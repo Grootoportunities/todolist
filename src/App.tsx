@@ -31,6 +31,12 @@ function App() {
     setFilter(value);
   }
 
+  function checkChange(movieID: string, checked: boolean) {
+    let changeWatched = movies.find((m) => m.id === movieID);
+    if (changeWatched) changeWatched.checked = checked;
+    setMovies([...movies]);
+  }
+
   let moviesForTodolist = movies;
 
   if (filter === "completed") {
@@ -47,6 +53,8 @@ function App() {
         deleteMovies={deleteMovies}
         changeFilter={changeFilter}
         addMovie={addMovie}
+        changeMoviesStatus={checkChange}
+        filter={filter}
       />
     </div>
   );
