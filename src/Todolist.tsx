@@ -1,6 +1,5 @@
 import React, { ChangeEvent, KeyboardEvent, useState } from "react";
 import { FilterValuesType } from "./App";
-import styled from "styled-components";
 
 export type InsidesPropsType = {
   id: string;
@@ -9,13 +8,19 @@ export type InsidesPropsType = {
 };
 
 type TodolistPropsType = {
+  todolistId: string;
   hat: string;
   insides: InsidesPropsType[];
-  deleteMovies: (id: string) => void;
-  changeFilter: (value: FilterValuesType) => void;
-  addMovie: (movieName: string) => void;
-  changeMoviesStatus: (movieID: string, checked: boolean) => void;
+  deleteMovies: (id: string, todolistId: string) => void;
+  changeFilter: (value: FilterValuesType, todolistId: string) => void;
+  addMovie: (movieName: string, todolistId: string) => void;
+  changeMoviesStatus: (
+    movieID: string,
+    checked: boolean,
+    todolistId: string,
+  ) => void;
   filter: FilterValuesType;
+  removeTodolist: (todolistId: string) => void;
 };
 
 export function Todolist(props: TodolistPropsType) {
@@ -24,11 +29,15 @@ export function Todolist(props: TodolistPropsType) {
 
   const mappedInsides = props.insides.map((item) => {
     const onDeleteHandler = () => {
-      props.deleteMovies(item.id);
+      props.deleteMovies(item.id, props.todolistId);
     };
 
     const onChangeInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
-      props.changeMoviesStatus(item.id, e.currentTarget.checked);
+      props.changeMoviesStatus(
+        item.id,
+        e.currentTarget.checked,
+        props.todolistId,
+      );
     };
 
     return (
@@ -49,23 +58,32 @@ export function Todolist(props: TodolistPropsType) {
   const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
     setError(null);
     if (e.charCode === 13) {
-      props.addMovie(newMovieName);
+      props.addMovie(newMovieName, props.todolistId);
       setNewMovieName("");
     }
   };
   const addMovie = () => {
     if (newMovieName.trim() !== "") {
-      props.addMovie(newMovieName.trim());
+      props.addMovie(newMovieName.trim(), props.todolistId);
       setNewMovieName("");
     } else setError("Field is required");
   };
-  const onAllClickHandler = () => props.changeFilter("all");
-  const onActiveClickHandler = () => props.changeFilter("active");
-  const onCompletedClickHandler = () => props.changeFilter("completed");
+  // const onAllClickHandler = () => props.changeFilter("all");
+  // const onActiveClickHandler = () => props.changeFilter("active");
+  // const onCompletedClickHandler = () => props.changeFilter("completed");
+  const onTsarClickHandler = (filter: FilterValuesType) => {
+    props.changeFilter(filter, props.todolistId);
+  };
+
+  const removeTodolistHandler = () => {
+    props.removeTodolist(props.todolistId);
+  };
 
   return (
     <div>
-      <h3>{props.hat}</h3>
+      <h3>
+        {props.hat} <button onClick={removeTodolistHandler}>X</button>
+      </h3>
       <div>
         <input
           value={newMovieName}
@@ -80,19 +98,19 @@ export function Todolist(props: TodolistPropsType) {
       <div>
         <button
           className={props.filter == "all" ? "active-filter" : ""}
-          onClick={onAllClickHandler}
+          onClick={() => onTsarClickHandler("all")}
         >
           All
         </button>
         <button
           className={props.filter == "active" ? "active-filter" : ""}
-          onClick={onActiveClickHandler}
+          onClick={() => onTsarClickHandler("active")}
         >
           Active
         </button>
         <button
           className={props.filter == "completed" ? "active-filter" : ""}
-          onClick={onCompletedClickHandler}
+          onClick={() => onTsarClickHandler("completed")}
         >
           Completed
         </button>
