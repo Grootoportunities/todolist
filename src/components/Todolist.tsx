@@ -1,5 +1,7 @@
-import React, { ChangeEvent, KeyboardEvent, useState } from "react";
-import { FilterValuesType } from "./App";
+import React, { ChangeEvent } from "react";
+import { FilterValuesType } from "../App";
+import { AddItemForm } from "./AddItemForm";
+import { EditableSpan } from "./EditableSpan";
 
 export type InsidesPropsType = {
   id: string;
@@ -13,7 +15,7 @@ type TodolistPropsType = {
   insides: InsidesPropsType[];
   deleteMovies: (id: string, todolistId: string) => void;
   changeFilter: (value: FilterValuesType, todolistId: string) => void;
-  addMovie: (movieName: string, todolistId: string) => void;
+  addTask: (movieName: string, todolistId: string) => void;
   changeMoviesStatus: (
     movieID: string,
     checked: boolean,
@@ -21,12 +23,15 @@ type TodolistPropsType = {
   ) => void;
   filter: FilterValuesType;
   removeTodolist: (todolistId: string) => void;
+  changeTodolistTitle: (newTitle: string, todolistId: string) => void;
+  changeTitleHandler: (
+    id: string,
+    newTitle: string,
+    todolistId: string,
+  ) => void;
 };
 
 export function Todolist(props: TodolistPropsType) {
-  const [newMovieName, setNewMovieName] = useState("");
-  const [error, setError] = useState<string | null>(null);
-
   const mappedInsides = props.insides.map((item) => {
     const onDeleteHandler = () => {
       props.deleteMovies(item.id, props.todolistId);
@@ -40,6 +45,9 @@ export function Todolist(props: TodolistPropsType) {
       );
     };
 
+    const onChangeTitleHandler = (newTitle: string) =>
+      props.changeTitleHandler(item.id, newTitle, props.todolistId);
+
     return (
       <li className={item.checked ? "is-done" : ""} key={item.id}>
         <input
@@ -47,30 +55,12 @@ export function Todolist(props: TodolistPropsType) {
           checked={item.checked}
           onChange={onChangeInputHandler}
         />
-        <span>{item.name}</span>
+        <EditableSpan title={item.name} onChange={onChangeTitleHandler} />
         <button onClick={onDeleteHandler}>X</button>
       </li>
     );
   });
-  const onChangeNewMovieNameHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewMovieName(e.currentTarget.value);
-  };
-  const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-    setError(null);
-    if (e.charCode === 13) {
-      props.addMovie(newMovieName, props.todolistId);
-      setNewMovieName("");
-    }
-  };
-  const addMovie = () => {
-    if (newMovieName.trim() !== "") {
-      props.addMovie(newMovieName.trim(), props.todolistId);
-      setNewMovieName("");
-    } else setError("Field is required");
-  };
-  // const onAllClickHandler = () => props.changeFilter("all");
-  // const onActiveClickHandler = () => props.changeFilter("active");
-  // const onCompletedClickHandler = () => props.changeFilter("completed");
+
   const onTsarClickHandler = (filter: FilterValuesType) => {
     props.changeFilter(filter, props.todolistId);
   };
@@ -79,21 +69,20 @@ export function Todolist(props: TodolistPropsType) {
     props.removeTodolist(props.todolistId);
   };
 
+  const addTask = (title: string) => {
+    props.addTask(title, props.todolistId);
+  };
+
+  const onChangeTodolistTitle = (newTitle: string) =>
+    props.changeTodolistTitle(newTitle, props.todolistId);
+
   return (
     <div>
       <h3>
-        {props.hat} <button onClick={removeTodolistHandler}>X</button>
+        <EditableSpan title={props.hat} onChange={onChangeTodolistTitle} />
+        <button onClick={removeTodolistHandler}>X</button>
       </h3>
-      <div>
-        <input
-          value={newMovieName}
-          onChange={onChangeNewMovieNameHandler}
-          onKeyPress={onKeyPressHandler}
-          className={error ? "error" : ""}
-        />
-        <button onClick={addMovie}>+</button>
-        <div className="error-message">{error}</div>
-      </div>
+      <AddItemForm addItem={addTask} />
       <ul>{mappedInsides}</ul>
       <div>
         <button
