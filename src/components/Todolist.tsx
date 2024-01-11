@@ -2,6 +2,8 @@ import React, { ChangeEvent } from "react";
 import { FilterValuesType } from "../App";
 import { AddItemForm } from "./AddItemForm";
 import { EditableSpan } from "./EditableSpan";
+import { Button, Checkbox, IconButton } from "@material-ui/core";
+import { CheckBox, Delete } from "@material-ui/icons";
 
 export type InsidesPropsType = {
   id: string;
@@ -50,13 +52,11 @@ export function Todolist(props: TodolistPropsType) {
 
     return (
       <li className={item.checked ? "is-done" : ""} key={item.id}>
-        <input
-          type="checkbox"
-          checked={item.checked}
-          onChange={onChangeInputHandler}
-        />
+        <Checkbox checked={item.checked} onChange={onChangeInputHandler} />
         <EditableSpan title={item.name} onChange={onChangeTitleHandler} />
-        <button onClick={onDeleteHandler}>X</button>
+        <IconButton onClick={onDeleteHandler}>
+          <Delete />
+        </IconButton>
       </li>
     );
   });
@@ -80,29 +80,33 @@ export function Todolist(props: TodolistPropsType) {
     <div>
       <h3>
         <EditableSpan title={props.hat} onChange={onChangeTodolistTitle} />
-        <button onClick={removeTodolistHandler}>X</button>
+        <IconButton onClick={removeTodolistHandler}>
+          <Delete />
+        </IconButton>
       </h3>
       <AddItemForm addItem={addTask} />
       <ul>{mappedInsides}</ul>
       <div>
-        <button
-          className={props.filter == "all" ? "active-filter" : ""}
+        <Button
+          variant={props.filter == "all" ? "contained" : "text"}
           onClick={() => onTsarClickHandler("all")}
         >
           All
-        </button>
-        <button
-          className={props.filter == "active" ? "active-filter" : ""}
+        </Button>
+        <Button
+          color={"secondary"}
+          variant={props.filter == "active" ? "contained" : "text"}
           onClick={() => onTsarClickHandler("active")}
         >
           Active
-        </button>
-        <button
-          className={props.filter == "completed" ? "active-filter" : ""}
+        </Button>
+        <Button
+          color={"primary"}
+          variant={props.filter == "completed" ? "contained" : "text"}
           onClick={() => onTsarClickHandler("completed")}
         >
           Completed
-        </button>
+        </Button>
       </div>
     </div>
   );

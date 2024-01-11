@@ -3,6 +3,16 @@ import "./App.css";
 import { InsidesPropsType, Todolist } from "./components/Todolist";
 import { v1 } from "uuid";
 import { AddItemForm } from "./components/AddItemForm";
+import {
+  AppBar,
+  Container,
+  Grid,
+  IconButton,
+  Paper,
+  Toolbar,
+  Typography,
+} from "@material-ui/core";
+import { Menu } from "@material-ui/icons";
 
 export type FilterValuesType = "all" | "active" | "completed";
 type TodolistsType = {
@@ -109,34 +119,55 @@ function App() {
   console.log(todolists);
   return (
     <div className="App">
-      <AddItemForm addItem={addTodolist} />
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton edge="start" color="inherit" aria-label="menu">
+            <Menu />
+          </IconButton>
+          <Typography variant="h6">Photos</Typography>
+        </Toolbar>
+      </AppBar>
+      <Container fixed>
+        <Grid style={{ margin: "30px 0" }} container>
+          <AddItemForm addItem={addTodolist} />
+        </Grid>
+        <Grid container spacing={5}>
+          {todolists.map((tl) => {
+            let moviesForTodolist = tasksObj[tl.id];
 
-      {todolists.map((tl) => {
-        let moviesForTodolist = tasksObj[tl.id];
+            if (tl.filter === "completed") {
+              moviesForTodolist = moviesForTodolist.filter(
+                (item) => item.checked,
+              );
+            } else if (tl.filter === "active") {
+              moviesForTodolist = moviesForTodolist.filter(
+                (item) => !item.checked,
+              );
+            }
 
-        if (tl.filter === "completed") {
-          moviesForTodolist = moviesForTodolist.filter((item) => item.checked);
-        } else if (tl.filter === "active") {
-          moviesForTodolist = moviesForTodolist.filter((item) => !item.checked);
-        }
-
-        return (
-          <Todolist
-            key={tl.id}
-            todolistId={tl.id}
-            hat={tl.hat}
-            insides={moviesForTodolist}
-            deleteMovies={deleteMovies}
-            changeFilter={changeFilter}
-            changeTitleHandler={changeTitleHandler}
-            addTask={addMovie}
-            changeMoviesStatus={checkChange}
-            filter={tl.filter}
-            removeTodolist={removeTodolist}
-            changeTodolistTitle={onChangeTodolistTitle}
-          />
-        );
-      })}
+            return (
+              <Grid item>
+                <Paper style={{ padding: "20px" }} elevation={3}>
+                  <Todolist
+                    key={tl.id}
+                    todolistId={tl.id}
+                    hat={tl.hat}
+                    insides={moviesForTodolist}
+                    deleteMovies={deleteMovies}
+                    changeFilter={changeFilter}
+                    changeTitleHandler={changeTitleHandler}
+                    addTask={addMovie}
+                    changeMoviesStatus={checkChange}
+                    filter={tl.filter}
+                    removeTodolist={removeTodolist}
+                    changeTodolistTitle={onChangeTodolistTitle}
+                  />
+                </Paper>
+              </Grid>
+            );
+          })}
+        </Grid>
+      </Container>
     </div>
   );
 }
