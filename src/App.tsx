@@ -15,7 +15,7 @@ import {
 import { Menu } from "@material-ui/icons";
 
 export type FilterValuesType = "all" | "active" | "completed";
-type TodolistsType = {
+export type TodolistType = {
   id: string;
   hat: string;
   filter: FilterValuesType;
@@ -59,7 +59,7 @@ function App() {
   const todolistId1 = v1();
   const todolistId2 = v1();
 
-  const [todolists, setTodolists] = useState<TodolistsType[]>([
+  const [todolists, setTodolists] = useState<TodolistType[]>([
     { id: todolistId1, hat: "Movies", filter: "all" },
     { id: todolistId2, hat: "Games", filter: "all" },
   ]);
@@ -98,7 +98,7 @@ function App() {
   };
 
   function addTodolist(title: string) {
-    let newTodolist: TodolistsType = { id: v1(), filter: "all", hat: title };
+    let newTodolist: TodolistType = { id: v1(), filter: "all", hat: title };
     setTodolists([newTodolist, ...todolists]);
     setTasksObj({ ...tasksObj, [newTodolist.id]: [] });
   }
