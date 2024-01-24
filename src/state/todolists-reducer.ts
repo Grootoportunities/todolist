@@ -1,24 +1,28 @@
 import { FilterValuesType, TodolistType } from "../App";
 import { v1 } from "uuid";
 
-type RemoveTodolistActionType = { type: "REMOVE-TODOLIST"; id: string };
-type AddTodolistActionType = { type: "ADD-TODOLIST"; title: string };
-export type ChangeTodolistTitleActionType = {
+export type RemoveTodolistAT = { type: "REMOVE-TODOLIST"; id: string };
+export type AddTodolistAT = {
+  type: "ADD-TODOLIST";
+  title: string;
+  todolistID: string;
+};
+export type ChangeTodolistTitleAT = {
   type: "CHANGE-TODOLIST-TITLE";
   id: string;
   hat: string;
 };
-export type ChangeTodolistFilterActionType = {
+export type ChangeTodolistFilterAT = {
   type: "CHANGE-TODOLIST-FILTER";
   id: string;
   filter: FilterValuesType;
 };
 
 type ActionsType =
-  | RemoveTodolistActionType
-  | AddTodolistActionType
-  | ChangeTodolistTitleActionType
-  | ChangeTodolistFilterActionType;
+  | RemoveTodolistAT
+  | AddTodolistAT
+  | ChangeTodolistTitleAT
+  | ChangeTodolistFilterAT;
 
 export const todolistsReducer = (
   state: TodolistType[],
@@ -29,8 +33,12 @@ export const todolistsReducer = (
       return state.filter((tl) => tl.id !== action.id);
 
     case "ADD-TODOLIST": {
-      // const newTodolist = { id: v1(), hat: action.title, filter: "all" };
-      return [...state, { id: v1(), hat: action.title, filter: "all" }]; // Почему-то подчёркивает красным если вторым элементом передаю newTodolist
+      const newTodolist: TodolistType = {
+        id: action.todolistID,
+        hat: action.title,
+        filter: "all",
+      };
+      return [...state, newTodolist];
     }
 
     case "CHANGE-TODOLIST-TITLE":
@@ -48,24 +56,27 @@ export const todolistsReducer = (
   }
 };
 
-export const RemoveTodolistAC = (
-  todolistID: string,
-): RemoveTodolistActionType => ({ type: "REMOVE-TODOLIST", id: todolistID });
-export const AddTodolistAC = (
-  todolistTitle: string,
-): AddTodolistActionType => ({ type: "ADD-TODOLIST", title: todolistTitle });
-export const ChangeTodolistTitleAC = (
+export const removeTodolistAC = (todolistID: string): RemoveTodolistAT => ({
+  type: "REMOVE-TODOLIST",
+  id: todolistID,
+});
+export const addTodolistAC = (todolistTitle: string): AddTodolistAT => ({
+  type: "ADD-TODOLIST",
+  title: todolistTitle,
+  todolistID: v1(),
+});
+export const changeTodolistTitleAC = (
   todolistID: string,
   newTodolistTitle: string,
-): ChangeTodolistTitleActionType => ({
+): ChangeTodolistTitleAT => ({
   type: "CHANGE-TODOLIST-TITLE",
   id: todolistID,
   hat: newTodolistTitle,
 });
-export const ChangeTodolistFilterAC = (
+export const changeTodolistFilterAC = (
   todolistID: string,
   newFilter: FilterValuesType,
-): ChangeTodolistFilterActionType => ({
+): ChangeTodolistFilterAT => ({
   type: "CHANGE-TODOLIST-FILTER",
   id: todolistID,
   filter: newFilter,

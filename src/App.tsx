@@ -21,7 +21,7 @@ export type TodolistType = {
   filter: FilterValuesType;
 };
 
-type TasksStateType = { [key: string]: InsidesPropsType[] };
+export type TasksStateType = { [key: string]: InsidesPropsType[] };
 
 function App() {
   function deleteMovies(id: string, todolistId: string) {
