@@ -6,7 +6,7 @@ import {
   todolistsReducer,
 } from "./todolists-reducer";
 import { v1 } from "uuid";
-import { FilterValuesType, TodolistType } from "../App";
+import { FilterValuesType, TodolistType } from "../AppWithRedux";
 
 test("correct todolist should be removed", () => {
   let todolistId1 = v1();
@@ -40,7 +40,7 @@ test("correct todolist should be added", () => {
   );
 
   expect(endState.length).toBe(3);
-  expect(endState[2].hat).toBe(newTodolistTitle);
+  expect(endState[0].hat).toBe(newTodolistTitle);
 });
 
 test("correct todolist should change its name", () => {

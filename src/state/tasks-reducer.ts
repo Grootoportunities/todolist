@@ -1,6 +1,11 @@
-import { TasksStateType } from "../App";
+import { TasksStateType } from "../AppWithRedux";
 import { v1 } from "uuid";
-import { AddTodolistAT, RemoveTodolistAT } from "./todolists-reducer";
+import {
+  AddTodolistAT,
+  RemoveTodolistAT,
+  todolistId1,
+  todolistId2,
+} from "./todolists-reducer";
 
 type ActionsType =
   | RemoveTaskAT
@@ -26,8 +31,23 @@ export type ChangeTaskTitleAT = {
   title: string;
 };
 
+const initialState: TasksStateType = {
+  [todolistId1]: [
+    { id: v1(), name: "Banshee Inisherin", checked: true },
+    { id: v1(), name: "Kid of the human", checked: true },
+    { id: v1(), name: "Memento", checked: true },
+    { id: v1(), name: "Whale", checked: true },
+    { id: v1(), name: "Twelve friends of Oushn", checked: false },
+    { id: v1(), name: "Seventh mile", checked: false },
+  ],
+  [todolistId2]: [
+    { id: v1(), name: "Grand Theft Auto: San Andreas", checked: false },
+    { id: v1(), name: "Fallout 4", checked: true },
+  ],
+};
+
 export const tasksReducer = (
-  state: TasksStateType,
+  state: TasksStateType = initialState,
   action: ActionsType,
 ): TasksStateType => {
   switch (action.type) {
@@ -65,10 +85,9 @@ export const tasksReducer = (
       const stateCopy = { ...state };
       delete stateCopy[action.id];
       return stateCopy;
-      // return { ...state, [action.id]: delete state[action.id] };
     }
     default:
-      throw new Error("I don't understand this type");
+      return state;
   }
 };
 
