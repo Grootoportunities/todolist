@@ -24,13 +24,7 @@ type ActionsType =
   | ChangeTodolistTitleAT
   | ChangeTodolistFilterAT;
 
-export const todolistId1 = v1();
-export const todolistId2 = v1();
-
-const initialState: TodolistType[] = [
-  { id: todolistId1, hat: "Movies", filter: "all" },
-  { id: todolistId2, hat: "Games", filter: "all" },
-];
+const initialState: TodolistType[] = [];
 
 export const todolistsReducer = (
   state: TodolistType[] = initialState,

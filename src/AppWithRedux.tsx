@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import "./App.css";
 import { TaskType, Todolist } from "./components/Todolist";
 import { AddItemForm } from "./components/AddItemForm";
@@ -31,6 +31,8 @@ export type TodolistType = {
 export type TasksStateType = { [key: string]: TaskType[] };
 
 function AppWithRedux() {
+  console.log("App is called");
+
   const dispatch = useDispatch();
 
   const todolists = useSelector<RootStateType, TodolistType[]>(
@@ -39,25 +41,48 @@ function AppWithRedux() {
 
   //Todolists CRUD
 
-  function changeFilter(value: FilterValuesType, todolistId: string) {
-    dispatch(changeTodolistFilterAC(todolistId, value));
-  }
+  const changeFilter = useCallback(
+    (value: FilterValuesType, todolistId: string) =>
+      dispatch(changeTodolistFilterAC(todolistId, value)),
+    [dispatch],
+  );
 
-  const removeTodolist = (todolistId: string) => {
-    const action = removeTodolistAC(todolistId);
-    dispatch(action);
-  };
+  const removeTodolist = useCallback(
+    (todolistId: string) => dispatch(removeTodolistAC(todolistId)),
+    [dispatch],
+  );
 
-  const onChangeTodolistTitle = (newTitle: string, todolistId: string) => {
-    dispatch(changeTodolistTitleAC(todolistId, newTitle));
-  };
+  const onChangeTodolistTitle = useCallback(
+    (newTitle: string, todolistId: string) =>
+      dispatch(changeTodolistTitleAC(todolistId, newTitle)),
+    [dispatch],
+  );
 
-  function addTodolist(title: string) {
-    const action = addTodolistAC(title);
-    dispatch(action);
-  }
+  const addTodolist = useCallback(
+    (title: string) => {
+      const action = addTodolistAC(title);
+      dispatch(action);
+    },
+    [dispatch],
+  );
 
-  console.log(todolists);
+  const mappedTodolists = todolists.map((tl) => {
+    return (
+      <Grid item key={tl.id}>
+        <Paper style={{ padding: "20px" }} elevation={3}>
+          <Todolist
+            todolistId={tl.id}
+            hat={tl.hat}
+            changeFilter={changeFilter}
+            filter={tl.filter}
+            removeTodolist={removeTodolist}
+            changeTodolistTitle={onChangeTodolistTitle}
+          />
+        </Paper>
+      </Grid>
+    );
+  });
+
   return (
     <div className="App">
       <AppBar position="static">
@@ -73,23 +98,7 @@ function AppWithRedux() {
           <AddItemForm addItem={addTodolist} />
         </Grid>
         <Grid container spacing={5}>
-          {todolists.map((tl) => {
-            return (
-              <Grid item>
-                <Paper style={{ padding: "20px" }} elevation={3}>
-                  <Todolist
-                    key={tl.id}
-                    todolistId={tl.id}
-                    hat={tl.hat}
-                    changeFilter={changeFilter}
-                    filter={tl.filter}
-                    removeTodolist={removeTodolist}
-                    changeTodolistTitle={onChangeTodolistTitle}
-                  />
-                </Paper>
-              </Grid>
-            );
-          })}
+          {mappedTodolists}
         </Grid>
       </Container>
     </div>
