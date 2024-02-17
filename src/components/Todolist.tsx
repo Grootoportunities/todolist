@@ -59,16 +59,8 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
     tasks = tasks.filter((item) => !item.checked);
   }
 
-  const mappedInsides = tasks.map((item) => {
-    return (
-      <Task
-        todolistId={props.todolistId}
-        taskID={item.id}
-        checked={item.checked}
-        name={item.name}
-        key={item.id}
-      />
-    );
+  const mappedTasks = tasks.map((item) => {
+    return <Task key={item.id} task={item} todolistId={props.todolistId} />;
   });
 
   return (
@@ -80,7 +72,7 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
         </IconButton>
       </h3>
       <AddItemForm addItem={addTask} />
-      <ul>{mappedInsides}</ul>
+      <ul>{mappedTasks}</ul>
       <div>
         <Button
           variant={props.filter == "all" ? "contained" : "text"}

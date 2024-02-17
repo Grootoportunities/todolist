@@ -2,6 +2,7 @@ import { FilterValuesType, TodolistType } from "../AppWithRedux";
 import { v1 } from "uuid";
 
 export type RemoveTodolistAT = { type: "REMOVE-TODOLIST"; id: string };
+
 export type AddTodolistAT = {
   type: "ADD-TODOLIST";
   title: string;
@@ -17,8 +18,7 @@ export type ChangeTodolistFilterAT = {
   id: string;
   filter: FilterValuesType;
 };
-
-type ActionsType =
+export type ActionsType =
   | RemoveTodolistAT
   | AddTodolistAT
   | ChangeTodolistTitleAT

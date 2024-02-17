@@ -2,7 +2,7 @@ import { TasksStateType } from "../AppWithRedux";
 import { v1 } from "uuid";
 import { AddTodolistAT, RemoveTodolistAT } from "./todolists-reducer";
 
-type ActionsType =
+export type ActionsType =
   | RemoveTaskAT
   | AddTaskAT
   | ChangeTaskIsDoneAT
@@ -10,15 +10,18 @@ type ActionsType =
   | AddTodolistAT
   | RemoveTodolistAT;
 
-type RemoveTaskAT = { type: "REMOVE-TASK"; todolistID: string; taskID: string };
-type AddTaskAT = { type: "ADD-TASK"; todolistID: string; title: string };
+export type RemoveTaskAT = {
+  type: "REMOVE-TASK";
+  todolistID: string;
+  taskID: string;
+};
+export type AddTaskAT = { type: "ADD-TASK"; todolistID: string; title: string };
 export type ChangeTaskIsDoneAT = {
   type: "CHANGE-IS-DONE-TASK";
   todolistID: string;
   taskID: string;
   isDone: boolean;
 };
-
 export type ChangeTaskTitleAT = {
   type: "CHANGE-TASK-TITLE";
   todolistID: string;
