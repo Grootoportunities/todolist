@@ -1,6 +1,8 @@
 import { Task } from "./Task";
 import { TaskType } from "./Todolist";
 import { ReduxStoreProviderDecorator } from "../stories/ReduxStoreProviderDecorator";
+import { useSelector } from "react-redux";
+import { RootStateType } from "../state/store";
 
 export default {
   title: "Task",
@@ -8,16 +10,18 @@ export default {
   decorators: [ReduxStoreProviderDecorator],
 };
 
-const unCheckedTask: TaskType = {
-  id: "1",
-  checked: false,
-  name: "Unchecked task",
-};
-const checkedTask: TaskType = { id: "1", checked: true, name: "Checked task" };
+const TaskExample = () => {
+  let tasks = useSelector<RootStateType, TaskType[]>(
+    (state) => state.tasks["todolistId1"],
+  );
 
-export const TaskExample = () => (
-  <>
-    <Task todolistId={"1"} task={checkedTask} />
-    <Task todolistId={"1"} task={unCheckedTask} />
-  </>
-);
+  const mappedTasks = tasks.map((t) => (
+    <Task todolistId={"todolistId1"} task={t} />
+  ));
+
+  return <>{mappedTasks}</>;
+};
+
+export const TaskStory = {
+  render: () => <TaskExample />,
+};
