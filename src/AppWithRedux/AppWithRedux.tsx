@@ -1,7 +1,7 @@
-import React, { useCallback } from "react";
-import "./App.css";
-import { TaskType, Todolist } from "./components/Todolist";
-import { AddItemForm } from "./components/AddItemForm";
+import React from "react";
+import "../App.css";
+import { TaskType, Todolist } from "../components/Todolist/Todolist";
+import { AddItemForm } from "../components/AddItemForm/AddItemForm";
 import {
   AppBar,
   Container,
@@ -12,14 +12,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Menu } from "@material-ui/icons";
-import {
-  addTodolistAC,
-  changeTodolistFilterAC,
-  changeTodolistTitleAC,
-  removeTodolistAC,
-} from "./state/todolists-reducer";
-import { useDispatch, useSelector } from "react-redux";
-import { RootStateType } from "./state/store";
+import { useAppWithRedux } from "./hooks/useAppWithRedux";
 
 export type FilterValuesType = "all" | "active" | "completed";
 export type TodolistType = {
@@ -31,40 +24,13 @@ export type TodolistType = {
 export type TasksStateType = { [key: string]: TaskType[] };
 
 function AppWithRedux() {
-  console.log("App is called");
-
-  const dispatch = useDispatch();
-
-  const todolists = useSelector<RootStateType, TodolistType[]>(
-    (state) => state.todolists,
-  );
-
-  //Todolists CRUD
-
-  const changeFilter = useCallback(
-    (value: FilterValuesType, todolistId: string) =>
-      dispatch(changeTodolistFilterAC(todolistId, value)),
-    [dispatch],
-  );
-
-  const removeTodolist = useCallback(
-    (todolistId: string) => dispatch(removeTodolistAC(todolistId)),
-    [dispatch],
-  );
-
-  const onChangeTodolistTitle = useCallback(
-    (newTitle: string, todolistId: string) =>
-      dispatch(changeTodolistTitleAC(todolistId, newTitle)),
-    [dispatch],
-  );
-
-  const addTodolist = useCallback(
-    (title: string) => {
-      const action = addTodolistAC(title);
-      dispatch(action);
-    },
-    [dispatch],
-  );
+  const {
+    todolists,
+    changeFilter,
+    removeTodolist,
+    onChangeTodolistTitle,
+    addTodolist,
+  } = useAppWithRedux();
 
   const mappedTodolists = todolists.map((tl) => {
     return (

@@ -9,5 +9,5 @@ export default {
 const actionCallback = action("Editable span wants to change");
 
 export const EditableSpanExample = () => (
-  <EditableSpan title={"Editable Span"} onChange={actionCallback} />
+  <EditableSpan originTitle={"Editable Span"} onChange={actionCallback} />
 );
