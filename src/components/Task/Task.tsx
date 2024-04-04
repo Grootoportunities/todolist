@@ -2,8 +2,8 @@ import React, { FC, memo } from "react";
 import { Checkbox, IconButton } from "@material-ui/core";
 import { EditableSpan } from "../EditableSpan/EditableSpan";
 import { Delete } from "@material-ui/icons";
-import { TaskType } from "../Todolist/Todolist";
 import { useTask } from "./hooks/useTask";
+import { TaskStatuses, TaskType } from "../../api/tasksAPI";
 
 type TaskProps = {
   task: TaskType;
@@ -15,9 +15,15 @@ export const Task: FC<TaskProps> = memo(({ task, todolistId }) => {
     useTask(task, todolistId);
 
   return (
-    <li className={task.checked ? "is-done" : ""} key={task.id}>
-      <Checkbox checked={task.checked} onChange={onChangeStatusHandler} />
-      <EditableSpan originTitle={task.name} onChange={onChangeTitleHandler} />
+    <li
+      className={task.status === TaskStatuses.Completed ? "is-done" : ""}
+      key={task.id}
+    >
+      <Checkbox
+        checked={task.status === TaskStatuses.Completed}
+        onChange={onChangeStatusHandler}
+      />
+      <EditableSpan originTitle={task.title} onChange={onChangeTitleHandler} />
       <IconButton onClick={onDeleteHandler}>
         <Delete />
       </IconButton>

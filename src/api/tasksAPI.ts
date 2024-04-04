@@ -1,13 +1,28 @@
 import axios from "axios";
 
+export enum TaskStatuses {
+  New,
+  InProgress,
+  Completed,
+  Draft,
+}
+
+export enum TaskPriorities {
+  Low,
+  Middle,
+  High,
+  Urgently,
+  Later,
+}
+
 export type TaskType = {
   id: string;
   title: string;
   description: string;
   todoListId: string;
   order: number;
-  status: number;
-  priority: number;
+  status: TaskStatuses;
+  priority: TaskPriorities;
   startDate: string;
   deadline: string;
   addedDate: string;

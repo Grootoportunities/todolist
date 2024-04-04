@@ -5,7 +5,7 @@ import {
   changeTaskTitleAC,
   removeTaskAC,
 } from "../../../state/tasks-reducer";
-import { TaskType } from "../../Todolist/Todolist";
+import { TaskStatuses, TaskType } from "../../../api/tasksAPI";
 
 export const useTask = (task: TaskType, todolistId: string) => {
   const dispatch = useDispatch();
@@ -13,7 +13,11 @@ export const useTask = (task: TaskType, todolistId: string) => {
   const onChangeStatusHandler = useCallback(
     (e: ChangeEvent<HTMLInputElement>) =>
       dispatch(
-        changeTaskIsDoneAC(todolistId, task.id, e.currentTarget.checked),
+        changeTaskIsDoneAC(
+          todolistId,
+          task.id,
+          e.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New,
+        ),
       ),
     [todolistId, task.id],
   );

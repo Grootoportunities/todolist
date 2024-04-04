@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootStateType } from "../../../state/store";
-import { TaskType } from "../Todolist";
 import { useCallback } from "react";
-import { FilterValuesType } from "../../../AppWithRedux/AppWithRedux";
 import { addTaskAC } from "../../../state/tasks-reducer";
+import { FilterValuesType } from "../../../state/todolists-reducer";
+import { TaskStatuses, TaskType } from "../../../api/tasksAPI";
 
 export const useTodolist = (
   todolistId: string,
@@ -17,9 +17,9 @@ export const useTodolist = (
   );
 
   if (filter === "completed") {
-    tasks = tasks.filter((item) => item.checked);
+    tasks = tasks.filter((item) => item.status === TaskStatuses.Completed);
   } else if (filter === "active") {
-    tasks = tasks.filter((item) => !item.checked);
+    tasks = tasks.filter((item) => item.status === TaskStatuses.New);
   }
 
   const dispatch = useDispatch();

@@ -1,17 +1,11 @@
 import React, { FC, memo } from "react";
-import { FilterValuesType } from "../../AppWithRedux/AppWithRedux";
 import { AddItemForm } from "../AddItemForm/AddItemForm";
 import { EditableSpan } from "../EditableSpan/EditableSpan";
 import { Button, IconButton } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
 import { Task } from "../Task/Task";
 import { useTodolist } from "./hooks/useTodolist";
-
-export type TaskType = {
-  id: string;
-  name: string;
-  checked: boolean;
-};
+import { FilterValuesType } from "../../state/todolists-reducer";
 
 type TodolistPropsType = {
   todolistId: string;

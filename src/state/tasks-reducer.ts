@@ -1,6 +1,7 @@
 import { TasksStateType } from "../AppWithRedux/AppWithRedux";
 import { v1 } from "uuid";
 import { AddTodolistAT, RemoveTodolistAT } from "./todolists-reducer";
+import { TaskPriorities, TaskStatuses, TaskType } from "../api/tasksAPI";
 
 export type ActionsType =
   | RemoveTaskAT
@@ -17,10 +18,10 @@ export type RemoveTaskAT = {
 };
 export type AddTaskAT = { type: "ADD-TASK"; todolistID: string; title: string };
 export type ChangeTaskIsDoneAT = {
-  type: "CHANGE-IS-DONE-TASK";
+  type: "CHANGE-TASK-STATUS";
   todolistID: string;
   taskID: string;
-  isDone: boolean;
+  status: TaskStatuses;
 };
 export type ChangeTaskTitleAT = {
   type: "CHANGE-TASK-TITLE";
@@ -44,17 +45,28 @@ export const tasksReducer = (
         ),
       };
     case "ADD-TASK": {
-      const newTask = { id: v1(), name: action.title, checked: false };
+      const newTask: TaskType = {
+        todoListId: action.todolistID,
+        id: v1(),
+        title: action.title,
+        status: TaskStatuses.New,
+        startDate: "",
+        addedDate: "",
+        deadline: "",
+        order: 0,
+        priority: TaskPriorities.Low,
+        description: "New Task",
+      };
       return {
         ...state,
         [action.todolistID]: [...state[action.todolistID], newTask],
       };
     }
-    case "CHANGE-IS-DONE-TASK":
+    case "CHANGE-TASK-STATUS":
       return {
         ...state,
         [action.todolistID]: state[action.todolistID].map((t) =>
-          t.id === action.taskID ? { ...t, checked: action.isDone } : t,
+          t.id === action.taskID ? { ...t, status: action.status } : t,
         ),
       };
     case "CHANGE-TASK-TITLE":
@@ -92,12 +104,12 @@ export const addTaskAC = (todolistID: string, title: string): AddTaskAT => ({
 export const changeTaskIsDoneAC = (
   todolistID: string,
   taskID: string,
-  isDone: boolean,
+  status: TaskStatuses,
 ): ChangeTaskIsDoneAT => ({
-  type: "CHANGE-IS-DONE-TASK",
+  type: "CHANGE-TASK-STATUS",
   todolistID,
   taskID,
-  isDone,
+  status,
 });
 export const changeTaskTitleAC = (
   todolistID: string,

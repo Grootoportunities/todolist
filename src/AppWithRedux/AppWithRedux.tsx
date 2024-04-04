@@ -1,6 +1,6 @@
 import React from "react";
 import "../App.css";
-import { TaskType, Todolist } from "../components/Todolist/Todolist";
+import { Todolist } from "../components/Todolist/Todolist";
 import { AddItemForm } from "../components/AddItemForm/AddItemForm";
 import {
   AppBar,
@@ -13,13 +13,7 @@ import {
 } from "@material-ui/core";
 import { Menu } from "@material-ui/icons";
 import { useAppWithRedux } from "./hooks/useAppWithRedux";
-
-export type FilterValuesType = "all" | "active" | "completed";
-export type TodolistType = {
-  id: string;
-  hat: string;
-  filter: FilterValuesType;
-};
+import { TaskType } from "../api/tasksAPI";
 
 export type TasksStateType = { [key: string]: TaskType[] };
 
@@ -38,7 +32,7 @@ function AppWithRedux() {
         <Paper style={{ padding: "20px" }} elevation={3}>
           <Todolist
             todolistId={tl.id}
-            hat={tl.hat}
+            hat={tl.title}
             changeFilter={changeFilter}
             filter={tl.filter}
             removeTodolist={removeTodolist}
