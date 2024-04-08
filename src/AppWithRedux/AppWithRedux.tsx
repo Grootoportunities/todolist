@@ -15,16 +15,14 @@ import { Menu } from "@material-ui/icons";
 import { useAppWithRedux } from "./hooks/useAppWithRedux";
 import { TaskType } from "../api/tasksAPI";
 import { todolistsAPI } from "../api/todolistsAPI";
-import {
-  fetchTodolistsThunk,
-  setTodolistsAC,
-} from "../state/todolists-reducer";
+import { fetchTodolistsTC } from "../state/todolists-reducer";
 import { useDispatch } from "react-redux";
+import { useAppDispatch } from "../state/store";
 
 export type TasksStateType = { [key: string]: TaskType[] };
 
 function AppWithRedux() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const {
     todolists,
@@ -52,11 +50,7 @@ function AppWithRedux() {
   });
 
   useEffect(() => {
-    // dispatch(fetchTodolistsThunk);
-
-    todolistsAPI
-      .getTodolists()
-      .then((res) => dispatch(setTodolistsAC(res.data)));
+    dispatch(fetchTodolistsTC());
   }, []);
 
   return (

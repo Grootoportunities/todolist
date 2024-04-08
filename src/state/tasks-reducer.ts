@@ -5,9 +5,17 @@ import {
   RemoveTodolistAT,
   SetTodolistsAT,
 } from "./todolists-reducer";
-import { TaskPriorities, TaskStatuses, TaskType } from "../api/tasksAPI";
+import {
+  TaskPriorities,
+  tasksAPI,
+  TaskStatuses,
+  TaskType,
+} from "../api/tasksAPI";
+import { Dispatch } from "redux";
+import { todolistsAPI } from "../api/todolistsAPI";
 
 export type ActionsType =
+  | SetTasksAT
   | SetTodolistsAT
   | RemoveTaskAT
   | AddTaskAT
@@ -33,6 +41,12 @@ export type ChangeTaskTitleAT = {
   todolistID: string;
   taskID: string;
   title: string;
+};
+
+export type SetTasksAT = {
+  type: "SET-TASKS";
+  tasks: TaskType[];
+  todolistID: string;
 };
 
 const initialState: TasksStateType = {};
@@ -99,6 +113,9 @@ export const tasksReducer = (
       //   return { ...acc, [curr.id]: [] };
       // }, {});
     }
+
+    case "SET-TASKS":
+      return { ...state, [action.todolistID]: action.tasks };
     default:
       return state;
   }
@@ -137,3 +154,18 @@ export const changeTaskTitleAC = (
   taskID,
   title,
 });
+export const setTasksAC = (
+  todolistID: string,
+  tasks: TaskType[],
+): SetTasksAT => ({
+  type: "SET-TASKS",
+  tasks,
+  todolistID,
+});
+
+//THUNKS
+
+export const fetchTasksTC = (todolistID: string) => (dispatch: Dispatch) =>
+  tasksAPI
+    .getTasks(todolistID)
+    .then((res) => dispatch(setTasksAC(todolistID, res.data.items)));

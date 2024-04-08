@@ -1,4 +1,4 @@
-import React, { FC, memo } from "react";
+import React, { FC, memo, useEffect } from "react";
 import { AddItemForm } from "../AddItemForm/AddItemForm";
 import { EditableSpan } from "../EditableSpan/EditableSpan";
 import { Button, IconButton } from "@material-ui/core";
@@ -6,6 +6,8 @@ import { Delete } from "@material-ui/icons";
 import { Task } from "../Task/Task";
 import { useTodolist } from "./hooks/useTodolist";
 import { FilterValuesType } from "../../state/todolists-reducer";
+import { useAppDispatch } from "../../state/store";
+import { fetchTasksTC, setTasksAC } from "../../state/tasks-reducer";
 
 type TodolistPropsType = {
   todolistId: string;
@@ -26,6 +28,7 @@ export const Todolist: FC<TodolistPropsType> = memo(
     removeTodolist,
     changeTodolistTitle,
   }) => {
+    const dispatch = useAppDispatch();
     const {
       tasks,
       onTsarClickHandler,
@@ -43,6 +46,10 @@ export const Todolist: FC<TodolistPropsType> = memo(
     const mappedTasks = tasks.map((item) => {
       return <Task key={item.id} task={item} todolistId={todolistId} />;
     });
+
+    useEffect(() => {
+      dispatch(fetchTasksTC(todolistId));
+    }, []);
 
     return (
       <div>

@@ -4,6 +4,7 @@ import {
   changeTaskIsDoneAC,
   changeTaskTitleAC,
   removeTaskAC,
+  setTasksAC,
   tasksReducer,
 } from "./tasks-reducer";
 import {
@@ -170,4 +171,22 @@ test("Empty array should be added when todolists are setted", () => {
   expect(keys.length).toBe(2);
   expect(endState["1"]).toStrictEqual([]);
   expect(endState["2"]).toStrictEqual([]);
+});
+
+test("Tasks should be set correctly", () => {
+  const action = setTasksAC("todolistID1", startState["todolistID1"]);
+
+  const endState = tasksReducer(
+    {
+      todolistID1: [],
+      todolistID2: [],
+    },
+    action,
+  );
+  const keys = Object.keys(endState);
+
+  expect(keys.length).toBe(1);
+  expect(endState["todolistID1"][0].title).toBe("Banshee Inisherin");
+  expect(endState["todolistID1"][1].title).toBe("Kid of the human");
+  expect(endState["todolistID2"]).toStrictEqual([]);
 });
