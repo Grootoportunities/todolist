@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../App.css";
 import { Todolist } from "../components/Todolist/Todolist";
 import { AddItemForm } from "../components/AddItemForm/AddItemForm";
@@ -14,10 +14,18 @@ import {
 import { Menu } from "@material-ui/icons";
 import { useAppWithRedux } from "./hooks/useAppWithRedux";
 import { TaskType } from "../api/tasksAPI";
+import { todolistsAPI } from "../api/todolistsAPI";
+import {
+  fetchTodolistsThunk,
+  setTodolistsAC,
+} from "../state/todolists-reducer";
+import { useDispatch } from "react-redux";
 
 export type TasksStateType = { [key: string]: TaskType[] };
 
 function AppWithRedux() {
+  const dispatch = useDispatch();
+
   const {
     todolists,
     changeFilter,
@@ -42,6 +50,14 @@ function AppWithRedux() {
       </Grid>
     );
   });
+
+  useEffect(() => {
+    // dispatch(fetchTodolistsThunk);
+
+    todolistsAPI
+      .getTodolists()
+      .then((res) => dispatch(setTodolistsAC(res.data)));
+  }, []);
 
   return (
     <div className="App">

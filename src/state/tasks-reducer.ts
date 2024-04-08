@@ -1,9 +1,14 @@
 import { TasksStateType } from "../AppWithRedux/AppWithRedux";
 import { v1 } from "uuid";
-import { AddTodolistAT, RemoveTodolistAT } from "./todolists-reducer";
+import {
+  AddTodolistAT,
+  RemoveTodolistAT,
+  SetTodolistsAT,
+} from "./todolists-reducer";
 import { TaskPriorities, TaskStatuses, TaskType } from "../api/tasksAPI";
 
 export type ActionsType =
+  | SetTodolistsAT
   | RemoveTaskAT
   | AddTaskAT
   | ChangeTaskIsDoneAT
@@ -82,6 +87,17 @@ export const tasksReducer = (
       const stateCopy = { ...state };
       delete stateCopy[action.id];
       return stateCopy;
+    }
+    case "SET-TODOLISTS": {
+      const stateCopy = { ...state };
+
+      action.todolists.forEach((tl) => (stateCopy[tl.id] = []));
+
+      return stateCopy;
+
+      // return action.todolists.reduce((acc, curr) => {
+      //   return { ...acc, [curr.id]: [] };
+      // }, {});
     }
     default:
       return state;
