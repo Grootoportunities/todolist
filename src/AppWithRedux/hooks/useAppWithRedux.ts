@@ -1,17 +1,17 @@
-import { useDispatch, useSelector } from "react-redux";
-import { RootStateType } from "../../state/store";
+import { useSelector } from "react-redux";
+import { RootStateType, useAppDispatch } from "../../state/store";
 import { useCallback } from "react";
 import {
-  addTodolistAC,
   changeTodolistFilterAC,
-  changeTodolistTitleAC,
+  createTodolistTC,
+  deleteTodolistTC,
   FilterValuesType,
-  removeTodolistAC,
   TodolistDomainType,
+  updateTodolistTitleTC,
 } from "../../state/todolists-reducer";
 
 export const useAppWithRedux = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const todolists = useSelector<RootStateType, TodolistDomainType[]>(
     (state) => state.todolists,
@@ -24,18 +24,18 @@ export const useAppWithRedux = () => {
   );
 
   const removeTodolist = useCallback(
-    (todolistId: string) => dispatch(removeTodolistAC(todolistId)),
+    (todolistId: string) => dispatch(deleteTodolistTC(todolistId)),
     [dispatch],
   );
 
   const onChangeTodolistTitle = useCallback(
     (newTitle: string, todolistId: string) =>
-      dispatch(changeTodolistTitleAC(todolistId, newTitle)),
+      dispatch(updateTodolistTitleTC(todolistId, newTitle)),
     [dispatch],
   );
 
   const addTodolist = useCallback(
-    (title: string) => dispatch(addTodolistAC(title)),
+    (title: string) => dispatch(createTodolistTC(title)),
     [dispatch],
   );
 

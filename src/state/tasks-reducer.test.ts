@@ -1,8 +1,7 @@
 import { TasksStateType } from "../AppWithRedux/AppWithRedux";
 import {
   addTaskAC,
-  changeTaskIsDoneAC,
-  changeTaskTitleAC,
+  changeTaskAC,
   removeTaskAC,
   setTasksAC,
   tasksReducer,
@@ -108,7 +107,7 @@ test("Task should be de" + "leted correctly", () => {
 test("Task should be added correctly", () => {
   const endState = tasksReducer(
     startState,
-    addTaskAC("todolistID1", "New Task"),
+    addTaskAC(startState["todolistID2"][2]),
   );
 
   expect(endState["todolistID1"].length).toBe(4);
@@ -119,7 +118,14 @@ test("Task should be added correctly", () => {
 test("Task isDone should change correctly", () => {
   const endState = tasksReducer(
     startState,
-    changeTaskIsDoneAC("todolistID2", "3", TaskStatuses.Completed),
+    changeTaskAC("todolistID2", "3", {
+      title: "",
+      status: TaskStatuses.Completed,
+      description: "",
+      deadline: "",
+      priority: TaskPriorities.Low,
+      startDate: "",
+    }),
   );
 
   expect(endState["todolistID2"][2].status).toBeTruthy();
@@ -129,7 +135,14 @@ test("Task isDone should change correctly", () => {
 test("Task title should change correctly", () => {
   const endState = tasksReducer(
     startState,
-    changeTaskTitleAC("todolistID2", "3", "New Title"),
+    changeTaskAC("todolistID2", "3", {
+      title: "New Title",
+      status: TaskStatuses.Completed,
+      description: "",
+      deadline: "",
+      priority: TaskPriorities.Low,
+      startDate: "",
+    }),
   );
 
   expect(endState["todolistID2"][2].title).toBe("New Title");
@@ -139,7 +152,12 @@ test("Task title should change correctly", () => {
 test("New empty array of task should be added when new todolist is added", () => {
   const endState = tasksReducer(
     startState,
-    addTodolistAC("New Todolist Title"),
+    addTodolistAC({
+      id: "todolistId1",
+      title: "What to learn",
+      order: 0,
+      addedDate: "",
+    }),
   );
 
   const keys = Object.keys(endState);

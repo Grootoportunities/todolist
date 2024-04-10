@@ -1,7 +1,7 @@
-import { useDispatch, useSelector } from "react-redux";
-import { RootStateType } from "../../../state/store";
+import { useSelector } from "react-redux";
+import { RootStateType, useAppDispatch } from "../../../state/store";
 import { useCallback } from "react";
-import { addTaskAC } from "../../../state/tasks-reducer";
+import { createTaskTC } from "../../../state/tasks-reducer";
 import { FilterValuesType } from "../../../state/todolists-reducer";
 import { TaskStatuses, TaskType } from "../../../api/tasksAPI";
 
@@ -22,7 +22,7 @@ export const useTodolist = (
     tasks = tasks.filter((item) => item.status === TaskStatuses.New);
   }
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const onTsarClickHandler = useCallback(
     (filter: FilterValuesType) => onChangeFilter(filter, todolistId),
@@ -32,8 +32,8 @@ export const useTodolist = (
   const removeTodolistHandler = () => onRemoveTodolist(todolistId);
 
   const addTask = useCallback(
-    (title: string) => dispatch(addTaskAC(todolistId, title)),
-    [dispatch, todolistId],
+    (title: string) => dispatch(createTaskTC(todolistId, title)),
+    [dispatch, todolistId], //dispatch(addTaskAC(todolistId, title)),
   );
 
   const changeTodolistTitleHandler = useCallback(
