@@ -1,13 +1,13 @@
 import React, { FC, memo, useEffect } from "react";
-import { AddItemForm } from "../AddItemForm/AddItemForm";
-import { EditableSpan } from "../EditableSpan/EditableSpan";
+import { AddItemForm } from "../../../components/AddItemForm/AddItemForm";
+import { EditableSpan } from "../../../components/EditableSpan/EditableSpan";
 import { Button, IconButton } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
-import { Task } from "../Task/Task";
+import { Task } from "./task/Task";
 import { useTodolist } from "./hooks/useTodolist";
-import { FilterValuesType } from "../../state/todolists-reducer";
-import { useAppDispatch } from "../../state/store";
-import { fetchTasksTC, setTasksAC } from "../../state/tasks-reducer";
+import { FilterValuesType } from "../todolists-reducer";
+import { useAppDispatch } from "../../../app/store";
+import { fetchTasksTC } from "../tasks-reducer";
 
 type TodolistPropsType = {
   todolistId: string;

@@ -1,7 +1,7 @@
 import { ChangeEvent, useCallback } from "react";
-import { deleteTaskTC, updateTaskTC } from "../../../state/tasks-reducer";
-import { TaskStatuses, TaskType } from "../../../api/tasksAPI";
-import { useAppDispatch } from "../../../state/store";
+import { deleteTaskTC, updateTaskTC } from "../../../tasks-reducer";
+import { TaskStatuses, TaskType } from "../../../../../api/tasksAPI";
+import { useAppDispatch } from "../../../../../app/store";
 
 export const useTask = (task: TaskType, todolistId: string) => {
   const dispatch = useAppDispatch();

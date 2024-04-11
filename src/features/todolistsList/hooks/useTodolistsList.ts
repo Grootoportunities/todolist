@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { RootStateType, useAppDispatch } from "../../state/store";
+import { RootStateType, useAppDispatch } from "../../../app/store";
 import { useCallback } from "react";
 import {
   changeTodolistFilterAC,
@@ -8,9 +8,9 @@ import {
   FilterValuesType,
   TodolistDomainType,
   updateTodolistTitleTC,
-} from "../../state/todolists-reducer";
+} from "../todolists-reducer";
 
-export const useAppWithRedux = () => {
+export const useTodolistsList = () => {
   const dispatch = useAppDispatch();
 
   const todolists = useSelector<RootStateType, TodolistDomainType[]>(

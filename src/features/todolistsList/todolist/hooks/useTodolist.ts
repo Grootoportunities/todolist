@@ -1,9 +1,9 @@
 import { useSelector } from "react-redux";
-import { RootStateType, useAppDispatch } from "../../../state/store";
+import { RootStateType, useAppDispatch } from "../../../../app/store";
 import { useCallback } from "react";
-import { createTaskTC } from "../../../state/tasks-reducer";
-import { FilterValuesType } from "../../../state/todolists-reducer";
-import { TaskStatuses, TaskType } from "../../../api/tasksAPI";
+import { createTaskTC } from "../../tasks-reducer";
+import { FilterValuesType } from "../../todolists-reducer";
+import { TaskStatuses, TaskType } from "../../../../api/tasksAPI";
 
 export const useTodolist = (
   todolistId: string,

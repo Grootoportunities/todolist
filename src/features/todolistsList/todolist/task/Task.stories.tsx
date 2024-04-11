@@ -1,8 +1,8 @@
 import { Task } from "./Task";
-import { ReduxStoreProviderDecorator } from "../../stories/ReduxStoreProviderDecorator";
+import { ReduxStoreProviderDecorator } from "../../../../stories/ReduxStoreProviderDecorator";
 import { useSelector } from "react-redux";
-import { RootStateType } from "../../state/store";
-import { TaskType } from "../../api/tasksAPI";
+import { RootStateType } from "../../../../app/store";
+import { TaskType } from "../../../../api/tasksAPI";
 
 export default {
   title: "Task",
