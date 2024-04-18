@@ -69,7 +69,7 @@ type GetTasksResponseType = {
   totalCount: number;
   error: string | null;
 };
-type CUDResponseType<D = {}> = {
+export type CUDResponseType<D = {}> = {
   data: D;
   messages: string[];
   fieldsErrors: string[];

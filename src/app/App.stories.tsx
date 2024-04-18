@@ -7,4 +7,4 @@ export default {
   decorators: [ReduxStoreProviderDecorator],
 };
 
-export const AppExample = () => <App />;
+export const AppExample = () => <App demo={true} />;

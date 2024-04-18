@@ -1,10 +1,16 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { useTodolistsList } from "./hooks/useTodolistsList";
 import { Grid, Paper } from "@material-ui/core";
 import { Todolist } from "./todolist/Todolist";
 import { AddItemForm } from "../../components/AddItemForm/AddItemForm";
+import { fetchTodolistsTC } from "./todolists-reducer";
+import { useAppDispatch } from "../../app/store";
 
-export const TodolistsList: FC = () => {
+type TodolistsListProps = {
+  demo?: boolean;
+};
+
+export const TodolistsList: FC<TodolistsListProps> = ({ demo = false }) => {
   const {
     todolists,
     changeFilter,
@@ -13,22 +19,29 @@ export const TodolistsList: FC = () => {
     addTodolist,
   } = useTodolistsList();
 
+  const dispatch = useAppDispatch();
+
   const mappedTodolists = todolists.map((tl) => {
     return (
       <Grid item key={tl.id}>
         <Paper style={{ padding: "20px" }} elevation={3}>
           <Todolist
-            todolistId={tl.id}
-            hat={tl.title}
+            todolist={tl}
             changeFilter={changeFilter}
-            filter={tl.filter}
             removeTodolist={removeTodolist}
             changeTodolistTitle={onChangeTodolistTitle}
+            demo={demo}
           />
         </Paper>
       </Grid>
     );
   });
+
+  useEffect(() => {
+    if (demo) return;
+
+    dispatch(fetchTodolistsTC());
+  }, []);
 
   return (
     <>

@@ -1,23 +1,24 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./App.css";
-import {
-  AppBar,
-  Container,
-  IconButton,
-  Toolbar,
-  Typography,
-} from "@material-ui/core";
-import { Menu } from "@material-ui/icons";
-import { fetchTodolistsTC } from "../features/todolistsList/todolists-reducer";
-import { useAppDispatch } from "./store";
+import AppBar from "@material-ui/core/AppBar";
+import Container from "@material-ui/core/Container";
+import IconButton from "@material-ui/core/IconButton";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import Menu from "@material-ui/icons/Menu";
+import { RootStateType } from "./store";
 import { TodolistsList } from "../features/todolistsList/TodolistsList";
+import { ErrorSnackbar } from "../components/ErrorSnackBar/ErrorSnackbar";
+import { useSelector } from "react-redux";
+import { StatusesType } from "./app-reducer";
 
-function App() {
-  const dispatch = useAppDispatch();
+type AppProps = { demo?: boolean };
 
-  useEffect(() => {
-    dispatch(fetchTodolistsTC());
-  }, []);
+function App({ demo = false }: AppProps) {
+  const status = useSelector<RootStateType, StatusesType>(
+    (state) => state.app.status,
+  );
 
   return (
     <div className="App">
@@ -26,12 +27,14 @@ function App() {
           <IconButton edge="start" color="inherit" aria-label="menu">
             <Menu />
           </IconButton>
-          <Typography variant="h6">Photos</Typography>
+          <Typography variant="h6">Todolists</Typography>
         </Toolbar>
+        {status === StatusesType.LOADING && <LinearProgress />}
       </AppBar>
       <Container fixed>
-        <TodolistsList />
+        <TodolistsList demo={demo} />
       </Container>
+      <ErrorSnackbar />
     </div>
   );
 }

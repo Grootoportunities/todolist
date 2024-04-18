@@ -5,14 +5,19 @@ import { Button, IconButton } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
 import { Task } from "./task/Task";
 import { useTodolist } from "./hooks/useTodolist";
-import { FilterValuesType } from "../todolists-reducer";
+import { FilterValuesType, TodolistDomainType } from "../todolists-reducer";
 import { useAppDispatch } from "../../../app/store";
 import { fetchTasksTC } from "../tasks-reducer";
+import { StatusesType } from "../../../app/app-reducer";
 
 type TodolistPropsType = {
-  todolistId: string;
-  hat: string;
-  filter: FilterValuesType;
+  // todolistId: string;
+  // hat: string;
+  // filter: FilterValuesType;
+
+  todolist: TodolistDomainType;
+
+  demo?: boolean;
 
   changeFilter: (value: FilterValuesType, todolistId: string) => void;
   removeTodolist: (todolistId: string) => void;
@@ -21,12 +26,14 @@ type TodolistPropsType = {
 
 export const Todolist: FC<TodolistPropsType> = memo(
   ({
-    todolistId,
-    hat,
-    filter,
+    // todolistId,
+    // hat,
+    // filter,
+    todolist,
     changeFilter,
     removeTodolist,
     changeTodolistTitle,
+    demo = false,
   }) => {
     const dispatch = useAppDispatch();
     const {
@@ -36,51 +43,61 @@ export const Todolist: FC<TodolistPropsType> = memo(
       addTask,
       changeTodolistTitleHandler,
     } = useTodolist(
-      todolistId,
-      filter,
+      // todolistId,
+      // filter,
+      todolist,
       changeFilter,
       removeTodolist,
       changeTodolistTitle,
     );
 
     const mappedTasks = tasks.map((item) => {
-      return <Task key={item.id} task={item} todolistId={todolistId} />;
+      return <Task key={item.id} task={item} todolistId={todolist.id} />;
     });
 
     useEffect(() => {
-      dispatch(fetchTasksTC(todolistId));
+      if (demo) return;
+
+      dispatch(fetchTasksTC(todolist.id));
     }, []);
 
     return (
       <div>
         <h3>
           <EditableSpan
-            originTitle={hat}
+            originTitle={todolist.title}
             onChange={changeTodolistTitleHandler}
+            disabled={todolist.entityStatus === StatusesType.LOADING}
           />
-          <IconButton onClick={removeTodolistHandler}>
+          <IconButton
+            onClick={removeTodolistHandler}
+            disabled={todolist.entityStatus === StatusesType.LOADING}
+          >
             <Delete />
           </IconButton>
         </h3>
-        <AddItemForm addItem={addTask} />
+        <AddItemForm
+          addItem={addTask}
+          disabled={todolist.entityStatus === StatusesType.LOADING}
+        />
         <ul>{mappedTasks}</ul>
         <div>
           <Button
-            variant={filter == "all" ? "contained" : "text"}
+            variant={todolist.filter == "all" ? "contained" : "text"}
             onClick={() => onTsarClickHandler("all")}
           >
             All
           </Button>
           <Button
             color={"secondary"}
-            variant={filter == "active" ? "contained" : "text"}
+            variant={todolist.filter == "active" ? "contained" : "text"}
             onClick={() => onTsarClickHandler("active")}
           >
             Active
           </Button>
           <Button
             color={"primary"}
-            variant={filter == "completed" ? "contained" : "text"}
+            variant={todolist.filter == "completed" ? "contained" : "text"}
             onClick={() => onTsarClickHandler("completed")}
           >
             Completed

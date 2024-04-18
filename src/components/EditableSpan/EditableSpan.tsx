@@ -5,17 +5,18 @@ import { useEditableSpan } from "./hooks/useEditableSpan";
 type EditableSpanProps = {
   originTitle: string;
   onChange: (newValue: string) => void;
+  disabled?: boolean;
 };
 
 export const EditableSpan: FC<EditableSpanProps> = memo(
-  ({ originTitle, onChange }) => {
+  ({ originTitle, onChange, disabled = false }) => {
     const {
       editMode,
       title,
       spanDoubleClickHandler,
       inputBlurHandler,
       onChangeSpanHandler,
-    } = useEditableSpan(originTitle, onChange);
+    } = useEditableSpan(originTitle, onChange, disabled);
 
     return editMode ? (
       <TextField
@@ -24,6 +25,7 @@ export const EditableSpan: FC<EditableSpanProps> = memo(
         onChange={onChangeSpanHandler}
         autoFocus
         variant={"outlined"}
+        disabled={disabled}
       />
     ) : (
       <span onDoubleClick={spanDoubleClickHandler}>{originTitle}</span>

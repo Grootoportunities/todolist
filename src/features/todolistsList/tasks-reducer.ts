@@ -11,6 +11,16 @@ import {
 } from "../../api/tasksAPI";
 import { Dispatch } from "redux";
 import { RootStateType } from "../../app/store";
+import {
+  AppActionsType,
+  setAppStatusAC,
+  SetAppStatusAT,
+  StatusesType,
+} from "../../app/app-reducer";
+import {
+  handleServerAppError,
+  handleServerNetworkError,
+} from "../../utils/error-utils";
 
 const initialState: TasksStateType = {};
 
@@ -78,22 +88,55 @@ export const changeTaskAC = (
 //THUNKS
 
 export const fetchTasksTC =
-  (todolistID: string) => (dispatch: Dispatch<ActionsType>) =>
-    tasksAPI
-      .getTasks(todolistID)
-      .then((res) => dispatch(setTasksAC(todolistID, res.data.items)));
+  (todolistID: string) =>
+  (dispatch: Dispatch<ActionsType | SetAppStatusAT>) => {
+    dispatch(setAppStatusAC(StatusesType.LOADING));
+
+    tasksAPI.getTasks(todolistID).then((res) => {
+      dispatch(setTasksAC(todolistID, res.data.items));
+      dispatch(setAppStatusAC(StatusesType.SUCCEEDED));
+    });
+  };
 
 export const deleteTaskTC =
-  (todolistID: string, taskID: string) => (dispatch: Dispatch<ActionsType>) =>
+  (todolistID: string, taskID: string) => (dispatch: ThunkDispatchType) => {
+    dispatch(setAppStatusAC(StatusesType.LOADING));
+
     tasksAPI
       .deleteTask(todolistID, taskID)
-      .then(() => dispatch(removeTaskAC(todolistID, taskID)));
+      .then((res) => {
+        if (res.data.resultCode === 0) {
+          dispatch(removeTaskAC(todolistID, taskID));
+          dispatch(setAppStatusAC(StatusesType.SUCCEEDED));
+
+          return;
+        }
+
+        handleServerAppError(dispatch, res.data);
+      })
+      .catch((err) => handleServerNetworkError(dispatch, err.message));
+  };
 
 export const createTaskTC =
-  (todolistID: string, title: string) => (dispatch: Dispatch<ActionsType>) =>
+  (todolistID: string, title: string) => (dispatch: ThunkDispatchType) => {
+    dispatch(setAppStatusAC(StatusesType.LOADING));
+
     tasksAPI
       .createTask(todolistID, title)
-      .then((res) => dispatch(addTaskAC(res.data.data.item)));
+      .then((res) => {
+        //TODO: Сделать по аналогии с другими санками и посмотреть урок, что-то там нужно доделать
+
+        if (res.data.resultCode === 0) {
+          dispatch(addTaskAC(res.data.data.item));
+          dispatch(setAppStatusAC(StatusesType.SUCCEEDED));
+
+          return;
+        }
+
+        handleServerAppError(dispatch, res.data);
+      })
+      .catch((err) => handleServerNetworkError(dispatch, err.message));
+  };
 
 export const updateTaskTC =
   (
@@ -104,7 +147,7 @@ export const updateTaskTC =
       "startDate" | "description" | "deadline" | "priority"
     >,
   ) =>
-  (dispatch: Dispatch<ActionsType>, getState: () => RootStateType) => {
+  (dispatch: ThunkDispatchType, getState: () => RootStateType) => {
     const task = getState().tasks[todolistID].find((t) => t.id === taskID);
 
     if (!task) {
@@ -124,10 +167,22 @@ export const updateTaskTC =
 
     tasksAPI
       .updateTask(todolistID, taskID, apiModel)
-      .then(() => dispatch(changeTaskAC(todolistID, taskID, apiModel)));
+      .then((res) => {
+        if (res.data.resultCode === 0) {
+          dispatch(changeTaskAC(todolistID, taskID, apiModel));
+          dispatch(setAppStatusAC(StatusesType.SUCCEEDED));
+
+          return;
+        }
+
+        handleServerAppError(dispatch, res.data);
+      })
+      .catch((err) => handleServerNetworkError(dispatch, err.message));
   };
 
 //TYPES
+
+type ThunkDispatchType = Dispatch<ActionsType | AppActionsType>;
 
 export type ActionsType =
   | ReturnType<typeof changeTaskAC>

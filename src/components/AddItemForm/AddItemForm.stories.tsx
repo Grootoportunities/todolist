@@ -11,3 +11,7 @@ const actionCallback = action("Button add has been pushed with values");
 export const AddItemFormExample = () => (
   <AddItemForm addItem={actionCallback} />
 );
+
+export const AddItemFormDisabled = () => (
+  <AddItemForm addItem={actionCallback} disabled />
+);
