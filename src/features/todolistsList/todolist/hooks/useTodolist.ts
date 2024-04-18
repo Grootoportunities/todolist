@@ -48,5 +48,6 @@ export const useTodolist = (
     removeTodolistHandler,
     addTask,
     changeTodolistTitleHandler,
+    dispatch,
   };
 };

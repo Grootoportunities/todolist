@@ -66,6 +66,13 @@ export const tasksReducer = (
       );
     case "SET-TASKS":
       return { ...state, [action.todolistID]: action.tasks };
+    case "SET-TASK-ENTITY-STATUS":
+      return {
+        ...state,
+        [action.todolistID]: state[action.todolistID].map((t) =>
+          t.id === action.taskID ? { ...t, entityStatus: action.status } : t,
+        ),
+      };
     default:
       return state;
   }
@@ -75,15 +82,24 @@ export const tasksReducer = (
 
 export const removeTaskAC = (todolistID: string, taskID: string) =>
   ({ type: "REMOVE-TASK", todolistID, taskID }) as const;
+
 export const addTaskAC = (task: TaskType) =>
   ({ type: "ADD-TASK", task }) as const;
+
 export const setTasksAC = (todolistID: string, tasks: TaskType[]) =>
   ({ type: "SET-TASKS", tasks, todolistID }) as const;
+
 export const changeTaskAC = (
   todolistID: string,
   taskID: string,
   model: UpdateTaskModelType,
 ) => ({ type: "CHANGE-TASK", todolistID, taskID, model }) as const;
+
+export const setTaskEntityStatusAC = (
+  todolistID: string,
+  taskID: string,
+  status: StatusesType,
+) => ({ type: "SET-TASK-ENTITY-STATUS", todolistID, taskID, status }) as const;
 
 //THUNKS
 
@@ -92,15 +108,19 @@ export const fetchTasksTC =
   (dispatch: Dispatch<ActionsType | SetAppStatusAT>) => {
     dispatch(setAppStatusAC(StatusesType.LOADING));
 
-    tasksAPI.getTasks(todolistID).then((res) => {
-      dispatch(setTasksAC(todolistID, res.data.items));
-      dispatch(setAppStatusAC(StatusesType.SUCCEEDED));
-    });
+    tasksAPI
+      .getTasks(todolistID)
+      .then((res) => {
+        dispatch(setTasksAC(todolistID, res.data.items));
+        dispatch(setAppStatusAC(StatusesType.SUCCEEDED));
+      })
+      .catch((err) => handleServerNetworkError(dispatch, err.message));
   };
 
 export const deleteTaskTC =
   (todolistID: string, taskID: string) => (dispatch: ThunkDispatchType) => {
     dispatch(setAppStatusAC(StatusesType.LOADING));
+    dispatch(setTaskEntityStatusAC(todolistID, taskID, StatusesType.LOADING));
 
     tasksAPI
       .deleteTask(todolistID, taskID)
@@ -112,9 +132,17 @@ export const deleteTaskTC =
           return;
         }
 
+        dispatch(
+          setTaskEntityStatusAC(todolistID, taskID, StatusesType.FAILED),
+        );
         handleServerAppError(dispatch, res.data);
       })
-      .catch((err) => handleServerNetworkError(dispatch, err.message));
+      .catch((err) => {
+        dispatch(
+          setTaskEntityStatusAC(todolistID, taskID, StatusesType.FAILED),
+        );
+        handleServerNetworkError(dispatch, err.message);
+      });
   };
 
 export const createTaskTC =
@@ -124,8 +152,6 @@ export const createTaskTC =
     tasksAPI
       .createTask(todolistID, title)
       .then((res) => {
-        //TODO: Сделать по аналогии с другими санками и посмотреть урок, что-то там нужно доделать
-
         if (res.data.resultCode === 0) {
           dispatch(addTaskAC(res.data.data.item));
           dispatch(setAppStatusAC(StatusesType.SUCCEEDED));
@@ -165,19 +191,35 @@ export const updateTaskTC =
       ...updateModel,
     };
 
+    dispatch(setAppStatusAC(StatusesType.LOADING));
+    dispatch(setTaskEntityStatusAC(todolistID, taskID, StatusesType.LOADING));
+
     tasksAPI
       .updateTask(todolistID, taskID, apiModel)
       .then((res) => {
         if (res.data.resultCode === 0) {
           dispatch(changeTaskAC(todolistID, taskID, apiModel));
           dispatch(setAppStatusAC(StatusesType.SUCCEEDED));
+          dispatch(
+            setTaskEntityStatusAC(todolistID, taskID, StatusesType.SUCCEEDED),
+          );
 
           return;
         }
 
+        dispatch(
+          setTaskEntityStatusAC(todolistID, taskID, StatusesType.FAILED),
+        );
+
         handleServerAppError(dispatch, res.data);
       })
-      .catch((err) => handleServerNetworkError(dispatch, err.message));
+      .catch((err) => {
+        dispatch(
+          setTaskEntityStatusAC(todolistID, taskID, StatusesType.FAILED),
+        );
+
+        handleServerNetworkError(dispatch, err.message);
+      });
   };
 
 //TYPES
@@ -191,4 +233,5 @@ export type ActionsType =
   | ReturnType<typeof removeTaskAC>
   | ReturnType<typeof addTaskAC>
   | ReturnType<typeof addTodolistAC>
-  | ReturnType<typeof removeTodolistAC>;
+  | ReturnType<typeof removeTodolistAC>
+  | ReturnType<typeof setTaskEntityStatusAC>;

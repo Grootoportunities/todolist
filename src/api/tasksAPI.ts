@@ -1,4 +1,5 @@
 import axios from "axios";
+import { StatusesType } from "../app/app-reducer";
 
 const instance = axios.create({
   baseURL: "https://social-network.samuraijs.com/api/1.1//todo-lists/",
@@ -54,6 +55,7 @@ export type TaskType = {
   startDate: string;
   deadline: string;
   addedDate: string;
+  entityStatus: StatusesType;
 };
 export type TasksStateType = { [key: string]: TaskType[] };
 export type UpdateTaskModelType = {

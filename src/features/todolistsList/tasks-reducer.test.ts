@@ -2,6 +2,7 @@ import {
   addTaskAC,
   changeTaskAC,
   removeTaskAC,
+  setTaskEntityStatusAC,
   setTasksAC,
   tasksReducer,
 } from "./tasks-reducer";
@@ -15,6 +16,7 @@ import {
   TasksStateType,
   TaskStatuses,
 } from "../../api/tasksAPI";
+import { StatusesType } from "../../app/app-reducer";
 
 let startState: TasksStateType;
 
@@ -32,6 +34,7 @@ beforeEach(() => {
         startDate: "",
         deadline: "",
         addedDate: "",
+        entityStatus: StatusesType.IDLE,
       },
       {
         id: "2",
@@ -44,6 +47,7 @@ beforeEach(() => {
         startDate: "",
         deadline: "",
         addedDate: "",
+        entityStatus: StatusesType.IDLE,
       },
       {
         id: "3",
@@ -56,6 +60,7 @@ beforeEach(() => {
         startDate: "",
         deadline: "",
         addedDate: "",
+        entityStatus: StatusesType.IDLE,
       },
     ],
     todolistID2: [
@@ -70,6 +75,7 @@ beforeEach(() => {
         startDate: "",
         deadline: "",
         addedDate: "",
+        entityStatus: StatusesType.IDLE,
       },
       {
         id: "2",
@@ -82,6 +88,7 @@ beforeEach(() => {
         startDate: "",
         deadline: "",
         addedDate: "",
+        entityStatus: StatusesType.IDLE,
       },
       {
         id: "3",
@@ -94,6 +101,7 @@ beforeEach(() => {
         startDate: "",
         deadline: "",
         addedDate: "",
+        entityStatus: StatusesType.LOADING,
       },
     ],
   };
@@ -210,4 +218,18 @@ test("Tasks should be set correctly", () => {
   expect(endState["todolistID1"][0].title).toBe("Banshee Inisherin");
   expect(endState["todolistID1"][1].title).toBe("Kid of the human");
   expect(endState["todolistID2"]).toStrictEqual([]);
+});
+
+test("Task entity status should change", () => {
+  const action = setTaskEntityStatusAC(
+    "todolistId1",
+    "1",
+    StatusesType.LOADING,
+  );
+
+  const endState = tasksReducer(startState, action);
+
+  expect(endState["todolistID1"][0].entityStatus).toBe(StatusesType.LOADING);
+  expect(endState["todolistID1"][1].entityStatus).toBe(StatusesType.IDLE);
+  expect(endState["todolistID1"][2].entityStatus).toBe(StatusesType.IDLE);
 });

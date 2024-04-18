@@ -4,7 +4,6 @@ import { Grid, Paper } from "@material-ui/core";
 import { Todolist } from "./todolist/Todolist";
 import { AddItemForm } from "../../components/AddItemForm/AddItemForm";
 import { fetchTodolistsTC } from "./todolists-reducer";
-import { useAppDispatch } from "../../app/store";
 
 type TodolistsListProps = {
   demo?: boolean;
@@ -17,9 +16,8 @@ export const TodolistsList: FC<TodolistsListProps> = ({ demo = false }) => {
     removeTodolist,
     onChangeTodolistTitle,
     addTodolist,
+    dispatch,
   } = useTodolistsList();
-
-  const dispatch = useAppDispatch();
 
   const mappedTodolists = todolists.map((tl) => {
     return (

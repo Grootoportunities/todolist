@@ -45,5 +45,6 @@ export const useTodolistsList = () => {
     removeTodolist,
     onChangeTodolistTitle,
     addTodolist,
+    dispatch,
   };
 };

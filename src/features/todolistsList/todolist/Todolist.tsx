@@ -6,7 +6,6 @@ import { Delete } from "@material-ui/icons";
 import { Task } from "./task/Task";
 import { useTodolist } from "./hooks/useTodolist";
 import { FilterValuesType, TodolistDomainType } from "../todolists-reducer";
-import { useAppDispatch } from "../../../app/store";
 import { fetchTasksTC } from "../tasks-reducer";
 import { StatusesType } from "../../../app/app-reducer";
 
@@ -35,13 +34,13 @@ export const Todolist: FC<TodolistPropsType> = memo(
     changeTodolistTitle,
     demo = false,
   }) => {
-    const dispatch = useAppDispatch();
     const {
       tasks,
       onTsarClickHandler,
       removeTodolistHandler,
       addTask,
       changeTodolistTitleHandler,
+      dispatch,
     } = useTodolist(
       // todolistId,
       // filter,
@@ -52,7 +51,14 @@ export const Todolist: FC<TodolistPropsType> = memo(
     );
 
     const mappedTasks = tasks.map((item) => {
-      return <Task key={item.id} task={item} todolistId={todolist.id} />;
+      return (
+        <Task
+          disabled={todolist.entityStatus === StatusesType.LOADING}
+          key={item.id}
+          task={item}
+          todolistId={todolist.id}
+        />
+      );
     });
 
     useEffect(() => {
@@ -84,6 +90,7 @@ export const Todolist: FC<TodolistPropsType> = memo(
         <div>
           <Button
             variant={todolist.filter == "all" ? "contained" : "text"}
+            disabled={todolist.entityStatus === StatusesType.LOADING}
             onClick={() => onTsarClickHandler("all")}
           >
             All
@@ -91,6 +98,7 @@ export const Todolist: FC<TodolistPropsType> = memo(
           <Button
             color={"secondary"}
             variant={todolist.filter == "active" ? "contained" : "text"}
+            disabled={todolist.entityStatus === StatusesType.LOADING}
             onClick={() => onTsarClickHandler("active")}
           >
             Active
@@ -98,6 +106,7 @@ export const Todolist: FC<TodolistPropsType> = memo(
           <Button
             color={"primary"}
             variant={todolist.filter == "completed" ? "contained" : "text"}
+            disabled={todolist.entityStatus === StatusesType.LOADING}
             onClick={() => onTsarClickHandler("completed")}
           >
             Completed

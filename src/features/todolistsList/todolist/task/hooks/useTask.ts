@@ -1,9 +1,14 @@
-import { ChangeEvent, useCallback } from "react";
+import { ChangeEvent, useCallback, useMemo } from "react";
 import { deleteTaskTC, updateTaskTC } from "../../../tasks-reducer";
 import { TaskStatuses, TaskType } from "../../../../../api/tasksAPI";
 import { useAppDispatch } from "../../../../../app/store";
+import { StatusesType } from "../../../../../app/app-reducer";
 
-export const useTask = (task: TaskType, todolistId: string) => {
+export const useTask = (
+  task: TaskType,
+  todolistId: string,
+  disabled: boolean,
+) => {
   const dispatch = useAppDispatch();
 
   const onChangeStatusHandler = useCallback(
@@ -29,5 +34,15 @@ export const useTask = (task: TaskType, todolistId: string) => {
     [todolistId, task.id],
   );
 
-  return { onChangeStatusHandler, onChangeTitleHandler, onDeleteHandler };
+  const disableCondition = useMemo(
+    () => disabled || task.entityStatus === StatusesType.LOADING,
+    [disabled, task.entityStatus],
+  );
+
+  return {
+    onChangeStatusHandler,
+    onChangeTitleHandler,
+    onDeleteHandler,
+    disableCondition,
+  };
 };

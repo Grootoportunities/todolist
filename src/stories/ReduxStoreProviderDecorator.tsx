@@ -46,6 +46,7 @@ const initialGlobalState: RootStateType = {
         order: 0,
         priority: TaskPriorities.Low,
         description: "New Task",
+        entityStatus: StatusesType.IDLE,
       },
       {
         todoListId: "todolistId1",
@@ -58,6 +59,7 @@ const initialGlobalState: RootStateType = {
         order: 0,
         priority: TaskPriorities.Low,
         description: "New Task",
+        entityStatus: StatusesType.IDLE,
       },
     ],
     ["todolistId2"]: [
@@ -72,6 +74,7 @@ const initialGlobalState: RootStateType = {
         order: 0,
         priority: TaskPriorities.Low,
         description: "New Task",
+        entityStatus: StatusesType.IDLE,
       },
       {
         todoListId: "todolistId2",
@@ -84,6 +87,7 @@ const initialGlobalState: RootStateType = {
         order: 0,
         priority: TaskPriorities.Low,
         description: "React Book",
+        entityStatus: StatusesType.LOADING,
       },
     ],
   },
