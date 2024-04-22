@@ -2,7 +2,7 @@ import axios from "axios";
 import { StatusesType } from "../app/app-reducer";
 
 const instance = axios.create({
-  baseURL: "https://social-network.samuraijs.com/api/1.1//todo-lists/",
+  baseURL: "https://social-network.samuraijs.com/api/1.1/todo-lists/",
   withCredentials: true,
   headers: { "API-KEY": "0ec2bc57-903d-45af-82a6-939602d241d5" },
 });

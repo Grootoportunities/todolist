@@ -9,14 +9,8 @@ import {
   TaskType,
   UpdateTaskModelType,
 } from "../../api/tasksAPI";
-import { Dispatch } from "redux";
-import { RootStateType } from "../../app/store";
-import {
-  AppActionsType,
-  setAppStatusAC,
-  SetAppStatusAT,
-  StatusesType,
-} from "../../app/app-reducer";
+import { AppThunksType, RootStateType } from "../../app/store";
+import { setAppStatusAC, StatusesType } from "../../app/app-reducer";
 import {
   handleServerAppError,
   handleServerNetworkError,
@@ -26,7 +20,7 @@ const initialState: TasksStateType = {};
 
 export const tasksReducer = (
   state: TasksStateType = initialState,
-  action: ActionsType,
+  action: TasksActionsType,
 ): TasksStateType => {
   switch (action.type) {
     case "REMOVE-TASK":
@@ -104,8 +98,8 @@ export const setTaskEntityStatusAC = (
 //THUNKS
 
 export const fetchTasksTC =
-  (todolistID: string) =>
-  (dispatch: Dispatch<ActionsType | SetAppStatusAT>) => {
+  (todolistID: string): AppThunksType =>
+  (dispatch) => {
     dispatch(setAppStatusAC(StatusesType.LOADING));
 
     tasksAPI
@@ -118,7 +112,8 @@ export const fetchTasksTC =
   };
 
 export const deleteTaskTC =
-  (todolistID: string, taskID: string) => (dispatch: ThunkDispatchType) => {
+  (todolistID: string, taskID: string): AppThunksType =>
+  (dispatch) => {
     dispatch(setAppStatusAC(StatusesType.LOADING));
     dispatch(setTaskEntityStatusAC(todolistID, taskID, StatusesType.LOADING));
 
@@ -146,7 +141,8 @@ export const deleteTaskTC =
   };
 
 export const createTaskTC =
-  (todolistID: string, title: string) => (dispatch: ThunkDispatchType) => {
+  (todolistID: string, title: string): AppThunksType =>
+  (dispatch) => {
     dispatch(setAppStatusAC(StatusesType.LOADING));
 
     tasksAPI
@@ -172,8 +168,8 @@ export const updateTaskTC =
       Partial<UpdateTaskModelType>,
       "startDate" | "description" | "deadline" | "priority"
     >,
-  ) =>
-  (dispatch: ThunkDispatchType, getState: () => RootStateType) => {
+  ): AppThunksType =>
+  (dispatch, getState: () => RootStateType) => {
     const task = getState().tasks[todolistID].find((t) => t.id === taskID);
 
     if (!task) {
@@ -224,9 +220,7 @@ export const updateTaskTC =
 
 //TYPES
 
-type ThunkDispatchType = Dispatch<ActionsType | AppActionsType>;
-
-export type ActionsType =
+export type TasksActionsType =
   | ReturnType<typeof changeTaskAC>
   | ReturnType<typeof setTasksAC>
   | ReturnType<typeof setTodolistsAC>
