@@ -1,8 +1,8 @@
 import { ChangeEvent, useCallback, useMemo } from "react";
 import { deleteTaskTC, updateTaskTC } from "../../../tasks-reducer";
 import { TaskStatuses, TaskType } from "../../../../../api/tasksAPI";
-import { useAppDispatch } from "../../../../../app/store";
 import { StatusesType } from "../../../../../app/app-reducer";
+import { useAppDispatch } from "../../../../../app/hooks";
 
 export const useTask = (
   task: TaskType,

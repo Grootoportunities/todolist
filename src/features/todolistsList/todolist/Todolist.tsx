@@ -10,10 +10,6 @@ import { fetchTasksTC } from "../tasks-reducer";
 import { StatusesType } from "../../../app/app-reducer";
 
 type TodolistPropsType = {
-  // todolistId: string;
-  // hat: string;
-  // filter: FilterValuesType;
-
   todolist: TodolistDomainType;
 
   demo?: boolean;
@@ -25,9 +21,6 @@ type TodolistPropsType = {
 
 export const Todolist: FC<TodolistPropsType> = memo(
   ({
-    // todolistId,
-    // hat,
-    // filter,
     todolist,
     changeFilter,
     removeTodolist,
@@ -42,8 +35,6 @@ export const Todolist: FC<TodolistPropsType> = memo(
       changeTodolistTitleHandler,
       dispatch,
     } = useTodolist(
-      // todolistId,
-      // filter,
       todolist,
       changeFilter,
       removeTodolist,

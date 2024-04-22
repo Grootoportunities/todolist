@@ -1,21 +1,16 @@
-import { useSelector } from "react-redux";
-import { RootStateType, useAppDispatch } from "../../../../app/store";
 import { useCallback } from "react";
 import { createTaskTC } from "../../tasks-reducer";
 import { FilterValuesType, TodolistDomainType } from "../../todolists-reducer";
-import { TaskStatuses, TaskType } from "../../../../api/tasksAPI";
+import { TaskStatuses } from "../../../../api/tasksAPI";
+import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
 
 export const useTodolist = (
-  // todolistId: string,
-  // filter: FilterValuesType,
   todolist: TodolistDomainType,
   onChangeFilter: (value: FilterValuesType, todolistId: string) => void,
   onRemoveTodolist: (todolistId: string) => void,
   onChangeTodolistTitle: (newTitle: string, todolistId: string) => void,
 ) => {
-  let tasks = useSelector<RootStateType, TaskType[]>(
-    (state) => state.tasks[todolist.id],
-  );
+  let tasks = useAppSelector((state) => state.tasks[todolist.id]);
 
   if (todolist.filter === "completed") {
     tasks = tasks.filter((item) => item.status === TaskStatuses.Completed);

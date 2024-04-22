@@ -7,18 +7,15 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Menu from "@material-ui/icons/Menu";
-import { RootStateType } from "./store";
 import { TodolistsList } from "../features/todolistsList/TodolistsList";
 import { ErrorSnackbar } from "../components/ErrorSnackBar/ErrorSnackbar";
-import { useSelector } from "react-redux";
 import { StatusesType } from "./app-reducer";
+import { useAppSelector } from "./hooks";
 
 type AppProps = { demo?: boolean };
 
 function App({ demo = false }: AppProps) {
-  const status = useSelector<RootStateType, StatusesType>(
-    (state) => state.app.status,
-  );
+  const status = useAppSelector((state) => state.app.status);
 
   return (
     <div className="App">
