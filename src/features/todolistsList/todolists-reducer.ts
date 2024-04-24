@@ -151,27 +151,6 @@ export const createTodolistTC =
       .catch((err) => handleServerNetworkError(dispatch, err.message));
   };
 
-// export const createTodolistTC =
-//     (title: string): AppThunksType =>
-//         async (dispatch) => {
-//             dispatch(setAppStatusAC(StatusesType.LOADING));
-//
-//             try {
-//                 const res = await todolistsAPI.createTodolist(title);
-//
-//                 if (res.data.resultCode === 0) {
-//                     dispatch(addTodolistAC(res.data.data.item));
-//                     dispatch(setAppStatusAC(StatusesType.SUCCEEDED));
-//
-//                     return;
-//                 }
-//
-//                 handleServerAppError(dispatch, res.data);
-//             } catch (err) {
-//                 handleServerNetworkError(dispatch, err.message);
-//             }
-//         };
-
 export const updateTodolistTitleTC =
   (ID: string, title: string): AppThunksType =>
   (dispatch) => {

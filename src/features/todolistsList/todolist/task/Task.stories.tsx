@@ -1,6 +1,6 @@
 import { Task } from "./Task";
 import { ReduxStoreProviderDecorator } from "../../../../stories/ReduxStoreProviderDecorator";
-import { useAppSelector } from "../../../../app/hooks";
+import { useAppSelector } from "../../../../app/hooks/hooks";
 
 export default {
   title: "Task",

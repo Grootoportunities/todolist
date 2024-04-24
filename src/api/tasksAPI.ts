@@ -74,6 +74,6 @@ type GetTasksResponseType = {
 export type CUDResponseType<D = {}> = {
   data: D;
   messages: string[];
-  fieldsErrors: string[];
+  // fieldsErrors: string[];
   resultCode: number;
 };

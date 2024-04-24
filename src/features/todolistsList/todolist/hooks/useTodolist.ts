@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { createTaskTC } from "../../tasks-reducer";
 import { FilterValuesType, TodolistDomainType } from "../../todolists-reducer";
 import { TaskStatuses } from "../../../../api/tasksAPI";
-import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../app/hooks/hooks";
 
 export const useTodolist = (
   todolist: TodolistDomainType,

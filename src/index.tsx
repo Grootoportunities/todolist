@@ -4,13 +4,31 @@ import "./index.css";
 import App from "./app/App";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Login } from "./features/login/Login";
+
+const PATH = {
+  APP: "/",
+  LOGIN: "/login",
+};
+
+const router = createBrowserRouter([
+  {
+    path: PATH.APP,
+    element: <App />,
+  },
+  {
+    path: PATH.LOGIN,
+    element: <Login />,
+  },
+]);
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
 );
 root.render(
   <Provider store={store}>
-    <App />
+    <RouterProvider router={router} />
   </Provider>,
 );
 

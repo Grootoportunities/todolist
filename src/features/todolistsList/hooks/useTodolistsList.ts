@@ -6,7 +6,7 @@ import {
   FilterValuesType,
   updateTodolistTitleTC,
 } from "../todolists-reducer";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks/hooks";
 
 export const useTodolistsList = () => {
   const dispatch = useAppDispatch();

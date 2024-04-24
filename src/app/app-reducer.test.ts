@@ -12,6 +12,7 @@ beforeEach(() => {
   startState = {
     status: StatusesType.IDLE,
     error: null,
+    isInit: false,
   };
 });
 

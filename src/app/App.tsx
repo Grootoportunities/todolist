@@ -10,12 +10,31 @@ import Menu from "@material-ui/icons/Menu";
 import { TodolistsList } from "../features/todolistsList/TodolistsList";
 import { ErrorSnackbar } from "../components/ErrorSnackBar/ErrorSnackbar";
 import { StatusesType } from "./app-reducer";
-import { useAppSelector } from "./hooks";
+import { Navigate } from "react-router-dom";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
+import { useApp } from "./hooks/useApp";
 
 type AppProps = { demo?: boolean };
 
 function App({ demo = false }: AppProps) {
-  const status = useAppSelector((state) => state.app.status);
+  const { status, isLoggedIn, isInit, onLogoutHandler } = useApp();
+
+  if (!isInit) {
+    return (
+      <Grid
+        container
+        justifyContent={"center"}
+        height={"100vh"}
+        alignItems={"center"}
+      >
+        <CircularProgress />
+      </Grid>
+    );
+  }
+
+  if (!isLoggedIn) return <Navigate to={"/login"} />;
 
   return (
     <div className="App">
@@ -25,6 +44,9 @@ function App({ demo = false }: AppProps) {
             <Menu />
           </IconButton>
           <Typography variant="h6">Todolists</Typography>
+          <Button variant={"contained"} onClick={onLogoutHandler}>
+            Logout
+          </Button>
         </Toolbar>
         {status === StatusesType.LOADING && <LinearProgress />}
       </AppBar>
