@@ -1,22 +1,19 @@
 import {
-  addTaskAC,
-  changeTaskAC,
-  removeTaskAC,
-  setTaskEntityStatusAC,
-  setTasksAC,
+  addTask,
+  changeTask,
+  removeTask,
+  setTaskEntityStatus,
+  setTasks,
   tasksReducer,
 } from "./tasks-reducer";
-import {
-  addTodolistAC,
-  removeTodolistAC,
-  setTodolistsAC,
-} from "./todolists-reducer";
+
 import {
   TaskPriorities,
   TasksStateType,
   TaskStatuses,
 } from "../../api/tasksAPI";
 import { StatusesType } from "../../app/app-reducer";
+import { addTodolist, removeTodolist, setTodolists } from "./todolists-reducer";
 
 let startState: TasksStateType;
 
@@ -108,7 +105,10 @@ beforeEach(() => {
 });
 
 test("Task should be de" + "leted correctly", () => {
-  const endState = tasksReducer(startState, removeTaskAC("todolistID1", "2"));
+  const endState = tasksReducer(
+    startState,
+    removeTask({ todolistID: "todolistID1", taskID: "2" }),
+  );
 
   expect(endState["todolistID1"].length).toBe(2);
   expect(endState["todolistID2"].length).toBe(3);
@@ -118,7 +118,7 @@ test("Task should be de" + "leted correctly", () => {
 test("Task should be added correctly", () => {
   const endState = tasksReducer(
     startState,
-    addTaskAC(startState["todolistID2"][2]),
+    addTask(startState["todolistID2"][2]),
   );
 
   expect(endState["todolistID1"].length).toBe(4);
@@ -129,13 +129,17 @@ test("Task should be added correctly", () => {
 test("Task isDone should change correctly", () => {
   const endState = tasksReducer(
     startState,
-    changeTaskAC("todolistID2", "3", {
-      title: "",
-      status: TaskStatuses.Completed,
-      description: "",
-      deadline: "",
-      priority: TaskPriorities.Low,
-      startDate: "",
+    changeTask({
+      todolistID: "todolistID2",
+      taskID: "3",
+      model: {
+        title: "",
+        status: TaskStatuses.Completed,
+        description: "",
+        deadline: "",
+        priority: TaskPriorities.Low,
+        startDate: "",
+      },
     }),
   );
 
@@ -146,13 +150,17 @@ test("Task isDone should change correctly", () => {
 test("Task title should change correctly", () => {
   const endState = tasksReducer(
     startState,
-    changeTaskAC("todolistID2", "3", {
-      title: "New Title",
-      status: TaskStatuses.Completed,
-      description: "",
-      deadline: "",
-      priority: TaskPriorities.Low,
-      startDate: "",
+    changeTask({
+      todolistID: "todolistID2",
+      taskID: "3",
+      model: {
+        title: "New Title",
+        status: TaskStatuses.Completed,
+        description: "",
+        deadline: "",
+        priority: TaskPriorities.Low,
+        startDate: "",
+      },
     }),
   );
 
@@ -163,11 +171,14 @@ test("Task title should change correctly", () => {
 test("New empty array of task should be added when new todolist is added", () => {
   const endState = tasksReducer(
     startState,
-    addTodolistAC({
-      id: "todolistId1",
-      title: "What to learn",
-      order: 0,
-      addedDate: "",
+    addTodolist({
+      todolist: {
+        ...startState["todolistID1"],
+        id: "1",
+        title: "Title",
+        order: 0,
+        addedDate: "",
+      },
     }),
   );
 
@@ -180,7 +191,10 @@ test("New empty array of task should be added when new todolist is added", () =>
 });
 
 test("By deleting todolist, tasks also should be deleted", () => {
-  const endState = tasksReducer(startState, removeTodolistAC("todolistID2"));
+  const endState = tasksReducer(
+    startState,
+    removeTodolist({ todolistID: "todolistID2" }),
+  );
 
   const keys = Object.keys(endState);
 
@@ -189,10 +203,12 @@ test("By deleting todolist, tasks also should be deleted", () => {
 });
 
 test("Empty array should be added when todolists are setted", () => {
-  const action = setTodolistsAC([
-    { id: "1", title: "title1", order: 0, addedDate: "" },
-    { id: "2", title: "title2", order: 0, addedDate: "" },
-  ]);
+  const action = setTodolists({
+    todolists: [
+      { id: "1", title: "title1", order: 0, addedDate: "" },
+      { id: "2", title: "title2", order: 0, addedDate: "" },
+    ],
+  });
 
   const endState = tasksReducer({}, action);
   const keys = Object.keys(endState);
@@ -203,7 +219,10 @@ test("Empty array should be added when todolists are setted", () => {
 });
 
 test("Tasks should be set correctly", () => {
-  const action = setTasksAC("todolistID1", startState["todolistID1"]);
+  const action = setTasks({
+    todolistID: "todolistID1",
+    tasks: startState["todolistID1"],
+  });
 
   const endState = tasksReducer(
     {
@@ -221,11 +240,11 @@ test("Tasks should be set correctly", () => {
 });
 
 test("Task entity status should change", () => {
-  const action = setTaskEntityStatusAC(
-    "todolistId1",
-    "1",
-    StatusesType.LOADING,
-  );
+  const action = setTaskEntityStatus({
+    todolistID: "todolistId1",
+    taskID: "1",
+    status: StatusesType.LOADING,
+  });
 
   const endState = tasksReducer(startState, action);
 

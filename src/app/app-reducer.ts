@@ -1,10 +1,11 @@
-import { AppThunksType } from "./store";
 import { authAPI } from "../api/authAPI";
 import {
   handleServerAppError,
   handleServerNetworkError,
 } from "../utils/error-utils";
-import { setLoginAC } from "../features/login/auth-reducer";
+import { setLogin } from "../features/login/auth-reducer";
+import { Dispatch } from "redux";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export enum StatusesType {
   IDLE = "idle",
@@ -13,55 +14,43 @@ export enum StatusesType {
   FAILED = "failed",
 }
 
-const initialState: AppStateType = {
+const initialState = {
   status: StatusesType.IDLE,
-  error: null,
+  error: null as string | null,
   isInit: false,
 };
 
-export const appReducer = (
-  state: AppStateType = initialState,
-  action: AppActionsType,
-) => {
-  switch (action.type) {
-    case "APP/SET-STATUS":
-      return { ...state, status: action.status };
-    case "APP/SET-ERROR":
-      return { ...state, error: action.error };
-    case "APP/SET-INIT":
-      return { ...state, isInit: action.isInit };
-    default:
-      return state;
-  }
-};
+const slice = createSlice({
+  name: "app",
+  initialState,
+  reducers: {
+    setAppStatus: (state, action: PayloadAction<{ status: StatusesType }>) => {
+      state.status = action.payload.status;
+    },
+    setAppError: (state, action: PayloadAction<{ error: string | null }>) => {
+      state.error = action.payload.error;
+    },
+    setAppInit: (state, action: PayloadAction<{ isInit: boolean }>) => {
+      state.isInit = action.payload.isInit;
+    },
+  },
+});
 
-export const setAppStatusAC = (status: StatusesType) =>
-  ({
-    type: "APP/SET-STATUS",
-    status,
-  }) as const;
-
-export const setAppErorrAC = (error: string | null) =>
-  ({
-    type: "APP/SET-ERROR",
-    error,
-  }) as const;
-
-export const setAppInitAC = (isInit: boolean) =>
-  ({ type: "APP/SET-INIT", isInit }) as const;
+export const appReducer = slice.reducer;
+export const { setAppError, setAppInit, setAppStatus } = slice.actions;
 
 //THUNKS
 
-export const initAppTC = (): AppThunksType => (dispatch) => {
+export const initAppTC = () => (dispatch: Dispatch) => {
   authAPI
     .init()
     .then((res) => {
       if (res.data.resultCode === 0) {
-        dispatch(setLoginAC(true));
+        dispatch(setLogin({ isLoggedIn: true }));
 
         return;
       } else if (res.data.messages[0] === "You are not authorized") {
-        dispatch(setAppStatusAC(StatusesType.FAILED));
+        dispatch(setAppStatus({ status: StatusesType.FAILED }));
 
         return;
       }
@@ -69,19 +58,5 @@ export const initAppTC = (): AppThunksType => (dispatch) => {
       handleServerAppError(dispatch, res.data);
     })
     .catch((err) => handleServerNetworkError(dispatch, err.message))
-    .finally(() => dispatch(setAppInitAC(true)));
+    .finally(() => dispatch(setAppInit({ isInit: true })));
 };
-
-//TYPES
-
-export type AppStateType = {
-  status: StatusesType;
-  error: string | null;
-  isInit: boolean;
-};
-
-export type SetAppStatusAT = ReturnType<typeof setAppStatusAC>;
-export type SetAppErrorAT = ReturnType<typeof setAppErorrAC>;
-export type SetAppInitAT = ReturnType<typeof setAppInitAC>;
-
-export type AppActionsType = SetAppStatusAT | SetAppErrorAT | SetAppInitAT;

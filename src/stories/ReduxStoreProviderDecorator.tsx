@@ -14,6 +14,7 @@ const rootReducer = combineReducers({
   todolists: todolistsReducer,
   app: appReducer,
   login: authReducer,
+  auth: authReducer,
 });
 
 const initialGlobalState: RootStateType = {

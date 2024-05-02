@@ -1,61 +1,54 @@
-import { AppThunksType } from "../../app/store";
 import { authAPI, LoginParamsType } from "../../api/authAPI";
-import { setAppStatusAC, StatusesType } from "../../app/app-reducer";
+import { setAppStatus, StatusesType } from "../../app/app-reducer";
 import {
   handleServerAppError,
   handleServerNetworkError,
 } from "../../utils/error-utils";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Dispatch } from "redux";
 
-const initialState: AuthInitialStateType = { isLoggedIn: false };
+const initialState = { isLoggedIn: false };
 
-export const authReducer = (
-  state: AuthInitialStateType = initialState,
-  action: AuthActionsType,
-): AuthInitialStateType => {
-  switch (action.type) {
-    case "LOGIN/SET-LOGIN":
-      return { ...state, isLoggedIn: action.isLoggedIn };
+const slice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {
+    setLogin: (state, action: PayloadAction<{ isLoggedIn: boolean }>) => {
+      state.isLoggedIn = action.payload.isLoggedIn;
+    },
+  },
+});
 
-    default:
-      return state;
-  }
-};
-
-export const setLoginAC = (isLoggedIn: boolean) =>
-  ({
-    type: "LOGIN/SET-LOGIN",
-    isLoggedIn,
-  }) as const;
+export const authReducer = slice.reducer;
+export const { setLogin } = slice.actions;
 
 // THUNKS
 
-export const setLoginTC =
-  (data: LoginParamsType): AppThunksType =>
-  (dispatch) => {
-    dispatch(setAppStatusAC(StatusesType.LOADING));
-    authAPI
-      .setLogin(data)
-      .then((res) => {
-        if (res.data.resultCode === 0) {
-          dispatch(setLoginAC(true));
-          dispatch(setAppStatusAC(StatusesType.SUCCEEDED));
+export const setLoginTC = (data: LoginParamsType) => (dispatch: Dispatch) => {
+  dispatch(setAppStatus({ status: StatusesType.LOADING }));
+  authAPI
+    .setLogin(data)
+    .then((res) => {
+      if (res.data.resultCode === 0) {
+        dispatch(setLogin({ isLoggedIn: true }));
+        dispatch(setAppStatus({ status: StatusesType.SUCCEEDED }));
 
-          return;
-        }
+        return;
+      }
 
-        handleServerAppError<{ userId?: number }>(dispatch, res.data);
-      })
-      .catch((err) => handleServerNetworkError(dispatch, err.message));
-  };
+      handleServerAppError<{ userId?: number }>(dispatch, res.data);
+    })
+    .catch((err) => handleServerNetworkError(dispatch, err.message));
+};
 
-export const deleteLoginTC = (): AppThunksType => (dispatch) => {
-  dispatch(setAppStatusAC(StatusesType.LOADING));
+export const deleteLoginTC = () => (dispatch: Dispatch) => {
+  dispatch(setAppStatus({ status: StatusesType.LOADING }));
   authAPI
     .deleteLogin()
     .then((res) => {
       if (res.data.resultCode === 0) {
-        dispatch(setLoginAC(false));
-        dispatch(setAppStatusAC(StatusesType.SUCCEEDED));
+        dispatch(setLogin({ isLoggedIn: false }));
+        dispatch(setAppStatus({ status: StatusesType.SUCCEEDED }));
 
         return;
       }
@@ -64,9 +57,3 @@ export const deleteLoginTC = (): AppThunksType => (dispatch) => {
     })
     .catch((err) => handleServerNetworkError(dispatch, err.message));
 };
-
-//TYPES
-
-export type AuthActionsType = ReturnType<typeof setLoginAC>;
-
-type AuthInitialStateType = { isLoggedIn: boolean };

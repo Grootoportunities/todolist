@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import {
-  changeTodolistFilterAC,
+  changeTodolistFilter,
   createTodolistTC,
   deleteTodolistTC,
   FilterValuesType,
@@ -15,7 +15,9 @@ export const useTodolistsList = () => {
 
   const changeFilter = useCallback(
     (value: FilterValuesType, todolistId: string) =>
-      dispatch(changeTodolistFilterAC(todolistId, value)),
+      dispatch(
+        changeTodolistFilter({ todolistID: todolistId, newFilter: value }),
+      ),
     [dispatch],
   );
 
