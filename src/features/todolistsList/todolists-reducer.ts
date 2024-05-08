@@ -6,6 +6,7 @@ import {
 } from "../../utils/error-utils";
 import { Dispatch } from "redux";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { clearTasksAndTodolists } from "../../common/actions/common.actions";
 
 const initialState: TodolistDomainType[] = [];
 
@@ -69,6 +70,9 @@ const slice = createSlice({
       );
       if (index !== -1) state[index].entityStatus = action.payload.status;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(clearTasksAndTodolists, () => []);
   },
 });
 

@@ -118,15 +118,29 @@ test("Task should be de" + "leted correctly", () => {
 test("Task should be added correctly", () => {
   const endState = tasksReducer(
     startState,
-    addTask(startState["todolistID2"][2]),
+    addTask({
+      id: "4",
+      title: "New Task",
+      status: TaskStatuses.New,
+      description: "Task",
+      todoListId: "todolistID2",
+      order: 0,
+      priority: TaskPriorities.Low,
+      startDate: "",
+      deadline: "",
+      addedDate: "",
+      entityStatus: StatusesType.IDLE,
+    }),
   );
 
-  expect(endState["todolistID1"].length).toBe(4);
-  expect(endState["todolistID2"].length).toBe(3);
-  expect(endState["todolistID1"][3].title).toBe("New Task");
+  expect(endState["todolistID1"].length).toBe(3);
+  expect(endState["todolistID2"].length).toBe(4);
+  expect(endState["todolistID2"][3].title).toBe("New Task");
 });
 
 test("Task isDone should change correctly", () => {
+  expect(startState["todolistID2"][2].status).toBe(TaskStatuses.New);
+
   const endState = tasksReducer(
     startState,
     changeTask({
@@ -143,8 +157,8 @@ test("Task isDone should change correctly", () => {
     }),
   );
 
-  expect(endState["todolistID2"][2].status).toBeTruthy();
-  expect(endState["todolistID1"][2].status).toBeFalsy();
+  expect(endState["todolistID2"][2].status).toBe(TaskStatuses.Completed);
+  expect(endState["todolistID1"][2].status).toBe(TaskStatuses.Completed);
 });
 
 test("Task title should change correctly", () => {
@@ -233,7 +247,7 @@ test("Tasks should be set correctly", () => {
   );
   const keys = Object.keys(endState);
 
-  expect(keys.length).toBe(1);
+  expect(keys.length).toBe(2);
   expect(endState["todolistID1"][0].title).toBe("Banshee Inisherin");
   expect(endState["todolistID1"][1].title).toBe("Kid of the human");
   expect(endState["todolistID2"]).toStrictEqual([]);
@@ -241,7 +255,7 @@ test("Tasks should be set correctly", () => {
 
 test("Task entity status should change", () => {
   const action = setTaskEntityStatus({
-    todolistID: "todolistId1",
+    todolistID: "todolistID1",
     taskID: "1",
     status: StatusesType.LOADING,
   });

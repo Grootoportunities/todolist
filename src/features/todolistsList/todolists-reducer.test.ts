@@ -55,7 +55,14 @@ test("correct todolist should be added", () => {
 
   const endState = todolistsReducer(
     startState,
-    addTodolist({ todolist: startState[0] }),
+    addTodolist({
+      todolist: {
+        id: "todolistId3",
+        title: newTodolistTitle,
+        order: 0,
+        addedDate: "",
+      },
+    }),
   );
 
   expect(endState.length).toBe(3);
@@ -103,9 +110,9 @@ test("Todolist entity status should be changed", () => {
   expect(startState[0].entityStatus).toBe(StatusesType.IDLE);
 
   const endState = todolistsReducer(
-    [],
+    startState,
     setTodolistEntityStatus({
-      todolistID: startState[0].id,
+      todolistID: todolistId1,
       status: StatusesType.LOADING,
     }),
   );

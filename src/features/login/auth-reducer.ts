@@ -6,6 +6,7 @@ import {
 } from "../../utils/error-utils";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Dispatch } from "redux";
+import { clearTasksAndTodolists } from "../../common/actions/common.actions";
 
 const initialState = { isLoggedIn: false };
 
@@ -31,6 +32,7 @@ export const setLoginTC = (data: LoginParamsType) => (dispatch: Dispatch) => {
     .then((res) => {
       if (res.data.resultCode === 0) {
         dispatch(setLogin({ isLoggedIn: true }));
+        dispatch(clearTasksAndTodolists());
         dispatch(setAppStatus({ status: StatusesType.SUCCEEDED }));
 
         return;
@@ -48,6 +50,7 @@ export const deleteLoginTC = () => (dispatch: Dispatch) => {
     .then((res) => {
       if (res.data.resultCode === 0) {
         dispatch(setLogin({ isLoggedIn: false }));
+
         dispatch(setAppStatus({ status: StatusesType.SUCCEEDED }));
 
         return;

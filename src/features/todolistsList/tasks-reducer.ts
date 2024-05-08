@@ -13,6 +13,7 @@ import {
 import { Dispatch } from "redux";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { addTodolist, removeTodolist, setTodolists } from "./todolists-reducer";
+import { clearTasksAndTodolists } from "../../common/actions/common.actions";
 
 const initialState: TasksStateType = {};
 
@@ -81,7 +82,8 @@ const slice = createSlice({
       })
       .addCase(setTodolists, (state, action) => {
         action.payload.todolists.forEach((tl) => (state[tl.id] = []));
-      }),
+      })
+      .addCase(clearTasksAndTodolists, () => {}),
 });
 
 export const tasksReducer = slice.reducer;
