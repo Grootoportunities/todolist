@@ -24,8 +24,14 @@ export type LoginParamsType = {
   captcha?: string;
 };
 
+export type FieldsErrorsType = {
+  field: string;
+  error: string;
+};
+
 type OperationResultType<T = {}> = {
   resultCode: number;
   messages: string[];
+  fieldsErrors: FieldsErrorsType[];
   data: T;
 };

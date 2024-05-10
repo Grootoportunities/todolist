@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "./hooks";
-import { FC, useCallback, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { initAppTC } from "../app-reducer";
 import { deleteLoginTC } from "../../features/login/auth-reducer";
 

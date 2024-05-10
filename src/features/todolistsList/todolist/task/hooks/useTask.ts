@@ -5,38 +5,38 @@ import { StatusesType } from "../../../../../app/app-reducer";
 import { useAppDispatch } from "../../../../../app/hooks/hooks";
 
 export const useTask = (
-  task: TaskType,
-  todolistId: string,
-  disabled: boolean,
+    task: TaskType,
+    todolistID: string,
+    disabled: boolean,
 ) => {
   const dispatch = useAppDispatch();
 
   const onChangeStatusHandler = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) =>
-      dispatch(
-        updateTaskTC(todolistId, task.id, {
-          status: e.currentTarget.checked
-            ? TaskStatuses.Completed
-            : TaskStatuses.New,
-        }),
-      ),
-    [todolistId, task.id],
+      (e: ChangeEvent<HTMLInputElement>) =>
+          dispatch(
+              updateTaskTC(todolistID, task.id, {
+                status: e.currentTarget.checked
+                    ? TaskStatuses.Completed
+                    : TaskStatuses.New,
+              }),
+          ),
+      [todolistID, task.id],
   );
 
   const onChangeTitleHandler = useCallback(
-    (newTitle: string) =>
-      dispatch(updateTaskTC(todolistId, task.id, { title: newTitle })),
-    [todolistId, task.id],
+      (newTitle: string) =>
+          dispatch(updateTaskTC(todolistID, task.id, { title: newTitle })),
+      [todolistID, task.id],
   );
 
   const onDeleteHandler = useCallback(
-    () => dispatch(deleteTaskTC(todolistId, task.id)),
-    [todolistId, task.id],
+      () => dispatch(deleteTaskTC({ todolistID, taskID: task.id })),
+      [todolistID, task.id],
   );
 
   const disableCondition = useMemo(
-    () => disabled || task.entityStatus === StatusesType.LOADING,
-    [disabled, task.entityStatus],
+      () => disabled || task.entityStatus === StatusesType.LOADING,
+      [disabled, task.entityStatus],
   );
 
   return {

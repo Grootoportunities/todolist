@@ -1,23 +1,24 @@
-import { authAPI, LoginParamsType } from "../../api/authAPI";
+import { authAPI, FieldsErrorsType, LoginParamsType } from "../../api/authAPI";
 import { setAppStatus, StatusesType } from "../../app/app-reducer";
-import {
-  handleServerAppError,
-  handleServerNetworkError,
-} from "../../utils/error-utils";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { handleServerAppError } from "../../utils/error-utils";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Dispatch } from "redux";
 import { clearTasksAndTodolists } from "../../common/actions/common.actions";
-
-const initialState = { isLoggedIn: false };
+import { handleServerNetworkError } from "../../common/utils/handleServerNetworkError";
+import { AppDispatchType } from "../../app/store";
 
 const slice = createSlice({
   name: "auth",
-  initialState,
+  initialState: { isLoggedIn: false },
   reducers: {
     setLogin: (state, action: PayloadAction<{ isLoggedIn: boolean }>) => {
       state.isLoggedIn = action.payload.isLoggedIn;
     },
   },
+  extraReducers: (builder) =>
+    builder.addCase(setLoginTC.fulfilled, (state, action) => {
+      state.isLoggedIn = action.payload.isLoggedIn;
+    }),
 });
 
 export const authReducer = slice.reducer;
@@ -25,23 +26,55 @@ export const { setLogin } = slice.actions;
 
 // THUNKS
 
-export const setLoginTC = (data: LoginParamsType) => (dispatch: Dispatch) => {
+export const setLoginTC = createAsyncThunk<
+  { isLoggedIn: boolean },
+  LoginParamsType,
+  { rejectValue: { errors: string[]; fieldsErrors: FieldsErrorsType[] } | null }
+  // { dispatch: AppDispatchType; state: RootStateType; rejectValue: null }
+>(`auth/setLoginTC`, async (data, thunkAPI) => {
+  const dispatch = thunkAPI.dispatch as AppDispatchType;
+  const rejectWithValue = thunkAPI.rejectWithValue;
+
   dispatch(setAppStatus({ status: StatusesType.LOADING }));
-  authAPI
-    .setLogin(data)
-    .then((res) => {
-      if (res.data.resultCode === 0) {
-        dispatch(setLogin({ isLoggedIn: true }));
-        dispatch(clearTasksAndTodolists());
-        dispatch(setAppStatus({ status: StatusesType.SUCCEEDED }));
 
-        return;
-      }
+  try {
+    const res = await authAPI.setLogin(data);
+    debugger;
+    if (res.data.resultCode === 0) {
+      // dispatch(setLogin({ isLoggedIn: true }));
+      dispatch(setAppStatus({ status: StatusesType.SUCCEEDED }));
 
-      handleServerAppError<{ userId?: number }>(dispatch, res.data);
-    })
-    .catch((err) => handleServerNetworkError(dispatch, err.message));
-};
+      return { isLoggedIn: true };
+    }
+
+    handleServerAppError<{ userId?: number }>(dispatch, res.data);
+    return rejectWithValue({
+      errors: res.data.messages,
+      fieldsErrors: res.data.fieldsErrors,
+    });
+  } catch (err) {
+    handleServerNetworkError(err, dispatch);
+    return rejectWithValue(null);
+  }
+});
+
+// export const setLoginTC = (data: LoginParamsType) => (dispatch: Dispatch) => {
+//   dispatch(setAppStatus({ status: StatusesType.LOADING }));
+//   authAPI
+//     .setLogin(data)
+//     .then((res) => {
+//       if (res.data.resultCode === 0) {
+//         dispatch(setLogin({ isLoggedIn: true }));
+//         dispatch(clearTasksAndTodolists());
+//         dispatch(setAppStatus({ status: StatusesType.SUCCEEDED }));
+//
+//         return;
+//       }
+//
+//       handleServerAppError<{ userId?: number }>(dispatch, res.data);
+//     })
+//     .catch((err) => handleServerNetworkError(err, dispatch));
+// };
 
 export const deleteLoginTC = () => (dispatch: Dispatch) => {
   dispatch(setAppStatus({ status: StatusesType.LOADING }));
@@ -50,7 +83,7 @@ export const deleteLoginTC = () => (dispatch: Dispatch) => {
     .then((res) => {
       if (res.data.resultCode === 0) {
         dispatch(setLogin({ isLoggedIn: false }));
-
+        dispatch(clearTasksAndTodolists());
         dispatch(setAppStatus({ status: StatusesType.SUCCEEDED }));
 
         return;
@@ -58,5 +91,5 @@ export const deleteLoginTC = () => (dispatch: Dispatch) => {
 
       handleServerAppError(dispatch, res.data);
     })
-    .catch((err) => handleServerNetworkError(dispatch, err.message));
+    .catch((err) => handleServerNetworkError(err, dispatch));
 };

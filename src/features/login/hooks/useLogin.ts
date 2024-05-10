@@ -20,7 +20,15 @@ export const useLogin = () => {
       password: "",
       rememberMe: false,
     },
-    onSubmit: (values) => dispatch(setLoginTC(values)),
+    onSubmit: async (values, formikHelpers) => {
+      const action = await dispatch(setLoginTC(values));
+      if (setLoginTC.rejected.match(action)) {
+        if (action.payload?.fieldsErrors.length) {
+          const error = action.payload?.fieldsErrors[0];
+          formikHelpers.setFieldError(error?.field, error?.error);
+        }
+      }
+    },
   });
 
   useEffect(() => dispatch(initAppTC()), []);
