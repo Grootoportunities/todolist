@@ -27,8 +27,8 @@ export const useTodolistsList = () => {
   );
 
   const onChangeTodolistTitle = useCallback(
-    (newTitle: string, todolistId: string) =>
-      dispatch(updateTodolistTitleTC(todolistId, newTitle)),
+    (newTitle: string, todolistID: string) =>
+      dispatch(updateTodolistTitleTC({ todolistID, title: newTitle })),
     [dispatch],
   );
 

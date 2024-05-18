@@ -28,7 +28,8 @@ export const useTodolist = (
   const removeTodolistHandler = () => onRemoveTodolist(todolist.id);
 
   const addTask = useCallback(
-    (title: string) => dispatch(createTaskTC(todolist.id, title)),
+    (title: string) =>
+      dispatch(createTaskTC({ todolistID: todolist.id, title })),
     [dispatch, todolist.id], //dispatch(addTaskAC(todolistId, title)),
   );
 

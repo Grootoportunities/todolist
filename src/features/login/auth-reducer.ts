@@ -1,8 +1,7 @@
 import { authAPI, FieldsErrorsType, LoginParamsType } from "../../api/authAPI";
-import { setAppStatus, StatusesType } from "../../app/app-reducer";
+import { setAppInit, setAppStatus, StatusesType } from "../../app/app-reducer";
 import { handleServerAppError } from "../../utils/error-utils";
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Dispatch } from "redux";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { clearTasksAndTodolists } from "../../common/actions/common.actions";
 import { handleServerNetworkError } from "../../common/utils/handleServerNetworkError";
 import { AppDispatchType } from "../../app/store";
@@ -10,27 +9,57 @@ import { AppDispatchType } from "../../app/store";
 const slice = createSlice({
   name: "auth",
   initialState: { isLoggedIn: false },
-  reducers: {
-    setLogin: (state, action: PayloadAction<{ isLoggedIn: boolean }>) => {
-      state.isLoggedIn = action.payload.isLoggedIn;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) =>
-    builder.addCase(setLoginTC.fulfilled, (state, action) => {
-      state.isLoggedIn = action.payload.isLoggedIn;
-    }),
+    builder
+      .addCase(setLoginTC.fulfilled, (state, action) => {
+        state.isLoggedIn = action.payload;
+      })
+      .addCase(deleteLoginTC.fulfilled, (state, action) => {
+        state.isLoggedIn = action.payload;
+      })
+      .addCase(initAppTC.fulfilled, (state, action) => {
+        state.isLoggedIn = action.payload;
+      }),
 });
-
-export const authReducer = slice.reducer;
-export const { setLogin } = slice.actions;
 
 // THUNKS
 
+export const initAppTC = createAsyncThunk<
+  boolean,
+  undefined,
+  { rejectValue: { errors: string[]; fieldsErrors: FieldsErrorsType[] } | null }
+>("app/initAppTC", async (_, thunkAPI) => {
+  const dispatch = thunkAPI.dispatch as AppDispatchType;
+  const rejectWithValue = thunkAPI.rejectWithValue;
+
+  try {
+    const res = await authAPI.init();
+    if (res.data.resultCode === 0) {
+      return true;
+    } else if (res.data.messages[0] === "You are not authorized") {
+      dispatch(setAppStatus({ status: StatusesType.FAILED }));
+
+      return rejectWithValue(null);
+    }
+
+    handleServerAppError(dispatch, res.data);
+    return rejectWithValue({
+      errors: res.data.messages,
+      fieldsErrors: res.data.fieldsErrors,
+    });
+  } catch (err) {
+    handleServerNetworkError(err, dispatch);
+    return rejectWithValue(null);
+  } finally {
+    dispatch(setAppInit({ isInit: true }));
+  }
+});
+
 export const setLoginTC = createAsyncThunk<
-  { isLoggedIn: boolean },
+  boolean,
   LoginParamsType,
   { rejectValue: { errors: string[]; fieldsErrors: FieldsErrorsType[] } | null }
-  // { dispatch: AppDispatchType; state: RootStateType; rejectValue: null }
 >(`auth/setLoginTC`, async (data, thunkAPI) => {
   const dispatch = thunkAPI.dispatch as AppDispatchType;
   const rejectWithValue = thunkAPI.rejectWithValue;
@@ -41,10 +70,9 @@ export const setLoginTC = createAsyncThunk<
     const res = await authAPI.setLogin(data);
     debugger;
     if (res.data.resultCode === 0) {
-      // dispatch(setLogin({ isLoggedIn: true }));
       dispatch(setAppStatus({ status: StatusesType.SUCCEEDED }));
 
-      return { isLoggedIn: true };
+      return true;
     }
 
     handleServerAppError<{ userId?: number }>(dispatch, res.data);
@@ -58,38 +86,34 @@ export const setLoginTC = createAsyncThunk<
   }
 });
 
-// export const setLoginTC = (data: LoginParamsType) => (dispatch: Dispatch) => {
-//   dispatch(setAppStatus({ status: StatusesType.LOADING }));
-//   authAPI
-//     .setLogin(data)
-//     .then((res) => {
-//       if (res.data.resultCode === 0) {
-//         dispatch(setLogin({ isLoggedIn: true }));
-//         dispatch(clearTasksAndTodolists());
-//         dispatch(setAppStatus({ status: StatusesType.SUCCEEDED }));
-//
-//         return;
-//       }
-//
-//       handleServerAppError<{ userId?: number }>(dispatch, res.data);
-//     })
-//     .catch((err) => handleServerNetworkError(err, dispatch));
-// };
+export const deleteLoginTC = createAsyncThunk<
+  boolean,
+  undefined,
+  { rejectValue: { errors: string[]; fieldsErrors: FieldsErrorsType[] } | null }
+>("auth/deleteLoginTC", async (_, thunkAPI) => {
+  const dispatch = thunkAPI.dispatch as AppDispatchType;
+  const rejectWithValue = thunkAPI.rejectWithValue;
 
-export const deleteLoginTC = () => (dispatch: Dispatch) => {
   dispatch(setAppStatus({ status: StatusesType.LOADING }));
-  authAPI
-    .deleteLogin()
-    .then((res) => {
-      if (res.data.resultCode === 0) {
-        dispatch(setLogin({ isLoggedIn: false }));
-        dispatch(clearTasksAndTodolists());
-        dispatch(setAppStatus({ status: StatusesType.SUCCEEDED }));
 
-        return;
-      }
+  try {
+    const res = await authAPI.deleteLogin();
+    if (res.data.resultCode === 0) {
+      dispatch(clearTasksAndTodolists());
+      dispatch(setAppStatus({ status: StatusesType.SUCCEEDED }));
 
-      handleServerAppError(dispatch, res.data);
-    })
-    .catch((err) => handleServerNetworkError(err, dispatch));
-};
+      return false;
+    }
+
+    handleServerAppError(dispatch, res.data);
+    return rejectWithValue({
+      errors: res.data.messages,
+      fieldsErrors: res.data.fieldsErrors,
+    });
+  } catch (err) {
+    handleServerNetworkError(err, dispatch);
+    return rejectWithValue(null);
+  }
+});
+
+export const authReducer = slice.reducer;

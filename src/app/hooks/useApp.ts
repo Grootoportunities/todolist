@@ -1,7 +1,6 @@
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { useCallback, useEffect } from "react";
-import { initAppTC } from "../app-reducer";
-import { deleteLoginTC } from "../../features/login/auth-reducer";
+import { deleteLoginTC, initAppTC } from "../../features/login/auth-reducer";
 
 export const useApp = () => {
   const status = useAppSelector((state) => state.app.status);

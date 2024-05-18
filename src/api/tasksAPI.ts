@@ -1,5 +1,6 @@
 import axios from "axios";
 import { StatusesType } from "../app/app-reducer";
+import { FieldsErrorsType } from "./authAPI";
 
 const instance = axios.create({
   baseURL: "https://social-network.samuraijs.com/api/1.1/todo-lists/",
@@ -44,6 +45,7 @@ export enum TaskPriorities {
   Urgently,
   Later,
 }
+
 export type TaskType = {
   id: string;
   title: string;
@@ -75,5 +77,6 @@ export type CUDResponseType<D = {}> = {
   data: D;
   messages: string[];
   // fieldsErrors: string[];
+  fieldsErrors: FieldsErrorsType[];
   resultCode: number;
 };

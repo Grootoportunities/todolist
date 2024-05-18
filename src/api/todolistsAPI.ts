@@ -1,4 +1,5 @@
 import axios from "axios";
+import { FieldsErrorsType } from "./authAPI";
 
 const instance = axios.create({
   baseURL: "https://social-network.samuraijs.com/api/1.1/todo-lists",
@@ -31,6 +32,6 @@ export type TodolistType = {
 type ResponseType<D = {}> = {
   data: D;
   messages: string[];
-  fieldsErrors: string[];
+  fieldsErrors: FieldsErrorsType[];
   resultCode: number;
 };

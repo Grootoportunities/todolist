@@ -1,8 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../../../app/hooks/hooks";
 import { useFormik } from "formik";
-import { setLoginTC } from "../auth-reducer";
+import { initAppTC, setLoginTC } from "../auth-reducer";
 import { useEffect } from "react";
-import { initAppTC } from "../../../app/app-reducer";
 
 export const useLogin = () => {
   const dispatch = useAppDispatch();
@@ -31,7 +30,9 @@ export const useLogin = () => {
     },
   });
 
-  useEffect(() => dispatch(initAppTC()), []);
+  useEffect(() => {
+    dispatch(initAppTC());
+  }, []);
 
   return { isLoggedIn, status, isInit, formik };
 };
