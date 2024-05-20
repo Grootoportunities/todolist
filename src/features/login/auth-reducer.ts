@@ -29,7 +29,7 @@ export const initAppTC = createAsyncThunk<
   boolean,
   undefined,
   { rejectValue: { errors: string[]; fieldsErrors: FieldsErrorsType[] } | null }
->("app/initAppTC", async (_, thunkAPI) => {
+>("auth/initAppTC", async (_, thunkAPI) => {
   const dispatch = thunkAPI.dispatch as AppDispatchType;
   const rejectWithValue = thunkAPI.rejectWithValue;
 

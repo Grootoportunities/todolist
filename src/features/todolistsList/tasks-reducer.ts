@@ -91,9 +91,7 @@ export const fetchTasksTC = createAsyncThunk<
   return { todolistID, tasks: res.data.items };
 });
 
-type DeleteTaskTT = { todolistID: string; taskID: string };
-
-export const deleteTaskTC = createAsyncThunk<DeleteTaskTT, DeleteTaskTT>(
+export const deleteTaskTC = createAsyncThunk<DeleteTaskThunk, DeleteTaskThunk>(
   "tasks/deleteTaskTC",
   async (arg, { dispatch, rejectWithValue }) => {
     dispatch(setAppStatus({ status: StatusesType.LOADING }));
@@ -148,19 +146,13 @@ export const createTaskTC = createAsyncThunk<
 });
 
 export const updateTaskTC = createAsyncThunk<
-  {
-    todolistID: string;
-    taskID: string;
-    model: UpdateTaskModelType;
-  },
-  {
-    todolistID: string;
-    taskID: string;
-    model: Omit<
+  UpdateTaskThunk<UpdateTaskModelType>,
+  UpdateTaskThunk<
+    Omit<
       Partial<UpdateTaskModelType>,
       "startDate" | "description" | "deadline" | "priority"
-    >;
-  },
+    >
+  >,
   {
     // state: RootStateType;
     rejectValue: { errors: string[]; fieldsErrors: FieldsErrorsType[] } | null;
@@ -241,3 +233,12 @@ export const updateTaskTC = createAsyncThunk<
     return rejectWithValue(null);
   }
 });
+
+//TYPES
+
+type DeleteTaskThunk = { todolistID: string; taskID: string };
+type UpdateTaskThunk<T> = {
+  todolistID: string;
+  taskID: string;
+  model: T;
+};
