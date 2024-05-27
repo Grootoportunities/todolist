@@ -1,9 +1,10 @@
 import { useCallback, useEffect } from "react";
 import { useAppSelector } from "../../../app/hooks/hooks";
 import { useActions } from "../../../app/hooks/useActions";
+import { selectTodolist } from "../todolists.selectors";
 
 export const useTodolistsList = (demo: boolean) => {
-  const todolists = useAppSelector((state) => state.todolists);
+  const todolists = useAppSelector(selectTodolist);
   const { createTodolist, fetchTodolists } = useActions();
 
   const addTodolist = useCallback((title: string) => createTodolist(title), []);

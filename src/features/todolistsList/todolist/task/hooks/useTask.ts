@@ -9,39 +9,40 @@ export const useTask = (
   disabled: boolean,
 ) => {
   const { updateTask, deleteTask } = useActions();
+  const { id: taskID, entityStatus } = task;
 
   const onChangeStatusHandler = useCallback(
     (e: ChangeEvent<HTMLInputElement>) =>
       updateTask({
         todolistID,
-        taskID: task.id,
+        taskID,
         model: {
           status: e.currentTarget.checked
             ? TaskStatuses.Completed
             : TaskStatuses.New,
         },
       }),
-    [todolistID, task.id],
+    [todolistID, taskID],
   );
 
   const onChangeTitleHandler = useCallback(
-    (newTitle: string) =>
+    (title: string) =>
       updateTask({
         todolistID,
-        taskID: task.id,
-        model: { title: newTitle },
+        taskID,
+        model: { title },
       }),
-    [todolistID, task.id],
+    [todolistID, taskID],
   );
 
   const onDeleteHandler = useCallback(
-    () => deleteTask({ todolistID, taskID: task.id }),
-    [todolistID, task.id],
+    () => deleteTask({ todolistID, taskID }),
+    [todolistID, taskID],
   );
 
   const disableCondition = useMemo(
-    () => disabled || task.entityStatus === StatusesType.LOADING,
-    [disabled, task.entityStatus],
+    () => disabled || entityStatus === StatusesType.LOADING,
+    [disabled, entityStatus],
   );
 
   return {

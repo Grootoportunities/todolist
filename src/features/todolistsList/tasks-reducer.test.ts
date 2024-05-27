@@ -1,11 +1,4 @@
-import {
-  createTask,
-  deleteTask,
-  fetchTasks,
-  tasksActions,
-  tasksReducer,
-  updateTask,
-} from "./tasks-reducer";
+import { tasksActions, tasksReducer, tasksThunks } from "./tasks-reducer";
 
 import {
   TaskPriorities,
@@ -13,12 +6,8 @@ import {
   TaskStatuses,
 } from "../../api/tasksAPI";
 import { StatusesType } from "../../app/app-reducer";
-import {
-  createTodolist,
-  deleteTodolist,
-  fetchTodolists,
-} from "./todolists-reducer";
 import { BaseActionType } from "../../common/types/types";
+import { todolistsThunks } from "./todolists-reducer";
 
 let startState: TasksStateType;
 
@@ -110,8 +99,8 @@ beforeEach(() => {
 });
 
 test("Task should be deleted correctly", () => {
-  const action: BaseActionType<typeof deleteTask.fulfilled> = {
-    type: deleteTask.fulfilled.type,
+  const action: BaseActionType<typeof tasksThunks.deleteTask.fulfilled> = {
+    type: tasksThunks.deleteTask.fulfilled.type,
     payload: { todolistID: "todolistID1", taskID: "2" },
   };
 
@@ -123,8 +112,8 @@ test("Task should be deleted correctly", () => {
 });
 
 test("Task should be added correctly", () => {
-  const action: BaseActionType<typeof createTask.fulfilled> = {
-    type: createTask.fulfilled.type,
+  const action: BaseActionType<typeof tasksThunks.createTask.fulfilled> = {
+    type: tasksThunks.createTask.fulfilled.type,
     payload: {
       id: "4",
       title: "New Task",
@@ -150,8 +139,8 @@ test("Task should be added correctly", () => {
 test("Task isDone should change correctly", () => {
   expect(startState["todolistID2"][2].status).toBe(TaskStatuses.New);
 
-  const action: BaseActionType<typeof updateTask.fulfilled> = {
-    type: updateTask.fulfilled.type,
+  const action: BaseActionType<typeof tasksThunks.updateTask.fulfilled> = {
+    type: tasksThunks.updateTask.fulfilled.type,
     payload: {
       todolistID: "todolistID2",
       taskID: "3",
@@ -173,8 +162,8 @@ test("Task isDone should change correctly", () => {
 });
 
 test("Task title should change correctly", () => {
-  const action: BaseActionType<typeof updateTask.fulfilled> = {
-    type: updateTask.fulfilled.type,
+  const action: BaseActionType<typeof tasksThunks.updateTask.fulfilled> = {
+    type: tasksThunks.updateTask.fulfilled.type,
     payload: {
       todolistID: "todolistID2",
       taskID: "3",
@@ -196,8 +185,10 @@ test("Task title should change correctly", () => {
 });
 
 test("New empty array of task should be added when new todolist is added", () => {
-  const action: BaseActionType<typeof createTodolist.fulfilled> = {
-    type: createTodolist.fulfilled.type,
+  const action: BaseActionType<
+    typeof todolistsThunks.createTodolist.fulfilled
+  > = {
+    type: todolistsThunks.createTodolist.fulfilled.type,
     payload: {
       ...startState["todolistID1"],
       id: "1",
@@ -218,8 +209,10 @@ test("New empty array of task should be added when new todolist is added", () =>
 });
 
 test("By deleting todolist, tasks also should be deleted", () => {
-  const action: BaseActionType<typeof deleteTodolist.fulfilled> = {
-    type: deleteTodolist.fulfilled.type,
+  const action: BaseActionType<
+    typeof todolistsThunks.deleteTodolist.fulfilled
+  > = {
+    type: todolistsThunks.deleteTodolist.fulfilled.type,
     payload: "todolistID2",
   };
 
@@ -232,8 +225,10 @@ test("By deleting todolist, tasks also should be deleted", () => {
 });
 
 test("Empty array should be added when todolists are setted", () => {
-  const action: BaseActionType<typeof fetchTodolists.fulfilled> = {
-    type: fetchTodolists.fulfilled.type,
+  const action: BaseActionType<
+    typeof todolistsThunks.fetchTodolists.fulfilled
+  > = {
+    type: todolistsThunks.fetchTodolists.fulfilled.type,
     payload: [
       { id: "1", title: "title1", order: 0, addedDate: "" },
       { id: "2", title: "title2", order: 0, addedDate: "" },
@@ -249,8 +244,8 @@ test("Empty array should be added when todolists are setted", () => {
 });
 
 test("Tasks should be set correctly", () => {
-  const action: BaseActionType<typeof fetchTasks.fulfilled> = {
-    type: fetchTasks.fulfilled.type,
+  const action: BaseActionType<typeof tasksThunks.fetchTasks.fulfilled> = {
+    type: tasksThunks.fetchTasks.fulfilled.type,
     payload: { tasks: startState["todolistID1"], todolistID: "todolistID1" },
   };
 

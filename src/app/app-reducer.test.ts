@@ -1,9 +1,4 @@
-import {
-  appReducer,
-  setAppError,
-  setAppStatus,
-  StatusesType,
-} from "./app-reducer";
+import { appActions, appReducer, StatusesType } from "./app-reducer";
 
 type AppStateType = {
   status: StatusesType;
@@ -24,7 +19,7 @@ beforeEach(() => {
 test("Error should occurre", () => {
   const error = "Some error occurred";
 
-  const endState = appReducer(startState, setAppError({ error }));
+  const endState = appReducer(startState, appActions.setAppError({ error }));
 
   expect(endState.error).toBe(error);
 });
@@ -32,7 +27,7 @@ test("Error should occurre", () => {
 test("Status should be false", () => {
   const endState = appReducer(
     startState,
-    setAppStatus({ status: StatusesType.FAILED }),
+    appActions.setAppStatus({ status: StatusesType.FAILED }),
   );
 
   expect(endState.status).toBe(StatusesType.FAILED);

@@ -1,10 +1,10 @@
 import { useAppDispatch, useAppSelector } from "../../../app/hooks/hooks";
 import { useFormik } from "formik";
-import { setLogin } from "../auth-reducer";
 import { useEffect } from "react";
 import { appSelectors } from "../../../app";
 import { selectIsLoggedIn } from "../auth.selectors";
 import { useActions } from "../../../app/hooks/useActions";
+import { authThunks } from "../auth-reducer";
 
 export const useLogin = () => {
   const dispatch = useAppDispatch();
@@ -24,8 +24,8 @@ export const useLogin = () => {
       rememberMe: false,
     },
     onSubmit: async (values, formikHelpers) => {
-      const action = await dispatch(setLogin(values));
-      if (setLogin.rejected.match(action)) {
+      const action = await dispatch(authThunks.setLogin(values));
+      if (authThunks.setLogin.rejected.match(action)) {
         if (action.payload?.fieldsErrors.length) {
           const error = action.payload?.fieldsErrors[0];
           formikHelpers.setFieldError(error?.field, error?.error);

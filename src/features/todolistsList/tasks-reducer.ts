@@ -5,17 +5,13 @@ import {
   UpdateTaskModelType,
 } from "../../api/tasksAPI";
 import { AppDispatchType, RootStateType } from "../../app/store";
-import { setAppStatus, StatusesType } from "../../app/app-reducer";
+import { appActions, StatusesType } from "../../app/app-reducer";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-  createTodolist,
-  deleteTodolist,
-  fetchTodolists,
-} from "./todolists-reducer";
 import { clearTasksAndTodolists } from "../../common/actions/common.actions";
 import { handleServerAppError } from "../../utils/error-utils";
 import { handleServerNetworkError } from "../../common/utils/handleServerNetworkError";
 import { FieldsErrorsType } from "../../api/authAPI";
+import { todolistsThunks } from "./todolists-reducer";
 
 const slice = createSlice({
   name: "tasks",
@@ -37,13 +33,13 @@ const slice = createSlice({
   },
   extraReducers: (builder) =>
     builder
-      .addCase(createTodolist.fulfilled, (state, action) => {
+      .addCase(todolistsThunks.createTodolist.fulfilled, (state, action) => {
         state[action.payload.id] = [];
       })
-      .addCase(deleteTodolist.fulfilled, (state, action) => {
+      .addCase(todolistsThunks.deleteTodolist.fulfilled, (state, action) => {
         delete state[action.payload];
       })
-      .addCase(fetchTodolists.fulfilled, (state, action) => {
+      .addCase(todolistsThunks.fetchTodolists.fulfilled, (state, action) => {
         action.payload.forEach((tl) => (state[tl.id] = []));
       })
       .addCase(clearTasksAndTodolists, () => {
@@ -77,21 +73,21 @@ const slice = createSlice({
 
 //THUNKS
 
-export const fetchTasks = createAsyncThunk<
+const fetchTasks = createAsyncThunk<
   { todolistID: string; tasks: TaskType[] },
   string
 >("tasks/fetchTasks", async (todolistID, { dispatch }) => {
-  dispatch(setAppStatus({ status: StatusesType.LOADING }));
+  dispatch(appActions.setAppStatus({ status: StatusesType.LOADING }));
   const res = await tasksAPI.getTasks(todolistID);
-  dispatch(setAppStatus({ status: StatusesType.SUCCEEDED }));
+  dispatch(appActions.setAppStatus({ status: StatusesType.SUCCEEDED }));
 
   return { todolistID, tasks: res.data.items };
 });
 
-export const deleteTask = createAsyncThunk<DeleteTaskThunk, DeleteTaskThunk>(
+const deleteTask = createAsyncThunk<DeleteTaskThunk, DeleteTaskThunk>(
   "tasks/deleteTask",
   async (arg, { dispatch, rejectWithValue }) => {
-    dispatch(setAppStatus({ status: StatusesType.LOADING }));
+    dispatch(appActions.setAppStatus({ status: StatusesType.LOADING }));
     dispatch(
       tasksActions.setTaskEntityStatus({
         ...arg,
@@ -101,7 +97,7 @@ export const deleteTask = createAsyncThunk<DeleteTaskThunk, DeleteTaskThunk>(
 
     const res = await tasksAPI.deleteTask(arg.todolistID, arg.taskID);
     if (res.data.resultCode === 0) {
-      dispatch(setAppStatus({ status: StatusesType.SUCCEEDED }));
+      dispatch(appActions.setAppStatus({ status: StatusesType.SUCCEEDED }));
 
       return arg;
     }
@@ -118,7 +114,7 @@ export const deleteTask = createAsyncThunk<DeleteTaskThunk, DeleteTaskThunk>(
   },
 );
 
-export const createTask = createAsyncThunk<
+const createTask = createAsyncThunk<
   TaskType,
   { todolistID: string; title: string },
   { rejectValue: { errors: string[]; fieldsErrors: FieldsErrorsType[] } | null }
@@ -126,12 +122,12 @@ export const createTask = createAsyncThunk<
   const dispatch = thunkAPI.dispatch as AppDispatchType;
   const rejectWithValue = thunkAPI.rejectWithValue;
 
-  dispatch(setAppStatus({ status: StatusesType.LOADING }));
+  dispatch(appActions.setAppStatus({ status: StatusesType.LOADING }));
 
   try {
     const res = await tasksAPI.createTask(arg.todolistID, arg.title);
     if (res.data.resultCode === 0) {
-      dispatch(setAppStatus({ status: StatusesType.SUCCEEDED }));
+      dispatch(appActions.setAppStatus({ status: StatusesType.SUCCEEDED }));
 
       return res.data.data.item;
     }
@@ -147,7 +143,7 @@ export const createTask = createAsyncThunk<
   }
 });
 
-export const updateTask = createAsyncThunk<
+const updateTask = createAsyncThunk<
   UpdateTaskThunk<UpdateTaskModelType>,
   UpdateTaskThunk<
     Omit<
@@ -181,7 +177,7 @@ export const updateTask = createAsyncThunk<
     ...arg.model,
   };
 
-  dispatch(setAppStatus({ status: StatusesType.LOADING }));
+  dispatch(appActions.setAppStatus({ status: StatusesType.LOADING }));
   dispatch(
     tasksActions.setTaskEntityStatus({
       todolistID: arg.todolistID,
@@ -193,7 +189,7 @@ export const updateTask = createAsyncThunk<
   try {
     const res = await tasksAPI.updateTask(arg.todolistID, arg.taskID, apiModel);
     if (res.data.resultCode === 0) {
-      dispatch(setAppStatus({ status: StatusesType.SUCCEEDED }));
+      dispatch(appActions.setAppStatus({ status: StatusesType.SUCCEEDED }));
       dispatch(
         tasksActions.setTaskEntityStatus({
           todolistID: arg.todolistID,

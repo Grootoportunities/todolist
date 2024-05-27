@@ -3,10 +3,11 @@ import { FilterValuesType, TodolistDomainType } from "../../todolists-reducer";
 import { TaskStatuses } from "../../../../api/tasksAPI";
 import { useAppSelector } from "../../../../app/hooks/hooks";
 import { useActions } from "../../../../app/hooks/useActions";
+import { selectTasks } from "../../tasks.selectors";
 
 export const useTodolist = (demo: boolean, todolist: TodolistDomainType) => {
   const { id: todolistID, filter } = todolist;
-  let tasks = useAppSelector((state) => state.tasks[todolistID]);
+  let tasks = useAppSelector(selectTasks(todolistID));
   const {
     createTask,
     fetchTasks,

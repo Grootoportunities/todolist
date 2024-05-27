@@ -1,5 +1,5 @@
 import { authAPI, FieldsErrorsType, LoginParamsType } from "../../api/authAPI";
-import { setAppInit, setAppStatus, StatusesType } from "../../app/app-reducer";
+import { appActions, StatusesType } from "../../app/app-reducer";
 import { handleServerAppError } from "../../utils/error-utils";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { clearTasksAndTodolists } from "../../common/actions/common.actions";
@@ -25,11 +25,11 @@ const slice = createSlice({
 
 // THUNKS
 
-export const initApp = createAsyncThunk<
+const initApp = createAsyncThunk<
   boolean,
   undefined,
   { rejectValue: { errors: string[]; fieldsErrors: FieldsErrorsType[] } | null }
->("auth/initAppTC", async (_, thunkAPI) => {
+>("auth/initApp", async (_, thunkAPI) => {
   const dispatch = thunkAPI.dispatch as AppDispatchType;
   const rejectWithValue = thunkAPI.rejectWithValue;
 
@@ -38,7 +38,7 @@ export const initApp = createAsyncThunk<
     if (res.data.resultCode === 0) {
       return true;
     } else if (res.data.messages[0] === "You are not authorized") {
-      dispatch(setAppStatus({ status: StatusesType.FAILED }));
+      dispatch(appActions.setAppStatus({ status: StatusesType.FAILED }));
 
       return rejectWithValue(null);
     }
@@ -52,25 +52,25 @@ export const initApp = createAsyncThunk<
     handleServerNetworkError(err, dispatch);
     return rejectWithValue(null);
   } finally {
-    dispatch(setAppInit({ isInit: true }));
+    dispatch(appActions.setAppInit({ isInit: true }));
   }
 });
 
-export const setLogin = createAsyncThunk<
+const setLogin = createAsyncThunk<
   boolean,
   LoginParamsType,
   { rejectValue: { errors: string[]; fieldsErrors: FieldsErrorsType[] } | null }
->(`auth/setLoginTC`, async (data, thunkAPI) => {
+>(`auth/setLogin`, async (data, thunkAPI) => {
   const dispatch = thunkAPI.dispatch as AppDispatchType;
   const rejectWithValue = thunkAPI.rejectWithValue;
 
-  dispatch(setAppStatus({ status: StatusesType.LOADING }));
+  dispatch(appActions.setAppStatus({ status: StatusesType.LOADING }));
 
   try {
     const res = await authAPI.setLogin(data);
     debugger;
     if (res.data.resultCode === 0) {
-      dispatch(setAppStatus({ status: StatusesType.SUCCEEDED }));
+      dispatch(appActions.setAppStatus({ status: StatusesType.SUCCEEDED }));
 
       return true;
     }
@@ -86,21 +86,21 @@ export const setLogin = createAsyncThunk<
   }
 });
 
-export const deleteLogin = createAsyncThunk<
+const deleteLogin = createAsyncThunk<
   boolean,
   undefined,
   { rejectValue: { errors: string[]; fieldsErrors: FieldsErrorsType[] } | null }
->("auth/deleteLoginTC", async (_, thunkAPI) => {
+>("auth/deleteLogin", async (_, thunkAPI) => {
   const dispatch = thunkAPI.dispatch as AppDispatchType;
   const rejectWithValue = thunkAPI.rejectWithValue;
 
-  dispatch(setAppStatus({ status: StatusesType.LOADING }));
+  dispatch(appActions.setAppStatus({ status: StatusesType.LOADING }));
 
   try {
     const res = await authAPI.deleteLogin();
     if (res.data.resultCode === 0) {
       dispatch(clearTasksAndTodolists());
-      dispatch(setAppStatus({ status: StatusesType.SUCCEEDED }));
+      dispatch(appActions.setAppStatus({ status: StatusesType.SUCCEEDED }));
 
       return false;
     }

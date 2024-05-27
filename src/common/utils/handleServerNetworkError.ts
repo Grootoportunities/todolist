@@ -1,6 +1,6 @@
 import { AppDispatchType } from "../../app/store";
 import axios from "axios";
-import { setAppError, setAppStatus, StatusesType } from "../../app/app-reducer";
+import { appActions, StatusesType } from "../../app/app-reducer";
 
 export const handleServerNetworkError = (
   err: unknown,
@@ -21,6 +21,6 @@ export const handleServerNetworkError = (
     errorMessage = JSON.stringify(err);
   }
 
-  dispatch(setAppError({ error: errorMessage }));
-  dispatch(setAppStatus({ status: StatusesType.FAILED }));
+  dispatch(appActions.setAppError({ error: errorMessage }));
+  dispatch(appActions.setAppStatus({ status: StatusesType.FAILED }));
 };
