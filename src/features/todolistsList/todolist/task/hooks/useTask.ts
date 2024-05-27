@@ -1,46 +1,41 @@
 import { ChangeEvent, useCallback, useMemo } from "react";
-import { deleteTaskTC, updateTaskTC } from "../../../tasks-reducer";
 import { TaskStatuses, TaskType } from "../../../../../api/tasksAPI";
 import { StatusesType } from "../../../../../app/app-reducer";
-import { useAppDispatch } from "../../../../../app/hooks/hooks";
+import { useActions } from "../../../../../app/hooks/useActions";
 
 export const useTask = (
   task: TaskType,
   todolistID: string,
   disabled: boolean,
 ) => {
-  const dispatch = useAppDispatch();
+  const { updateTask, deleteTask } = useActions();
 
   const onChangeStatusHandler = useCallback(
     (e: ChangeEvent<HTMLInputElement>) =>
-      dispatch(
-        updateTaskTC({
-          todolistID,
-          taskID: task.id,
-          model: {
-            status: e.currentTarget.checked
-              ? TaskStatuses.Completed
-              : TaskStatuses.New,
-          },
-        }),
-      ),
+      updateTask({
+        todolistID,
+        taskID: task.id,
+        model: {
+          status: e.currentTarget.checked
+            ? TaskStatuses.Completed
+            : TaskStatuses.New,
+        },
+      }),
     [todolistID, task.id],
   );
 
   const onChangeTitleHandler = useCallback(
     (newTitle: string) =>
-      dispatch(
-        updateTaskTC({
-          todolistID,
-          taskID: task.id,
-          model: { title: newTitle },
-        }),
-      ),
+      updateTask({
+        todolistID,
+        taskID: task.id,
+        model: { title: newTitle },
+      }),
     [todolistID, task.id],
   );
 
   const onDeleteHandler = useCallback(
-    () => dispatch(deleteTaskTC({ todolistID, taskID: task.id })),
+    () => deleteTask({ todolistID, taskID: task.id }),
     [todolistID, task.id],
   );
 

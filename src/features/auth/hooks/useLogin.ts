@@ -1,13 +1,17 @@
 import { useAppDispatch, useAppSelector } from "../../../app/hooks/hooks";
 import { useFormik } from "formik";
-import { initAppTC, setLoginTC } from "../auth-reducer";
+import { setLogin } from "../auth-reducer";
 import { useEffect } from "react";
+import { appSelectors } from "../../../app";
+import { selectIsLoggedIn } from "../auth.selectors";
+import { useActions } from "../../../app/hooks/useActions";
 
 export const useLogin = () => {
   const dispatch = useAppDispatch();
-  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
-  const status = useAppSelector((state) => state.app.status);
-  const isInit = useAppSelector((state) => state.app.isInit);
+  const { initApp } = useActions();
+  const isLoggedIn = useAppSelector(selectIsLoggedIn);
+  const status = useAppSelector(appSelectors.selectStatus);
+  const isInit = useAppSelector(appSelectors.selectIsInit);
 
   const formik = useFormik({
     validate: (values) => {
@@ -20,8 +24,8 @@ export const useLogin = () => {
       rememberMe: false,
     },
     onSubmit: async (values, formikHelpers) => {
-      const action = await dispatch(setLoginTC(values));
-      if (setLoginTC.rejected.match(action)) {
+      const action = await dispatch(setLogin(values));
+      if (setLogin.rejected.match(action)) {
         if (action.payload?.fieldsErrors.length) {
           const error = action.payload?.fieldsErrors[0];
           formikHelpers.setFieldError(error?.field, error?.error);
@@ -31,7 +35,7 @@ export const useLogin = () => {
   });
 
   useEffect(() => {
-    dispatch(initAppTC());
+    initApp();
   }, []);
 
   return { isLoggedIn, status, isInit, formik };

@@ -1,13 +1,12 @@
 import {
-  changeTodolistFilter,
-  createTodolistTC,
-  deleteTodolistTC,
-  fetchTodolistsTC,
+  createTodolist,
+  deleteTodolist,
+  fetchTodolists,
   FilterValuesType,
-  setTodolistEntityStatus,
   TodolistDomainType,
+  todolistsActions,
   todolistsReducer,
-  updateTodolistTitleTC,
+  updateTodolistTitle,
 } from "./todolists-reducer";
 import { v1 } from "uuid";
 import { StatusesType } from "../../app/app-reducer";
@@ -42,8 +41,8 @@ beforeEach(() => {
 });
 
 test("correct todolist should be removed", () => {
-  const action: BaseActionType<typeof deleteTodolistTC.fulfilled> = {
-    type: deleteTodolistTC.fulfilled.type,
+  const action: BaseActionType<typeof deleteTodolist.fulfilled> = {
+    type: deleteTodolist.fulfilled.type,
     payload: todolistId1,
   };
 
@@ -56,8 +55,8 @@ test("correct todolist should be removed", () => {
 test("correct todolist should be added", () => {
   let newTodolistTitle = "New Todolist";
 
-  const action: BaseActionType<typeof createTodolistTC.fulfilled> = {
-    type: createTodolistTC.fulfilled.type,
+  const action: BaseActionType<typeof createTodolist.fulfilled> = {
+    type: createTodolist.fulfilled.type,
     payload: {
       id: "todolistId3",
       title: newTodolistTitle,
@@ -75,8 +74,8 @@ test("correct todolist should be added", () => {
 test("correct todolist should change its name", () => {
   let newTodolistTitle = "New Todolist";
 
-  const action: BaseActionType<typeof updateTodolistTitleTC.fulfilled> = {
-    type: updateTodolistTitleTC.fulfilled.type,
+  const action: BaseActionType<typeof updateTodolistTitle.fulfilled> = {
+    type: updateTodolistTitle.fulfilled.type,
     payload: {
       todolistID: todolistId2,
       title: newTodolistTitle,
@@ -94,7 +93,10 @@ test("correct filter of todolist should be changed", () => {
 
   const endState = todolistsReducer(
     startState,
-    changeTodolistFilter({ todolistID: todolistId2, newFilter }),
+    todolistsActions.changeTodolistFilter({
+      todolistID: todolistId2,
+      filter: newFilter,
+    }),
   );
 
   expect(endState[0].filter).toBe("all");
@@ -102,8 +104,8 @@ test("correct filter of todolist should be changed", () => {
 });
 
 test("Todolists should be setted correctly", () => {
-  const action: BaseActionType<typeof fetchTodolistsTC.fulfilled> = {
-    type: fetchTodolistsTC.fulfilled.type,
+  const action: BaseActionType<typeof fetchTodolists.fulfilled> = {
+    type: fetchTodolists.fulfilled.type,
     payload: startState,
   };
 
@@ -118,7 +120,7 @@ test("Todolist entity status should be changed", () => {
 
   const endState = todolistsReducer(
     startState,
-    setTodolistEntityStatus({
+    todolistsActions.setTodolistEntityStatus({
       todolistID: todolistId1,
       status: StatusesType.LOADING,
     }),

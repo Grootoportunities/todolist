@@ -5,7 +5,7 @@ import App from "./app/App";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Login } from "./features/login/Login";
+import { Login } from "./features/auth/Login";
 
 const PATH = {
   APP: "/",

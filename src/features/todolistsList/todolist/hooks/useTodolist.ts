@@ -1,42 +1,51 @@
-import { useCallback } from "react";
-import { createTaskTC } from "../../tasks-reducer";
+import { useCallback, useEffect } from "react";
 import { FilterValuesType, TodolistDomainType } from "../../todolists-reducer";
 import { TaskStatuses } from "../../../../api/tasksAPI";
-import { useAppDispatch, useAppSelector } from "../../../../app/hooks/hooks";
+import { useAppSelector } from "../../../../app/hooks/hooks";
+import { useActions } from "../../../../app/hooks/useActions";
 
-export const useTodolist = (
-  todolist: TodolistDomainType,
-  onChangeFilter: (value: FilterValuesType, todolistId: string) => void,
-  onRemoveTodolist: (todolistId: string) => void,
-  onChangeTodolistTitle: (newTitle: string, todolistId: string) => void,
-) => {
-  let tasks = useAppSelector((state) => state.tasks[todolist.id]);
+export const useTodolist = (demo: boolean, todolist: TodolistDomainType) => {
+  const { id: todolistID, filter } = todolist;
+  let tasks = useAppSelector((state) => state.tasks[todolistID]);
+  const {
+    createTask,
+    fetchTasks,
+    changeTodolistFilter,
+    deleteTodolist,
+    updateTodolistTitle,
+  } = useActions();
 
-  if (todolist.filter === "completed") {
+  if (filter === "completed") {
     tasks = tasks.filter((item) => item.status === TaskStatuses.Completed);
-  } else if (todolist.filter === "active") {
+  } else if (filter === "active") {
     tasks = tasks.filter((item) => item.status === TaskStatuses.New);
   }
 
-  const dispatch = useAppDispatch();
-
   const onTsarClickHandler = useCallback(
-    (filter: FilterValuesType) => onChangeFilter(filter, todolist.id),
-    [onChangeFilter, todolist.id],
+    (filter: FilterValuesType) => changeTodolistFilter({ filter, todolistID }),
+    [todolistID],
   );
 
-  const removeTodolistHandler = () => onRemoveTodolist(todolist.id);
+  const removeTodolistHandler = useCallback(
+    () => deleteTodolist(todolistID),
+    [todolistID],
+  );
 
   const addTask = useCallback(
-    (title: string) =>
-      dispatch(createTaskTC({ todolistID: todolist.id, title })),
-    [dispatch, todolist.id], //dispatch(addTaskAC(todolistId, title)),
+    (title: string) => createTask({ todolistID, title }),
+    [todolistID],
   );
 
   const changeTodolistTitleHandler = useCallback(
-    (newTitle: string) => onChangeTodolistTitle(newTitle, todolist.id),
-    [onChangeTodolistTitle, todolist.id],
+    (title: string) => updateTodolistTitle({ title, todolistID }),
+    [todolistID],
   );
+
+  useEffect(() => {
+    if (demo) return;
+
+    fetchTasks(todolistID);
+  }, []);
 
   return {
     tasks,
@@ -44,6 +53,5 @@ export const useTodolist = (
     removeTodolistHandler,
     addTask,
     changeTodolistTitleHandler,
-    dispatch,
   };
 };

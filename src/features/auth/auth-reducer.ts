@@ -12,20 +12,20 @@ const slice = createSlice({
   reducers: {},
   extraReducers: (builder) =>
     builder
-      .addCase(setLoginTC.fulfilled, (state, action) => {
+      .addCase(setLogin.fulfilled, (state, action) => {
         state.isLoggedIn = action.payload;
       })
-      .addCase(deleteLoginTC.fulfilled, (state, action) => {
+      .addCase(deleteLogin.fulfilled, (state, action) => {
         state.isLoggedIn = action.payload;
       })
-      .addCase(initAppTC.fulfilled, (state, action) => {
+      .addCase(initApp.fulfilled, (state, action) => {
         state.isLoggedIn = action.payload;
       }),
 });
 
 // THUNKS
 
-export const initAppTC = createAsyncThunk<
+export const initApp = createAsyncThunk<
   boolean,
   undefined,
   { rejectValue: { errors: string[]; fieldsErrors: FieldsErrorsType[] } | null }
@@ -56,7 +56,7 @@ export const initAppTC = createAsyncThunk<
   }
 });
 
-export const setLoginTC = createAsyncThunk<
+export const setLogin = createAsyncThunk<
   boolean,
   LoginParamsType,
   { rejectValue: { errors: string[]; fieldsErrors: FieldsErrorsType[] } | null }
@@ -86,7 +86,7 @@ export const setLoginTC = createAsyncThunk<
   }
 });
 
-export const deleteLoginTC = createAsyncThunk<
+export const deleteLogin = createAsyncThunk<
   boolean,
   undefined,
   { rejectValue: { errors: string[]; fieldsErrors: FieldsErrorsType[] } | null }
@@ -117,3 +117,4 @@ export const deleteLoginTC = createAsyncThunk<
 });
 
 export const authReducer = slice.reducer;
+export const authThunks = { deleteLogin, setLogin, initApp };

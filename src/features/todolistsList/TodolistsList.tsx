@@ -1,45 +1,25 @@
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 import { useTodolistsList } from "./hooks/useTodolistsList";
 import { Grid, Paper } from "@material-ui/core";
 import { Todolist } from "./todolist/Todolist";
 import { AddItemForm } from "../../components/AddItemForm/AddItemForm";
-import { fetchTodolistsTC } from "./todolists-reducer";
 
-type TodolistsListProps = {
+export type TodolistsListProps = {
   demo?: boolean;
 };
 
 export const TodolistsList: FC<TodolistsListProps> = ({ demo = false }) => {
-  const {
-    todolists,
-    changeFilter,
-    removeTodolist,
-    onChangeTodolistTitle,
-    addTodolist,
-    dispatch,
-  } = useTodolistsList();
+  const { todolists, addTodolist } = useTodolistsList(demo);
 
   const mappedTodolists = todolists.map((tl) => {
     return (
       <Grid item key={tl.id}>
         <Paper style={{ padding: "20px" }} elevation={3}>
-          <Todolist
-            todolist={tl}
-            changeFilter={changeFilter}
-            removeTodolist={removeTodolist}
-            changeTodolistTitle={onChangeTodolistTitle}
-            demo={demo}
-          />
+          <Todolist todolist={tl} demo={demo} />
         </Paper>
       </Grid>
     );
   });
-
-  useEffect(() => {
-    if (demo) return;
-
-    dispatch(fetchTodolistsTC());
-  }, []);
 
   return (
     <>

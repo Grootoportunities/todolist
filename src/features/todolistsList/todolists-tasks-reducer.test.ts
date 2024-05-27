@@ -1,5 +1,5 @@
 import {
-  createTodolistTC,
+  createTodolist,
   TodolistDomainType,
   todolistsReducer,
 } from "./todolists-reducer";
@@ -11,8 +11,8 @@ test("ID's of tasks and todolists should be equal", () => {
   const startTodolistsState: TodolistDomainType[] = [];
   const startTasksState: TasksStateType = {};
 
-  const action: BaseActionType<typeof createTodolistTC.fulfilled> = {
-    type: createTodolistTC.fulfilled.type,
+  const action: BaseActionType<typeof createTodolist.fulfilled> = {
+    type: createTodolist.fulfilled.type,
     payload: {
       id: "todolistId1",
       title: "What to learn",

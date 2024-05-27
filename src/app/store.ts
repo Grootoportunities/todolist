@@ -2,7 +2,7 @@ import { tasksReducer } from "../features/todolistsList/tasks-reducer";
 import { todolistsReducer } from "../features/todolistsList/todolists-reducer";
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { appReducer } from "./app-reducer";
-import { authReducer } from "../features/login/auth-reducer";
+import { authReducer } from "../features/auth/auth-reducer";
 import { configureStore, UnknownAction } from "@reduxjs/toolkit";
 
 export const store = configureStore({

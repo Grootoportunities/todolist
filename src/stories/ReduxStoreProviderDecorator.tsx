@@ -7,7 +7,7 @@ import { v1 } from "uuid";
 import { TaskPriorities, TaskStatuses } from "../api/tasksAPI";
 import { appReducer, StatusesType } from "../app/app-reducer";
 import { thunk } from "redux-thunk";
-import { authReducer } from "../features/login/auth-reducer";
+import { authReducer } from "../features/auth/auth-reducer";
 
 const rootReducer = combineReducers({
   tasks: tasksReducer,

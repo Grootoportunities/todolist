@@ -1,45 +1,27 @@
-import React, { FC, memo, useEffect } from "react";
+import React, { FC, memo } from "react";
 import { AddItemForm } from "../../../components/AddItemForm/AddItemForm";
 import { EditableSpan } from "../../../components/EditableSpan/EditableSpan";
 import { Button, IconButton } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
 import { Task } from "./task/Task";
 import { useTodolist } from "./hooks/useTodolist";
-import { FilterValuesType, TodolistDomainType } from "../todolists-reducer";
-import { fetchTasksTC } from "../tasks-reducer";
+import { TodolistDomainType } from "../todolists-reducer";
 import { StatusesType } from "../../../app/app-reducer";
 
 type TodolistPropsType = {
   todolist: TodolistDomainType;
-
   demo?: boolean;
-
-  changeFilter: (value: FilterValuesType, todolistId: string) => void;
-  removeTodolist: (todolistId: string) => void;
-  changeTodolistTitle: (newTitle: string, todolistId: string) => void;
 };
 
 export const Todolist: FC<TodolistPropsType> = memo(
-  ({
-    todolist,
-    changeFilter,
-    removeTodolist,
-    changeTodolistTitle,
-    demo = false,
-  }) => {
+  ({ todolist, demo = false }) => {
     const {
       tasks,
       onTsarClickHandler,
       removeTodolistHandler,
       addTask,
       changeTodolistTitleHandler,
-      dispatch,
-    } = useTodolist(
-      todolist,
-      changeFilter,
-      removeTodolist,
-      changeTodolistTitle,
-    );
+    } = useTodolist(demo, todolist);
 
     const mappedTasks = tasks.map((item) => {
       return (
@@ -51,12 +33,6 @@ export const Todolist: FC<TodolistPropsType> = memo(
         />
       );
     });
-
-    useEffect(() => {
-      if (demo) return;
-
-      dispatch(fetchTasksTC(todolist.id));
-    }, []);
 
     return (
       <div>

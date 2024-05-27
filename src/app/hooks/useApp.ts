@@ -1,19 +1,21 @@
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { useCallback, useEffect } from "react";
-import { deleteLoginTC, initAppTC } from "../../features/login/auth-reducer";
+import { deleteLogin, initApp } from "../../features/auth/auth-reducer";
+import { authSelectors } from "../../features/auth";
+import { selectIsInit, selectStatus } from "../app.selectors";
 
 export const useApp = () => {
-  const status = useAppSelector((state) => state.app.status);
-  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
-  const isInit = useAppSelector((state) => state.app.isInit);
+  const status = useAppSelector(selectStatus);
+  const isLoggedIn = useAppSelector(authSelectors.selectIsLoggedIn);
+  const isInit = useAppSelector(selectIsInit);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(initAppTC());
+    dispatch(initApp());
   }, []);
 
   const onLogoutHandler = useCallback(
-    () => dispatch(deleteLoginTC()),
+    () => dispatch(deleteLogin()),
     [dispatch],
   );
 

@@ -1,48 +1,21 @@
-import { useCallback } from "react";
-import {
-  changeTodolistFilter,
-  createTodolistTC,
-  deleteTodolistTC,
-  FilterValuesType,
-  updateTodolistTitleTC,
-} from "../todolists-reducer";
-import { useAppDispatch, useAppSelector } from "../../../app/hooks/hooks";
+import { useCallback, useEffect } from "react";
+import { useAppSelector } from "../../../app/hooks/hooks";
+import { useActions } from "../../../app/hooks/useActions";
 
-export const useTodolistsList = () => {
-  const dispatch = useAppDispatch();
-
+export const useTodolistsList = (demo: boolean) => {
   const todolists = useAppSelector((state) => state.todolists);
+  const { createTodolist, fetchTodolists } = useActions();
 
-  const changeFilter = useCallback(
-    (value: FilterValuesType, todolistId: string) =>
-      dispatch(
-        changeTodolistFilter({ todolistID: todolistId, newFilter: value }),
-      ),
-    [dispatch],
-  );
+  const addTodolist = useCallback((title: string) => createTodolist(title), []);
 
-  const removeTodolist = useCallback(
-    (todolistId: string) => dispatch(deleteTodolistTC(todolistId)),
-    [dispatch],
-  );
+  useEffect(() => {
+    if (demo) return;
 
-  const onChangeTodolistTitle = useCallback(
-    (newTitle: string, todolistID: string) =>
-      dispatch(updateTodolistTitleTC({ todolistID, title: newTitle })),
-    [dispatch],
-  );
-
-  const addTodolist = useCallback(
-    (title: string) => dispatch(createTodolistTC(title)),
-    [dispatch],
-  );
+    fetchTodolists();
+  }, []);
 
   return {
     todolists,
-    changeFilter,
-    removeTodolist,
-    onChangeTodolistTitle,
     addTodolist,
-    dispatch,
   };
 };

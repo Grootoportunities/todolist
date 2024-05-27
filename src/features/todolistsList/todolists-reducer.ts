@@ -15,13 +15,13 @@ const slice = createSlice({
       state,
       action: PayloadAction<{
         todolistID: string;
-        newFilter: FilterValuesType;
+        filter: FilterValuesType;
       }>,
     ) => {
       const index = state.findIndex(
         (tl) => tl.id === action.payload.todolistID,
       );
-      if (index !== -1) state[index].filter = action.payload.newFilter;
+      if (index !== -1) state[index].filter = action.payload.filter;
     },
     setTodolistEntityStatus: (
       state,
@@ -38,26 +38,26 @@ const slice = createSlice({
       .addCase(clearTasksAndTodolists, () => {
         return [];
       })
-      .addCase(fetchTodolistsTC.fulfilled, (state, action) =>
+      .addCase(fetchTodolists.fulfilled, (state, action) =>
         action.payload.map((tl) => ({
           ...tl,
           filter: "all",
           entityStatus: StatusesType.IDLE,
         })),
       )
-      .addCase(deleteTodolistTC.fulfilled, (state, action) => {
+      .addCase(deleteTodolist.fulfilled, (state, action) => {
         const index = state.findIndex((tl) => tl.id === action.payload);
 
         if (index !== -1) state.splice(index, 1);
       })
-      .addCase(createTodolistTC.fulfilled, (state, action) => {
+      .addCase(createTodolist.fulfilled, (state, action) => {
         state.unshift({
           ...action.payload,
           filter: "all",
           entityStatus: StatusesType.IDLE,
         });
       })
-      .addCase(updateTodolistTitleTC.fulfilled, (state, action) => {
+      .addCase(updateTodolistTitle.fulfilled, (state, action) => {
         const index = state.findIndex(
           (tl) => tl.id === action.payload.todolistID,
         );
@@ -67,16 +67,13 @@ const slice = createSlice({
   },
 });
 
-export const todolistsReducer = slice.reducer;
-export const { setTodolistEntityStatus, changeTodolistFilter } = slice.actions;
-
 //THUNKS
 
-export const fetchTodolistsTC = createAsyncThunk<
+export const fetchTodolists = createAsyncThunk<
   TodolistType[],
   undefined,
   { rejectValue: null }
->("todolists/fetchTodolistsTC", async (_, thunkAPI) => {
+>("todolists/fetchTodolists", async (_, thunkAPI) => {
   const dispatch = thunkAPI.dispatch as AppDispatchType;
   const rejectWithValue = thunkAPI.rejectWithValue;
 
@@ -93,17 +90,20 @@ export const fetchTodolistsTC = createAsyncThunk<
   }
 });
 
-export const deleteTodolistTC = createAsyncThunk<
+export const deleteTodolist = createAsyncThunk<
   string,
   string,
   { rejectValue: { errors: string[]; fieldsErrors: FieldsErrorsType[] } | null }
->("todolists/deleteTodolistTC", async (todolistID, thunkAPI) => {
+>("todolists/deleteTodolist", async (todolistID, thunkAPI) => {
   const dispatch = thunkAPI.dispatch as AppDispatchType;
   const rejectWithValue = thunkAPI.rejectWithValue;
 
   dispatch(setAppStatus({ status: StatusesType.LOADING }));
   dispatch(
-    setTodolistEntityStatus({ todolistID, status: StatusesType.LOADING }),
+    todolistsActions.setTodolistEntityStatus({
+      todolistID,
+      status: StatusesType.LOADING,
+    }),
   );
 
   try {
@@ -116,7 +116,7 @@ export const deleteTodolistTC = createAsyncThunk<
     }
 
     dispatch(
-      setTodolistEntityStatus({
+      todolistsActions.setTodolistEntityStatus({
         todolistID,
         status: StatusesType.FAILED,
       }),
@@ -130,7 +130,7 @@ export const deleteTodolistTC = createAsyncThunk<
     });
   } catch (err) {
     dispatch(
-      setTodolistEntityStatus({
+      todolistsActions.setTodolistEntityStatus({
         todolistID,
         status: StatusesType.FAILED,
       }),
@@ -142,11 +142,11 @@ export const deleteTodolistTC = createAsyncThunk<
   }
 });
 
-export const createTodolistTC = createAsyncThunk<
+export const createTodolist = createAsyncThunk<
   TodolistType,
   string,
   { rejectValue: { errors: string[]; fieldsErrors: FieldsErrorsType[] } | null }
->("todolists/createTodolistTC", async (title, thunkAPI) => {
+>("todolists/createTodolist", async (title, thunkAPI) => {
   const dispatch = thunkAPI.dispatch as AppDispatchType;
   const rejectWithValue = thunkAPI.rejectWithValue;
 
@@ -172,11 +172,11 @@ export const createTodolistTC = createAsyncThunk<
   }
 });
 
-export const updateTodolistTitleTC = createAsyncThunk<
+export const updateTodolistTitle = createAsyncThunk<
   UpdateTodolistThunk,
   UpdateTodolistThunk,
   { rejectValue: { errors: string[]; fieldsErrors: FieldsErrorsType[] } | null }
->("todolists/updateTodolistTitleTC", async (arg, thunkAPI) => {
+>("todolists/updateTodolistTitle", async (arg, thunkAPI) => {
   const dispatch = thunkAPI.dispatch as AppDispatchType;
   const rejectWithValue = thunkAPI.rejectWithValue;
 
@@ -184,7 +184,7 @@ export const updateTodolistTitleTC = createAsyncThunk<
 
   dispatch(setAppStatus({ status: StatusesType.LOADING }));
   dispatch(
-    setTodolistEntityStatus({
+    todolistsActions.setTodolistEntityStatus({
       todolistID,
       status: StatusesType.LOADING,
     }),
@@ -195,7 +195,7 @@ export const updateTodolistTitleTC = createAsyncThunk<
     if (res.data.resultCode === 0) {
       dispatch(setAppStatus({ status: StatusesType.SUCCEEDED }));
       dispatch(
-        setTodolistEntityStatus({
+        todolistsActions.setTodolistEntityStatus({
           todolistID,
           status: StatusesType.SUCCEEDED,
         }),
@@ -205,7 +205,7 @@ export const updateTodolistTitleTC = createAsyncThunk<
     }
 
     dispatch(
-      setTodolistEntityStatus({
+      todolistsActions.setTodolistEntityStatus({
         todolistID,
         status: StatusesType.FAILED,
       }),
@@ -219,7 +219,7 @@ export const updateTodolistTitleTC = createAsyncThunk<
     });
   } catch (err) {
     dispatch(
-      setTodolistEntityStatus({
+      todolistsActions.setTodolistEntityStatus({
         todolistID,
         status: StatusesType.FAILED,
       }),
@@ -229,6 +229,15 @@ export const updateTodolistTitleTC = createAsyncThunk<
     return rejectWithValue(null);
   }
 });
+
+export const todolistsReducer = slice.reducer;
+export const todolistsActions = slice.actions;
+export const todolistsThunks = {
+  fetchTodolists,
+  deleteTodolist,
+  createTodolist,
+  updateTodolistTitle,
+};
 
 //TYPES
 
