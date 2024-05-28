@@ -4,6 +4,8 @@ import { TaskStatuses } from "../../../../api/tasksAPI";
 import { useAppSelector } from "../../../../app/hooks/hooks";
 import { useActions } from "../../../../app/hooks/useActions";
 import { selectTasks } from "../../tasks.selectors";
+import { PropTypes } from "@material-ui/core";
+import { v1 } from "uuid";
 
 export const useTodolist = (demo: boolean, todolist: TodolistDomainType) => {
   const { id: todolistID, filter } = todolist;
@@ -15,6 +17,12 @@ export const useTodolist = (demo: boolean, todolist: TodolistDomainType) => {
     deleteTodolist,
     updateTodolistTitle,
   } = useActions();
+
+  const filterButtons: FilterButtons[] = [
+    { ID: v1(), filter: "all", text: "All" },
+    { ID: v1(), filter: "active", color: "secondary", text: "Active" },
+    { ID: v1(), filter: "completed", color: "primary", text: "completed" },
+  ];
 
   if (filter === "completed") {
     tasks = tasks.filter((item) => item.status === TaskStatuses.Completed);
@@ -54,5 +62,13 @@ export const useTodolist = (demo: boolean, todolist: TodolistDomainType) => {
     removeTodolistHandler,
     addTask,
     changeTodolistTitleHandler,
+    filterButtons,
   };
+};
+
+type FilterButtons = {
+  ID: string;
+  text: string;
+  filter: FilterValuesType;
+  color?: PropTypes.Color;
 };

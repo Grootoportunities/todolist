@@ -7,7 +7,7 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Menu from "@material-ui/icons/Menu";
-import { TodolistsList } from "../features/todolistsList/TodolistsList";
+import { TodolistsList } from "../features/todolistsList";
 import { ErrorSnackbar } from "../components/ErrorSnackBar/ErrorSnackbar";
 import { StatusesType } from "./app-reducer";
 import { Navigate } from "react-router-dom";

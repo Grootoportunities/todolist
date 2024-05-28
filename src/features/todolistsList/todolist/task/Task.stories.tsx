@@ -1,6 +1,7 @@
 import { Task } from "./Task";
 import { ReduxStoreProviderDecorator } from "../../../../stories/ReduxStoreProviderDecorator";
 import { useAppSelector } from "../../../../app/hooks/hooks";
+import { tasksSelectors } from "../../index";
 
 export default {
   title: "Task",
@@ -9,7 +10,7 @@ export default {
 };
 
 const TaskExample = () => {
-  let tasks = useAppSelector((state) => state.tasks["todolistId1"]);
+  const tasks = useAppSelector(tasksSelectors.selectTasks("todolistId1"));
 
   const mappedTasks = tasks.map((t) => (
     <Task todolistId={"todolistId1"} task={t} />

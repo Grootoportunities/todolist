@@ -7,6 +7,7 @@ import { Task } from "./task/Task";
 import { useTodolist } from "./hooks/useTodolist";
 import { TodolistDomainType } from "../todolists-reducer";
 import { StatusesType } from "../../../app/app-reducer";
+import styled from "styled-components";
 
 type TodolistPropsType = {
   todolist: TodolistDomainType;
@@ -21,6 +22,7 @@ export const Todolist: FC<TodolistPropsType> = memo(
       removeTodolistHandler,
       addTask,
       changeTodolistTitleHandler,
+      filterButtons,
     } = useTodolist(demo, todolist);
 
     const mappedTasks = tasks.map((item) => {
@@ -34,8 +36,22 @@ export const Todolist: FC<TodolistPropsType> = memo(
       );
     });
 
+    const mappedFilterButtons = filterButtons.map((b) => {
+      return (
+        <Button
+          key={b.ID}
+          color={b.color}
+          variant={todolist.filter == b.filter ? "contained" : "text"}
+          disabled={todolist.entityStatus === StatusesType.LOADING}
+          onClick={() => onTsarClickHandler(b.filter)}
+        >
+          {b.text}
+        </Button>
+      );
+    });
+
     return (
-      <div>
+      <TodoContainer>
         <h3>
           <EditableSpan
             originTitle={todolist.title}
@@ -54,32 +70,13 @@ export const Todolist: FC<TodolistPropsType> = memo(
           disabled={todolist.entityStatus === StatusesType.LOADING}
         />
         <ul>{mappedTasks}</ul>
-        <div>
-          <Button
-            variant={todolist.filter == "all" ? "contained" : "text"}
-            disabled={todolist.entityStatus === StatusesType.LOADING}
-            onClick={() => onTsarClickHandler("all")}
-          >
-            All
-          </Button>
-          <Button
-            color={"secondary"}
-            variant={todolist.filter == "active" ? "contained" : "text"}
-            disabled={todolist.entityStatus === StatusesType.LOADING}
-            onClick={() => onTsarClickHandler("active")}
-          >
-            Active
-          </Button>
-          <Button
-            color={"primary"}
-            variant={todolist.filter == "completed" ? "contained" : "text"}
-            disabled={todolist.entityStatus === StatusesType.LOADING}
-            onClick={() => onTsarClickHandler("completed")}
-          >
-            Completed
-          </Button>
-        </div>
-      </div>
+        <div>{mappedFilterButtons}</div>
+      </TodoContainer>
     );
   },
 );
+
+const TodoContainer = styled.div`
+  width: 250px;
+  word-wrap: break-word;
+`;
