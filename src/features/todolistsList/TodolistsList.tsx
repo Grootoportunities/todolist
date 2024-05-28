@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { useTodolistsList } from "./hooks/useTodolistsList";
-import { Grid, Paper } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import { Todolist } from "./todolist/Todolist";
 import { AddItemForm } from "../../components/AddItemForm/AddItemForm";
 
@@ -14,9 +14,7 @@ export const TodolistsList: FC<TodolistsListProps> = ({ demo = false }) => {
   const mappedTodolists = todolists.map((tl) => {
     return (
       <Grid item key={tl.id}>
-        <Paper style={{ padding: "20px" }} elevation={3}>
-          <Todolist todolist={tl} demo={demo} />
-        </Paper>
+        <Todolist todolist={tl} demo={demo} />
       </Grid>
     );
   });
@@ -26,7 +24,14 @@ export const TodolistsList: FC<TodolistsListProps> = ({ demo = false }) => {
       <Grid style={{ margin: "30px 0" }} container>
         <AddItemForm addItem={addTodolist} />
       </Grid>
-      <Grid container spacing={5}>
+      <Grid
+        container
+        spacing={5}
+        style={{
+          flexWrap: "nowrap",
+          overflowX: "scroll",
+        }}
+      >
         {mappedTodolists}
       </Grid>
     </>

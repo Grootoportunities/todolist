@@ -2,6 +2,7 @@ import React, { FC, memo } from "react";
 import { IconButton, TextField } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
 import { useAddItemForm } from "./hooks/useAddItemForm";
+import styled from "styled-components";
 
 type AddItemFormProps = {
   addItem: (itemName: string) => void;
@@ -19,7 +20,7 @@ export const AddItemForm: FC<AddItemFormProps> = memo(
     } = useAddItemForm(addItem);
 
     return (
-      <div>
+      <Container>
         <TextField
           label={"Type value"}
           variant={"standard"}
@@ -33,7 +34,12 @@ export const AddItemForm: FC<AddItemFormProps> = memo(
         <IconButton onClick={addTask} color={"secondary"} disabled={disabled}>
           <Add />
         </IconButton>
-      </div>
+      </Container>
     );
   },
 );
+
+const Container = styled.div`
+  display: flex;
+  gap: 5px;
+`;

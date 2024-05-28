@@ -1,7 +1,7 @@
 import React, { FC, memo } from "react";
 import { AddItemForm } from "../../../components/AddItemForm/AddItemForm";
 import { EditableSpan } from "../../../components/EditableSpan/EditableSpan";
-import { Button, IconButton } from "@material-ui/core";
+import { Button, IconButton, Paper } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
 import { Task } from "./task/Task";
 import { useTodolist } from "./hooks/useTodolist";
@@ -51,32 +51,41 @@ export const Todolist: FC<TodolistPropsType> = memo(
     });
 
     return (
-      <TodoContainer>
+      <Paper
+        style={{
+          padding: "20px",
+          position: "relative",
+          width: "250px",
+          wordWrap: "break-word",
+        }}
+        elevation={3}
+      >
+        <IconButton
+          onClick={removeTodolistHandler}
+          disabled={todolist.entityStatus === StatusesType.LOADING}
+          style={{ position: "absolute", right: "0", top: "0" }}
+        >
+          <Delete />
+        </IconButton>
         <h3>
           <EditableSpan
             originTitle={todolist.title}
             onChange={changeTodolistTitleHandler}
             disabled={todolist.entityStatus === StatusesType.LOADING}
           />
-          <IconButton
-            onClick={removeTodolistHandler}
-            disabled={todolist.entityStatus === StatusesType.LOADING}
-          >
-            <Delete />
-          </IconButton>
         </h3>
         <AddItemForm
           addItem={addTask}
           disabled={todolist.entityStatus === StatusesType.LOADING}
         />
-        <ul>{mappedTasks}</ul>
+        <TasksList>{mappedTasks}</TasksList>
         <div>{mappedFilterButtons}</div>
-      </TodoContainer>
+      </Paper>
     );
   },
 );
 
-const TodoContainer = styled.div`
-  width: 250px;
-  word-wrap: break-word;
+const TasksList = styled.ul`
+  list-style: none;
+  padding-left: 0;
 `;
