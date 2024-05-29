@@ -6,7 +6,8 @@ export default {
   component: AddItemForm,
 };
 
-const actionCallback = action("Button add has been pushed with values");
+const actionCallback = async () =>
+  action("Button add has been pushed with values");
 
 export const AddItemFormExample = () => (
   <AddItemForm addItem={actionCallback} />

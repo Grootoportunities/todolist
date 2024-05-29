@@ -27,18 +27,16 @@ export const Task: FC<TaskProps> = memo(
         className={task.status === TaskStatuses.Completed ? "is-done" : ""}
         key={task.id}
       >
-        <div>
-          <Checkbox
-            checked={task.status === TaskStatuses.Completed}
-            onChange={onChangeStatusHandler}
-            disabled={disableCondition}
-          />
-          <EditableSpan
-            disabled={disableCondition}
-            originTitle={task.title}
-            onChange={onChangeTitleHandler}
-          />
-        </div>
+        <Checkbox
+          checked={task.status === TaskStatuses.Completed}
+          onChange={onChangeStatusHandler}
+          disabled={disableCondition}
+        />
+        <EditableSpan
+          disabled={disableCondition}
+          originTitle={task.title}
+          onChange={onChangeTitleHandler}
+        />
         <IconButton disabled={disableCondition} onClick={onDeleteHandler}>
           <Delete />
         </IconButton>
@@ -53,6 +51,7 @@ const TaskItem = styled.li`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  word-break: break-all;
 
   &::before {
     content: "•"; /* Символ маркера */

@@ -1,33 +1,35 @@
 import { ChangeEvent, KeyboardEvent, useState } from "react";
+import { AddItemHelpers } from "../AddItemForm";
 
-export const useAddItemForm = (onItemAdded: (itemName: string) => void) => {
-  const [newTaskName, setNewTaskName] = useState("");
+export const useAddItemForm = (
+  onItemAdded: (itemName: string, helpers: AddItemHelpers) => Promise<any>,
+) => {
+  const [itemTitle, setItemTitle] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const onChangeNewTaskNameHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewTaskName(e.currentTarget.value);
+    setItemTitle(e.currentTarget.value);
   };
 
   const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
     if (error !== null) setError(null);
+
     if (e.charCode === 13) {
-      onItemAdded(newTaskName);
-      setNewTaskName("");
+      onItemAdded(itemTitle, { setError, setItemTitle });
     }
   };
 
-  const addTask = () => {
-    if (newTaskName.trim() !== "") {
-      onItemAdded(newTaskName.trim());
-      setNewTaskName("");
-    } else setError("Field is required");
+  const addItemHandler = async () => {
+    if (itemTitle.trim() !== "")
+      onItemAdded(itemTitle.trim(), { setError, setItemTitle });
+    else setError("Field is required");
   };
 
   return {
-    newTaskName,
+    newTaskName: itemTitle,
     error,
     onChangeNewTaskNameHandler,
     onKeyPressHandler,
-    addTask,
+    addItemHandler,
   };
 };

@@ -78,8 +78,14 @@ export const Todolist: FC<TodolistPropsType> = memo(
           addItem={addTask}
           disabled={todolist.entityStatus === StatusesType.LOADING}
         />
-        <TasksList>{mappedTasks}</TasksList>
-        <div>{mappedFilterButtons}</div>
+        {tasks.length !== 0 ? (
+          <>
+            <TasksList>{mappedTasks}</TasksList>
+            <div>{mappedFilterButtons}</div>{" "}
+          </>
+        ) : (
+          <NoTasks>No Tasks</NoTasks>
+        )}
       </Paper>
     );
   },
@@ -88,4 +94,10 @@ export const Todolist: FC<TodolistPropsType> = memo(
 const TasksList = styled.ul`
   list-style: none;
   padding-left: 0;
+`;
+
+const NoTasks = styled.h3`
+  text-align: center;
+  margin-top: 40px;
+  opacity: 0.5;
 `;

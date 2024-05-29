@@ -4,7 +4,11 @@ import {
   TaskType,
   UpdateTaskModelType,
 } from "../../api/tasksAPI";
-import { AppDispatchType, RootStateType } from "../../app/store";
+import {
+  AppDispatchType,
+  RootStateType,
+  ThunkAPIConfigType,
+} from "../../app/store";
 import { appActions, StatusesType } from "../../app/app-reducer";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { clearTasksAndTodolists } from "../../common/actions/common.actions";
@@ -117,7 +121,7 @@ const deleteTask = createAsyncThunk<DeleteTaskThunk, DeleteTaskThunk>(
 const createTask = createAsyncThunk<
   TaskType,
   { todolistID: string; title: string },
-  { rejectValue: { errors: string[]; fieldsErrors: FieldsErrorsType[] } | null }
+  ThunkAPIConfigType
 >("tasks/createTask", async (arg, thunkAPI) => {
   const dispatch = thunkAPI.dispatch as AppDispatchType;
   const rejectWithValue = thunkAPI.rejectWithValue;
@@ -132,7 +136,7 @@ const createTask = createAsyncThunk<
       return res.data.data.item;
     }
 
-    handleServerAppError(dispatch, res.data);
+    handleServerAppError(dispatch, res.data, false);
     return rejectWithValue({
       errors: res.data.messages,
       fieldsErrors: res.data.fieldsErrors,
@@ -226,7 +230,7 @@ const updateTask = createAsyncThunk<
         status: StatusesType.FAILED,
       }),
     );
-
+    //TODO: Сделать чтобы rejectWithValue возвращалось в handleServerNetworkError?
     handleServerNetworkError(err, dispatch);
     return rejectWithValue(null);
   }

@@ -4,11 +4,6 @@ import { Add } from "@material-ui/icons";
 import { useAddItemForm } from "./hooks/useAddItemForm";
 import styled from "styled-components";
 
-type AddItemFormProps = {
-  addItem: (itemName: string) => void;
-  disabled?: boolean;
-};
-
 export const AddItemForm: FC<AddItemFormProps> = memo(
   ({ addItem, disabled = false }) => {
     const {
@@ -16,7 +11,7 @@ export const AddItemForm: FC<AddItemFormProps> = memo(
       error,
       onChangeNewTaskNameHandler,
       onKeyPressHandler,
-      addTask,
+      addItemHandler,
     } = useAddItemForm(addItem);
 
     return (
@@ -31,13 +26,27 @@ export const AddItemForm: FC<AddItemFormProps> = memo(
           helperText={error}
           disabled={disabled}
         />
-        <IconButton onClick={addTask} color={"secondary"} disabled={disabled}>
+        <IconButton
+          onClick={addItemHandler}
+          color={"secondary"}
+          disabled={disabled}
+        >
           <Add />
         </IconButton>
       </Container>
     );
   },
 );
+
+export type AddItemHelpers = {
+  setError: (error: string) => void;
+  setItemTitle: (title: string) => void;
+};
+
+type AddItemFormProps = {
+  addItem: (itemName: string, helpers: AddItemHelpers) => Promise<any>;
+  disabled?: boolean;
+};
 
 const Container = styled.div`
   display: flex;

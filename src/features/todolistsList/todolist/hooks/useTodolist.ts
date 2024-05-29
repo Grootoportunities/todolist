@@ -1,22 +1,25 @@
 import { useCallback, useEffect } from "react";
 import { FilterValuesType, TodolistDomainType } from "../../todolists-reducer";
 import { TaskStatuses } from "../../../../api/tasksAPI";
-import { useAppSelector } from "../../../../app/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../app/hooks/hooks";
 import { useActions } from "../../../../app/hooks/useActions";
 import { selectTasks } from "../../tasks.selectors";
 import { PropTypes } from "@material-ui/core";
 import { v1 } from "uuid";
+import { tasksThunks } from "../../tasks-reducer";
+import { AddItemHelpers } from "../../../../components/AddItemForm/AddItemForm";
 
 export const useTodolist = (demo: boolean, todolist: TodolistDomainType) => {
   const { id: todolistID, filter } = todolist;
   let tasks = useAppSelector(selectTasks(todolistID));
   const {
-    createTask,
     fetchTasks,
     changeTodolistFilter,
     deleteTodolist,
     updateTodolistTitle,
   } = useActions();
+
+  const dispatch = useAppDispatch();
 
   const filterButtons: FilterButtons[] = [
     { ID: v1(), filter: "all", text: "All" },
@@ -41,7 +44,21 @@ export const useTodolist = (demo: boolean, todolist: TodolistDomainType) => {
   );
 
   const addTask = useCallback(
-    (title: string) => createTask({ todolistID, title }),
+    async (title: string, helpers: AddItemHelpers) => {
+      const res = await dispatch(tasksThunks.createTask({ todolistID, title }));
+
+      if (tasksThunks.createTask.rejected.match(res)) {
+        const errorMessage = res.payload?.errors.length
+          ? res.payload.errors[0]
+          : "Some error occurred.";
+
+        helpers.setError(errorMessage);
+
+        return;
+      }
+
+      helpers.setItemTitle("");
+    },
     [todolistID],
   );
 

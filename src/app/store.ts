@@ -4,6 +4,7 @@ import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { appReducer } from "./app-reducer";
 import { authReducer } from "../features/auth/auth-reducer";
 import { configureStore, UnknownAction } from "@reduxjs/toolkit";
+import { FieldsErrorsType } from "../api/authAPI";
 
 export const store = configureStore({
   reducer: {
@@ -26,6 +27,10 @@ export type AppThunksType<ReturnType = void> = ThunkAction<
   unknown,
   UnknownAction
 >;
+
+export type ThunkAPIConfigType = {
+  rejectValue: { errors: string[]; fieldsErrors: FieldsErrorsType[] } | null;
+};
 
 // @ts-ignore
 window.store = store;
