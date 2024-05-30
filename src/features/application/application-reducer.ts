@@ -8,7 +8,7 @@ export enum StatusesType {
 }
 
 const slice = createSlice({
-  name: "app",
+  name: "application",
   initialState: {
     status: StatusesType.IDLE,
     error: null as string | null,
@@ -27,5 +27,5 @@ const slice = createSlice({
   },
 });
 
-export const appReducer = slice.reducer;
+export const applicationReducer = slice.reducer;
 export const appActions = slice.actions;

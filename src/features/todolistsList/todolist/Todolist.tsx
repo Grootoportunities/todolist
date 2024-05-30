@@ -6,7 +6,7 @@ import { Delete } from "@material-ui/icons";
 import { Task } from "./task/Task";
 import { useTodolist } from "./hooks/useTodolist";
 import { TodolistDomainType } from "../todolists-reducer";
-import { StatusesType } from "../../../app/app-reducer";
+import { StatusesType } from "../../application";
 import styled from "styled-components";
 
 type TodolistPropsType = {

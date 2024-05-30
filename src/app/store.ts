@@ -1,8 +1,7 @@
-import { tasksReducer } from "../features/todolistsList/tasks-reducer";
-import { todolistsReducer } from "../features/todolistsList/todolists-reducer";
+import { tasksReducer, todolistsReducer } from "../features/todolistsList";
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
-import { appReducer } from "./app-reducer";
-import { authReducer } from "../features/auth/auth-reducer";
+import { applicationReducer } from "../features/application";
+import { authReducer } from "../features/auth";
 import { configureStore, UnknownAction } from "@reduxjs/toolkit";
 import { FieldsErrorsType } from "../api/authAPI";
 
@@ -10,7 +9,7 @@ export const store = configureStore({
   reducer: {
     todolists: todolistsReducer,
     tasks: tasksReducer,
-    app: appReducer,
+    app: applicationReducer,
     auth: authReducer,
   },
 });

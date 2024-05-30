@@ -9,12 +9,13 @@ import Typography from "@material-ui/core/Typography";
 import Menu from "@material-ui/icons/Menu";
 import { TodolistsList } from "../features/todolistsList";
 import { ErrorSnackbar } from "../components/ErrorSnackBar/ErrorSnackbar";
-import { StatusesType } from "./app-reducer";
+import { StatusesType } from "../features/application";
 import { Navigate } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
-import { useApp } from "./hooks/useApp";
+
+import { useApp } from "./hooks/hooks";
 
 type AppProps = { demo?: boolean };
 

@@ -9,7 +9,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { ErrorSnackbar } from "../../components/ErrorSnackBar/ErrorSnackbar";
 import { Navigate } from "react-router-dom";
-import { StatusesType } from "../../app/app-reducer";
+import { StatusesType } from "../application";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { useLogin } from "./hooks/useLogin";

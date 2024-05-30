@@ -1,9 +1,8 @@
-import { useAppSelector } from "../../../app/hooks/hooks";
+import { useActions, useAppSelector } from "../../../app/hooks/hooks";
 import { useFormik } from "formik";
 import { useEffect } from "react";
-import { appSelectors } from "../../../app";
+import { appSelectors } from "../../application";
 import { selectIsLoggedIn } from "../auth.selectors";
-import { useActions } from "../../../app/hooks/useActions";
 import { authThunks } from "../auth-reducer";
 
 export const useLogin = () => {

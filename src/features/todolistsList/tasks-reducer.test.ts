@@ -1,11 +1,10 @@
 import { tasksActions, tasksReducer, tasksThunks } from "./tasks-reducer";
-
 import {
   TaskPriorities,
   TasksStateType,
   TaskStatuses,
 } from "../../api/tasksAPI";
-import { StatusesType } from "../../app/app-reducer";
+import { StatusesType } from "../application";
 import { BaseActionType } from "../../common/types/types";
 import { todolistsThunks } from "./todolists-reducer";
 

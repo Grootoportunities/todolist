@@ -1,5 +1,5 @@
 import axios from "axios";
-import { StatusesType } from "../app/app-reducer";
+import { StatusesType } from "../features/application";
 import { FieldsErrorsType } from "./authAPI";
 
 const instance = axios.create({

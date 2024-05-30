@@ -9,7 +9,7 @@ import {
   RootStateType,
   ThunkAPIConfigType,
 } from "../../app/store";
-import { appActions, StatusesType } from "../../app/app-reducer";
+import { appActions, StatusesType } from "../application";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { clearTasksAndTodolists } from "../../common/actions/common.actions";
 import { handleServerAppError } from "../../utils/error-utils";

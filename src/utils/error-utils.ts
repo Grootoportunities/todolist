@@ -1,4 +1,4 @@
-import { appActions, StatusesType } from "../app/app-reducer";
+import { appActions, StatusesType } from "../features/application";
 import { Dispatch } from "redux";
 import { CUDResponseType } from "../api/tasksAPI";
 

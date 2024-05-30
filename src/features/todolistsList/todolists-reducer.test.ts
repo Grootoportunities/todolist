@@ -6,7 +6,7 @@ import {
   todolistsThunks,
 } from "./todolists-reducer";
 import { v1 } from "uuid";
-import { StatusesType } from "../../app/app-reducer";
+import { StatusesType } from "../application";
 import { BaseActionType } from "../../common/types/types";
 
 let todolistId1: string;

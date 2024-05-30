@@ -1,7 +1,7 @@
 import { ChangeEvent, useCallback, useMemo } from "react";
 import { TaskStatuses, TaskType } from "../../../../../api/tasksAPI";
-import { StatusesType } from "../../../../../app/app-reducer";
-import { useActions } from "../../../../../app/hooks/useActions";
+import { StatusesType } from "../../../../application";
+import { useActions } from "../../../../../app/hooks/hooks";
 
 export const useTask = (
   task: TaskType,

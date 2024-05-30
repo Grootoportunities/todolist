@@ -1,8 +1,11 @@
 import { useCallback, useEffect } from "react";
 import { FilterValuesType, TodolistDomainType } from "../../todolists-reducer";
 import { TaskStatuses } from "../../../../api/tasksAPI";
-import { useAppDispatch, useAppSelector } from "../../../../app/hooks/hooks";
-import { useActions } from "../../../../app/hooks/useActions";
+import {
+  useActions,
+  useAppDispatch,
+  useAppSelector,
+} from "../../../../app/hooks/hooks";
 import { selectTasks } from "../../tasks.selectors";
 import { PropTypes } from "@material-ui/core";
 import { v1 } from "uuid";
