@@ -1,28 +1,22 @@
-import { AppDispatchType } from "../../app/store";
+import { AppDispatch } from "../../app/store";
 import axios from "axios";
-import { appActions, StatusesType } from "../../features/application";
+import { appActions } from "../../app";
+import { StatusesType } from "../enums";
 
 export const handleServerNetworkError = (
   err: unknown,
-  dispatch: AppDispatchType,
+  dispatch: AppDispatch,
   shouldSetAppError = true,
 ): void => {
   if (shouldSetAppError) {
     let errorMessage = "Some error occurred";
 
-    // ❗Проверка на наличие axios ошибки
-    if (axios.isAxiosError(err)) {
-      // ⏺️ err.response?.data?.message - например получение тасок с невалидной todolistId
-      // ⏺️ err?.message - например при создании таски в offline режиме
+    if (axios.isAxiosError(err))
       errorMessage =
         err.response?.data?.message || err?.message || errorMessage;
-      // ❗ Проверка на наличие нативной ошибки
-    } else if (err instanceof Error) {
+    else if (err instanceof Error)
       errorMessage = `Native error: ${err.message}`;
-      // ❗Какой-то непонятный кейс
-    } else {
-      errorMessage = JSON.stringify(err);
-    }
+    else errorMessage = JSON.stringify(err);
 
     dispatch(appActions.setAppError({ error: errorMessage }));
   }

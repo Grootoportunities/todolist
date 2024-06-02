@@ -1,9 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AppDispatchType, RootStateType } from "../../app/store";
-import { FieldsErrorsType } from "../../api/authAPI";
+import { AppDispatch, RootState } from "../../app/store";
+import { FieldsErrorsType } from "../../features/auth";
 
 export const createAppAsyncThunk = createAsyncThunk.withTypes<{
-  state: RootStateType;
-  dispatch: AppDispatchType;
+  state: RootState;
+  dispatch: AppDispatch;
   rejectValue: { errors: string[]; fieldsErrors: FieldsErrorsType[] } | null;
 }>();

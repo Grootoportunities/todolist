@@ -1,5 +1,7 @@
-import * as authSelectors from "./auth.selectors";
-import { authThunks, authReducer } from "./auth-reducer";
-import { Login } from "./Login";
+import * as authSelectors from "./model/auth.selectors";
+import { authThunks, authSlice } from "./model/authSlice";
+import { Login } from "./ui/login/Login";
+export * from "./api/authAPI";
+export * from "./api/types";
 
-export { authSelectors, authThunks, authReducer, Login };
+export { authSelectors, authThunks, authSlice, Login };

@@ -1,35 +1,24 @@
-import { tasksReducer, todolistsReducer } from "../features/todolistsList";
-import { ThunkAction, ThunkDispatch } from "redux-thunk";
-import { applicationReducer } from "../features/application";
-import { authReducer } from "../features/auth";
-import { configureStore, UnknownAction } from "@reduxjs/toolkit";
-import { FieldsErrorsType } from "../api/authAPI";
+import { appSlice } from "./index";
+import { authSlice } from "../features/auth";
+import { configureStore, ThunkDispatch, UnknownAction } from "@reduxjs/toolkit";
+import { todolistsSlice } from "../features/todolistsList/ui/todolist";
+import { tasksSlice } from "../features/todolistsList/ui/todolist/ui/task";
 
 export const store = configureStore({
   reducer: {
-    todolists: todolistsReducer,
-    tasks: tasksReducer,
-    app: applicationReducer,
-    auth: authReducer,
+    todolists: todolistsSlice,
+    tasks: tasksSlice,
+    app: appSlice,
+    auth: authSlice,
   },
 });
 
-export type RootStateType = ReturnType<typeof store.getState>;
-export type AppDispatchType = ThunkDispatch<
-  RootStateType,
-  unknown,
-  UnknownAction
->;
-export type AppThunksType<ReturnType = void> = ThunkAction<
-  ReturnType,
-  RootStateType,
-  unknown,
-  UnknownAction
->;
+export type RootState = ReturnType<typeof store.getState>;
 
-export type ThunkAPIConfigType = {
-  rejectValue: { errors: string[]; fieldsErrors: FieldsErrorsType[] } | null;
-};
+// //TODO Если не ошибаюсь, так описано в документации
+// export type AppDispatch = typeof store.dispatch;
+
+export type AppDispatch = ThunkDispatch<RootState, unknown, UnknownAction>;
 
 // @ts-ignore
 window.store = store;
