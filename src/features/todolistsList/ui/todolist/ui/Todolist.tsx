@@ -1,13 +1,12 @@
 import React, { FC, memo } from "react";
-import { AddItemForm } from "../../../../../common/components";
-import { EditableSpan } from "../../../../../common/components";
+import { AddItemForm, EditableSpan } from "../../../../../common/components";
 import { Button, IconButton, Paper } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
 import { Task } from "./task";
 import { useTodolist } from "../lib/useTodolist";
 import { TodolistDomainType } from "../model/todolistsSlice";
-import styled from "styled-components";
 import { StatusesType } from "../../../../../common/enums";
+import { S } from "./_styles";
 
 type TodolistPropsType = {
   todolist: TodolistDomainType;
@@ -81,24 +80,13 @@ export const Todolist: FC<TodolistPropsType> = memo(
         />
         {tasks.length !== 0 ? (
           <>
-            <TasksList>{mappedTasks}</TasksList>
+            <S.TasksList>{mappedTasks}</S.TasksList>
             <div>{mappedFilterButtons}</div>{" "}
           </>
         ) : (
-          <NoTasks>No Tasks</NoTasks>
+          <S.NoTasks>No Tasks</S.NoTasks>
         )}
       </Paper>
     );
   },
 );
-
-const TasksList = styled.ul`
-  list-style: none;
-  padding-left: 0;
-`;
-
-const NoTasks = styled.h3`
-  text-align: center;
-  margin-top: 40px;
-  opacity: 0.5;
-`;

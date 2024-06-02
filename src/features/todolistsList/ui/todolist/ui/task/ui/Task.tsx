@@ -3,9 +3,9 @@ import { Checkbox, IconButton } from "@material-ui/core";
 import { EditableSpan } from "../../../../../../../common/components";
 import { Delete } from "@material-ui/icons";
 import { useTask } from "../lib/useTask";
-import styled from "styled-components";
 import { TaskStatuses } from "../../../../../../../common/enums";
 import { TaskType } from "../api/types";
+import { S } from "./_styles";
 
 type TaskProps = {
   task: TaskType;
@@ -24,9 +24,10 @@ export const Task: FC<TaskProps> = memo(
     } = useTask(task, todolistId, disabled);
 
     return (
-      <TaskItem
+      <S.TaskItem
         className={task.status === TaskStatuses.Completed ? "is-done" : ""}
         key={task.id}
+        isDone={task.status}
       >
         <Checkbox
           checked={task.status === TaskStatuses.Completed}
@@ -41,26 +42,7 @@ export const Task: FC<TaskProps> = memo(
         <IconButton disabled={disableCondition} onClick={onDeleteHandler}>
           <Delete />
         </IconButton>
-      </TaskItem>
+      </S.TaskItem>
     );
   },
 );
-
-const TaskItem = styled.li`
-  position: relative;
-  padding-left: 10px; /* Отступ для пользовательского маркера */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  word-break: break-all;
-
-  &::before {
-    content: "•"; /* Символ маркера */
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%); /* Центрирование маркера по вертикали */
-    color: black; /* Цвет маркера */
-    font-size: 1.5em; /* Размер маркера */
-  }
-`;
