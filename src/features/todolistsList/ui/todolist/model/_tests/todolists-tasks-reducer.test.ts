@@ -1,10 +1,7 @@
-import {
-  TodolistDomainType,
-  todolistsSlice,
-  todolistsThunks,
-} from "../todolistsSlice";
+import { todolistsSlice, todolistsThunks } from "../todolistsSlice";
 import { tasksSlice, TasksStateType } from "../../ui/task";
 import { BaseActionType } from "../../../../../../common/types";
+import { TodolistDomainType } from "../types";
 
 test("ID's of tasks and todolists should be equal", () => {
   const startTodolistsState: TodolistDomainType[] = [];

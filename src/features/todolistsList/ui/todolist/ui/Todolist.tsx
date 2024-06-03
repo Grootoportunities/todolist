@@ -4,9 +4,9 @@ import { Button, IconButton, Paper } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
 import { Task } from "./task";
 import { useTodolist } from "../lib/useTodolist";
-import { TodolistDomainType } from "../model/todolistsSlice";
 import { StatusesType } from "../../../../../common/enums";
 import { S } from "./_styles";
+import { TodolistDomainType } from "../model/types";
 
 type TodolistPropsType = {
   todolist: TodolistDomainType;

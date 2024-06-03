@@ -1,6 +1,4 @@
 import {
-  FilterValuesType,
-  TodolistDomainType,
   todolistsActions,
   todolistsSlice,
   todolistsThunks,
@@ -8,6 +6,7 @@ import {
 import { v1 } from "uuid";
 import { BaseActionType } from "../../../../../../common/types";
 import { StatusesType } from "../../../../../../common/enums";
+import { FilterValuesType, TodolistDomainType } from "../types";
 
 let todolistId1: string;
 let todolistId2: string;

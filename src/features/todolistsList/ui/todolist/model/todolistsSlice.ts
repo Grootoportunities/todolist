@@ -3,11 +3,18 @@ import { appActions } from "../../../../../app";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { clearTasksAndTodolists } from "../../../../../common/actions";
 import { AppDispatch } from "../../../../../app/store";
-import { handleServerNetworkError } from "../../../../../common/utils";
+import {
+  handleServerAppError,
+  handleServerNetworkError,
+} from "../../../../../common/utils";
 import { StatusesType } from "../../../../../common/enums";
 import { ThunkAPIConfigType } from "../../../../../common/types";
-import { handleServerAppError } from "../../../../../common/utils";
 import { TodolistType } from "../api/types";
+import {
+  FilterValuesType,
+  TodolistDomainType,
+  UpdateTodolistThunk,
+} from "./types";
 
 const slice = createSlice({
   name: "todolists",
@@ -77,7 +84,7 @@ const slice = createSlice({
 const fetchTodolists = createAsyncThunk<
   TodolistType[],
   undefined,
-  { rejectValue: null }
+  ThunkAPIConfigType
 >(`${slice.name}/fetchTodolists`, async (_, thunkAPI) => {
   const dispatch = thunkAPI.dispatch as AppDispatch;
   const rejectWithValue = thunkAPI.rejectWithValue;
@@ -241,18 +248,4 @@ export const todolistsThunks = {
   deleteTodolist,
   createTodolist,
   updateTodolistTitle,
-};
-
-//TYPES
-
-export type FilterValuesType = "all" | "active" | "completed";
-
-export type TodolistDomainType = {
-  filter: FilterValuesType;
-  entityStatus: StatusesType;
-} & TodolistType;
-
-type UpdateTodolistThunk = {
-  todolistID: string;
-  title: string;
 };

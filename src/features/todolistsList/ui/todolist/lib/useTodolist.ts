@@ -1,11 +1,11 @@
 import { useCallback, useEffect } from "react";
-import { FilterValuesType, TodolistDomainType } from "../model/todolistsSlice";
 import { selectTasks, tasksThunks, TaskType } from "../ui/task";
 import { PropTypes } from "@material-ui/core";
 import { v1 } from "uuid";
 import { useActions, useAppSelector } from "../../../../../common/hooks";
 import { AddItemHelpers } from "../../../../../common/components";
 import { TaskStatuses } from "../../../../../common/enums";
+import { FilterValuesType, TodolistDomainType } from "../model/types";
 
 export const useTodolist = (demo: boolean, todolist: TodolistDomainType) => {
   const { id: todolistID, filter } = todolist;
