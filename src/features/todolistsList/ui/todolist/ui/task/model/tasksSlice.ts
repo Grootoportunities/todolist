@@ -221,7 +221,6 @@ const updateTask = createAsyncThunk<
         status: StatusesType.FAILED,
       }),
     );
-    //TODO: Сделать чтобы rejectWithValue возвращалось в handleServerNetworkError?
     handleServerNetworkError(err, dispatch);
     return rejectWithValue(null);
   }

@@ -16,6 +16,7 @@ import {
   UpdateTodolistThunk,
 } from "./types";
 
+//TODO: А тут - типизирует автоматически!
 const slice = createSlice({
   name: "todolists",
   initialState: [] as TodolistDomainType[],
@@ -78,13 +79,12 @@ const slice = createSlice({
 
 //THUNKS
 
-//TODO Сделать санки, которые используются в tasksReducer - отдельными экшенами с помощью actionCreator?
-// UPD: Не получится: это санки, а не редюсеры. Попробовал сделать общие экшены с application редюсера (как делал в
-// видосе Димыч) - не помогло.
 const fetchTodolists = createAsyncThunk<
   TodolistType[],
   undefined,
   ThunkAPIConfigType
+
+  //TODO: Обращаюсь к slice.name без проблем
 >(`${slice.name}/fetchTodolists`, async (_, thunkAPI) => {
   const dispatch = thunkAPI.dispatch as AppDispatch;
   const rejectWithValue = thunkAPI.rejectWithValue;
