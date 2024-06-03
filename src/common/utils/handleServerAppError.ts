@@ -1,6 +1,7 @@
 import { Dispatch } from "redux";
+import {appActions} from "../../app/model/appSlice";
 import { ResponseType } from "../types";
-import { appActions } from "../../app";
+
 import { StatusesType } from "../enums";
 
 export const handleServerAppError = <D>(

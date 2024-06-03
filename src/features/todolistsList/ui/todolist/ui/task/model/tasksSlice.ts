@@ -1,6 +1,6 @@
+import {appActions} from "../../../../../../../app/model/appSlice";
+import {RootState} from "../../../../../../../app/store";
 import { tasksAPI } from "../api/tasksAPI";
-import { AppDispatch, RootState } from "../../../../../../../app/store";
-import { appActions } from "../../../../../../../app";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { clearTasksAndTodolists } from "../../../../../../../common/actions";
 import { handleServerNetworkError } from "../../../../../../../common/utils";
@@ -117,7 +117,7 @@ const createTask = createAsyncThunk<
   { todolistID: string; title: string },
   ThunkAPIConfigType
 >("tasks/createTask", async (arg, thunkAPI) => {
-  const dispatch = thunkAPI.dispatch as AppDispatch;
+  const dispatch = thunkAPI.dispatch;
   const rejectWithValue = thunkAPI.rejectWithValue;
 
   dispatch(appActions.setAppStatus({ status: StatusesType.LOADING }));
@@ -151,7 +151,7 @@ const updateTask = createAsyncThunk<
   >,
   ThunkAPIConfigType
 >("tasks/updateTask", async (arg, thunkAPI) => {
-  const dispatch = thunkAPI.dispatch as AppDispatch;
+  const dispatch = thunkAPI.dispatch;
   const rejectWithValue = thunkAPI.rejectWithValue;
   const state = thunkAPI.getState() as RootState;
 

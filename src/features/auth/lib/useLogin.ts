@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import { useEffect } from "react";
-import { appSelectors } from "../../../app";
+import {selectIsInit, selectStatus} from "../../../app/model/app.selectors";
 import { selectIsLoggedIn } from "../model/auth.selectors";
 import { authThunks } from "../model/authSlice";
 import { useAppSelector } from "../../../common/hooks";
@@ -9,8 +9,8 @@ import { useActions } from "../../../common/hooks";
 export const useLogin = () => {
   const { initApp, setLogin } = useActions();
   const isLoggedIn = useAppSelector(selectIsLoggedIn);
-  const status = useAppSelector(appSelectors.selectStatus);
-  const isInit = useAppSelector(appSelectors.selectIsInit);
+  const status = useAppSelector(selectStatus);
+  const isInit = useAppSelector(selectIsInit);
 
   const formik = useFormik({
     validate: (values) => {

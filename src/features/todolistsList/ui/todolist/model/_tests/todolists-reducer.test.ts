@@ -1,6 +1,6 @@
 import {
   todolistsActions,
-  todolistsSlice,
+  todolistsReducer,
   todolistsThunks,
 } from "../todolistsSlice";
 import { v1 } from "uuid";
@@ -44,7 +44,7 @@ test("correct todolist should be removed", () => {
     payload: todolistId1,
   };
 
-  const endState = todolistsSlice(startState, action);
+  const endState = todolistsReducer(startState, action);
 
   expect(endState.length).toBe(1);
   expect(endState[0].id).toBe(todolistId2);
@@ -65,7 +65,7 @@ test("correct todolist should be added", () => {
     },
   };
 
-  const endState = todolistsSlice(startState, action);
+  const endState = todolistsReducer(startState, action);
 
   expect(endState.length).toBe(3);
   expect(endState[0].title).toBe(newTodolistTitle);
@@ -84,7 +84,7 @@ test("correct todolist should change its name", () => {
     },
   };
 
-  const endState = todolistsSlice(startState, action);
+  const endState = todolistsReducer(startState, action);
 
   expect(endState[0].title).toBe("What to learn");
   expect(endState[1].title).toBe(newTodolistTitle);
@@ -93,7 +93,7 @@ test("correct todolist should change its name", () => {
 test("correct filter of todolist should be changed", () => {
   let newFilter: FilterValuesType = "completed";
 
-  const endState = todolistsSlice(
+  const endState = todolistsReducer(
     startState,
     todolistsActions.changeTodolistFilter({
       todolistID: todolistId2,
@@ -113,7 +113,7 @@ test("Todolists should be setted correctly", () => {
     payload: startState,
   };
 
-  const endState = todolistsSlice([], action);
+  const endState = todolistsReducer([], action);
 
   expect(endState[0].title).toBe("What to learn");
   expect(endState[1].title).toBe("What to buy");
@@ -122,7 +122,7 @@ test("Todolists should be setted correctly", () => {
 test("Todolist entity status should be changed", () => {
   expect(startState[0].entityStatus).toBe(StatusesType.IDLE);
 
-  const endState = todolistsSlice(
+  const endState = todolistsReducer(
     startState,
     todolistsActions.setTodolistEntityStatus({
       todolistID: todolistId1,

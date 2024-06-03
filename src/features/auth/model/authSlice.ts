@@ -1,13 +1,12 @@
-import { appActions } from "../../../app";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { clearTasksAndTodolists } from "../../../common/actions";
-import { handleServerNetworkError } from "../../../common/utils";
-import { AppDispatch, RootState } from "../../../app/store";
-import { StatusesType } from "../../../common/enums";
-import { ThunkAPIConfigType } from "../../../common/types";
-import { handleServerAppError } from "../../../common/utils";
-import { authAPI } from "../api/authAPI";
-import { FieldsErrorsType, LoginParamsType } from "../api/types";
+import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {appActions} from "../../../app/model/appSlice";
+import {AppDispatch} from "../../../app/store";
+import {clearTasksAndTodolists} from "../../../common/actions";
+import {StatusesType} from "../../../common/enums";
+import {ThunkAPIConfigType} from "../../../common/types";
+import {handleServerAppError, handleServerNetworkError} from "../../../common/utils";
+import {authAPI} from "../api/authAPI";
+import {LoginParamsType} from "../api/types";
 
 //TODO: Тайпскрипт не типизирует автоматически slice!
 const slice = createSlice({
@@ -28,7 +27,6 @@ const slice = createSlice({
 });
 
 // THUNKS
-
 //TODO: Если в типизации санки третьим параметром я передам объект, в котором хранится типизация state и dispatch, то
 // начинает ругаться на slice, extraReducers, санку и authSlice (если я передаю объект, в котором лишь типизация
 // rejectValue, то не ругается). В store также ругается на сам store, а вот RootState как будто ругается на циклическую
@@ -36,12 +34,7 @@ const slice = createSlice({
 const initApp = createAsyncThunk<
   boolean,
   undefined,
-  // ThunkAPIConfigType
-  {
-    state: RootState;
-    dispatch: AppDispatch;
-    rejectValue: { errors: string[]; fieldsErrors: FieldsErrorsType[] } | null;
-  }
+  ThunkAPIConfigType
   //TODO: Если в санке в первый параметр написать `${slice.name}/initApp` - тоже начнёт ругаться. Но в сторе никаких
   // проблем не будет.
   // !!ОБРАТИ ВНИМАНИЕ: В слайсе тудулиста, если я пишу первый параметр через slice.name, то оно не
@@ -80,7 +73,7 @@ const initApp = createAsyncThunk<
 const setLogin = createAsyncThunk<boolean, LoginParamsType, ThunkAPIConfigType>(
   `auth/setLogin`,
   async (data, thunkAPI) => {
-    const dispatch = thunkAPI.dispatch as AppDispatch;
+    const dispatch = thunkAPI.dispatch;
     const rejectWithValue = thunkAPI.rejectWithValue;
 
     dispatch(appActions.setAppStatus({ status: StatusesType.LOADING }));
@@ -134,5 +127,5 @@ const deleteLogin = createAsyncThunk<boolean, undefined, ThunkAPIConfigType>(
   },
 );
 
-export const authSlice = slice.reducer;
+export const authReducer = slice.reducer;
 export const authThunks = { deleteLogin, setLogin, initApp };

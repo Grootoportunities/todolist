@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
-import { todolistsAPI } from "../features/todolistsList/ui/todolist";
+import {todolistsAPI} from "../features/todolistsList/ui/todolist/api/todolistsAPI";
 import { tasksAPI } from "../features/todolistsList/ui/todolist/ui/task";
 
 export default {

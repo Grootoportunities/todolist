@@ -1,20 +1,21 @@
-import { Provider } from "react-redux";
-import { RootState } from "../app/store";
-import { applyMiddleware, combineReducers, legacy_createStore } from "redux";
-import { v1 } from "uuid";
-import { appSlice } from "../app";
-import { thunk } from "redux-thunk";
-import { authSlice } from "../features/auth";
-import { StatusesType, TaskPriorities, TaskStatuses } from "../common/enums";
-import { tasksSlice } from "../features/todolistsList/ui/todolist/ui/task";
-import { todolistsSlice } from "../features/todolistsList/ui/todolist";
+import {Provider} from "react-redux";
+import {applyMiddleware, combineReducers, legacy_createStore} from "redux";
+import {thunk} from "redux-thunk";
+import {v1} from "uuid";
+import {appReducer} from "../app/model/appSlice";
+import {RootState} from "../app/store";
+import {StatusesType, TaskPriorities, TaskStatuses} from "../common/enums";
+import {authReducer} from "../features/auth/model/authSlice";
+import {todolistsReducer} from "../features/todolistsList/ui/todolist/model/todolistsSlice";
+import {tasksSlice} from "../features/todolistsList/ui/todolist/ui/task";
+
 
 const rootReducer = combineReducers({
   tasks: tasksSlice,
-  todolists: todolistsSlice,
-  app: appSlice,
-  login: authSlice,
-  auth: authSlice,
+  todolists: todolistsReducer,
+  app: appReducer,
+  login: authReducer,
+  auth: authReducer,
 });
 
 const initialGlobalState: RootState = {

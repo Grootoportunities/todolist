@@ -1,4 +1,4 @@
-import { todolistsSlice, todolistsThunks } from "../todolistsSlice";
+import {todolistsReducer, todolistsThunks} from "../todolistsSlice";
 import { tasksSlice, TasksStateType } from "../../ui/task";
 import { BaseActionType } from "../../../../../../common/types";
 import { TodolistDomainType } from "../types";
@@ -19,7 +19,7 @@ test("ID's of tasks and todolists should be equal", () => {
     },
   };
 
-  const endTodolistState = todolistsSlice(startTodolistsState, action);
+  const endTodolistState = todolistsReducer(startTodolistsState, action);
   const endTasksState = tasksSlice(startTasksState, action);
 
   const keys = Object.keys(endTasksState);
