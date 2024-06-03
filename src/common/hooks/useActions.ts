@@ -1,17 +1,12 @@
-import { useAppDispatch } from "./useAppDispatch";
-import { useMemo } from "react";
-import { bindActionCreators } from "redux";
+import {useMemo} from "react";
+import {bindActionCreators} from "redux";
+import {appActions} from "../../app/model/appSlice";
+import {authThunks} from "../../features/auth/model/authSlice";
+import {todolistsActions, todolistsThunks} from "../../features/todolistsList/ui/todolist/model/todolistsSlice";
 
-import { authThunks } from "../../features/auth";
-import { appActions } from "../../app";
-import {
-  tasksActions,
-  tasksThunks,
-} from "../../features/todolistsList/ui/todolist/ui/task";
-import {
-  todolistsActions,
-  todolistsThunks,
-} from "../../features/todolistsList/ui/todolist";
+import {tasksActions, tasksThunks,} from "../../features/todolistsList/ui/todolist/ui/task";
+import {useAppDispatch} from "./useAppDispatch";
+
 
 const allActions = {
   ...tasksThunks,

@@ -1,11 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
+import {store} from "./app/store";
 import App from "./app/ui/App";
 import { Provider } from "react-redux";
-import { store } from "./app/store";
+
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Login } from "./features/auth";
+import {Login} from "./features/auth/ui/login/Login";
+
 
 const PATH = {
   APP: "/",

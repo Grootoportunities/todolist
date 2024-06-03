@@ -1,6 +1,6 @@
-import { AppDispatch } from "../../app/store";
 import axios from "axios";
-import { appActions } from "../../app";
+import {appActions} from "../../app/model/appSlice";
+import {AppDispatch} from "../../app/store";
 import { StatusesType } from "../enums";
 
 export const handleServerNetworkError = (

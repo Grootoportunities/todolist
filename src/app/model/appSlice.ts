@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { StatusesType } from "../../common/enums";
 
 const slice = createSlice({
-  name: "application",
+  name: "app",
   initialState: {
     status: StatusesType.IDLE,
     error: null as string | null,
@@ -21,5 +21,5 @@ const slice = createSlice({
   },
 });
 
-export const appSlice = slice.reducer;
+export const appReducer = slice.reducer;
 export const appActions = slice.actions;

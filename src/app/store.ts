@@ -1,16 +1,17 @@
-import { appSlice } from "./index";
-import { authSlice } from "../features/auth";
-import { configureStore } from "@reduxjs/toolkit";
-import { todolistsSlice } from "../features/todolistsList/ui/todolist";
-import { tasksSlice } from "../features/todolistsList/ui/todolist/ui/task";
+import {configureStore} from "@reduxjs/toolkit";
+import {authReducer} from "../features/auth/model/authSlice";
+import {todolistsReducer} from "../features/todolistsList/ui/todolist/model/todolistsSlice";
+import {tasksSlice} from "../features/todolistsList/ui/todolist/ui/task";
+import {appReducer} from "./model/appSlice";
+
 
 export const store = configureStore({
-  reducer: {
-    todolists: todolistsSlice,
-    tasks: tasksSlice,
-    app: appSlice,
-    auth: authSlice,
-  },
+	reducer: {
+		todolists: todolistsReducer,
+		tasks: tasksSlice,
+		app: appReducer,
+		auth: authReducer,
+	},
 });
 
 //1. Переустановить Node modules

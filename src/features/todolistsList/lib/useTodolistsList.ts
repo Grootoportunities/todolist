@@ -1,7 +1,8 @@
 import { useCallback, useEffect } from "react";
-import { selectTodolist, todolistsThunks } from "../ui/todolist";
 import { useActions, useAppSelector } from "../../../common/hooks";
 import { AddItemHelpers } from "../../../common/components";
+import {selectTodolist} from "../ui/todolist/model/todolists.selectors";
+import {todolistsThunks} from "../ui/todolist/model/todolistsSlice";
 
 export const useTodolistsList = (demo: boolean) => {
   const todolists = useAppSelector(selectTodolist);
