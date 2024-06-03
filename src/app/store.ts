@@ -1,6 +1,6 @@
 import { appSlice } from "./index";
 import { authSlice } from "../features/auth";
-import { configureStore, ThunkDispatch, UnknownAction } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import { todolistsSlice } from "../features/todolistsList/ui/todolist";
 import { tasksSlice } from "../features/todolistsList/ui/todolist/ui/task";
 
@@ -13,12 +13,14 @@ export const store = configureStore({
   },
 });
 
+//1. Переустановить Node modules
+//2. Поменять версию тайпскрипта (вниз/вверх (4.4 или 5 и т.д))
+//3. Удалить и переустановить тайпскрипт глобально
+//4. Переустановить WebStorm
+//5. Винду :c
+
 export type RootState = ReturnType<typeof store.getState>;
-
-// //TODO Если не ошибаюсь, так описано в документации
-// export type AppDispatch = typeof store.dispatch;
-
-export type AppDispatch = ThunkDispatch<RootState, unknown, UnknownAction>;
+export type AppDispatch = typeof store.dispatch;
 
 // @ts-ignore
 window.store = store;

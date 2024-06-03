@@ -1,11 +1,9 @@
 import { useCallback, useEffect } from "react";
 import { FilterValuesType, TodolistDomainType } from "../model/todolistsSlice";
-import { selectTasks, TaskType } from "../ui/task";
+import { selectTasks, tasksThunks, TaskType } from "../ui/task";
 import { PropTypes } from "@material-ui/core";
 import { v1 } from "uuid";
-import { tasksThunks } from "../ui/task";
-import { useAppDispatch, useAppSelector } from "../../../../../common/hooks";
-import { useActions } from "../../../../../common/hooks";
+import { useActions, useAppSelector } from "../../../../../common/hooks";
 import { AddItemHelpers } from "../../../../../common/components";
 import { TaskStatuses } from "../../../../../common/enums";
 
@@ -18,9 +16,8 @@ export const useTodolist = (demo: boolean, todolist: TodolistDomainType) => {
     changeTodolistFilter,
     deleteTodolist,
     updateTodolistTitle,
+    createTask,
   } = useActions();
-
-  const dispatch = useAppDispatch();
 
   const filterButtons: FilterButtons[] = [
     { ID: v1(), filter: "all", text: "All" },
@@ -48,7 +45,7 @@ export const useTodolist = (demo: boolean, todolist: TodolistDomainType) => {
 
   const addTask = useCallback(
     async (title: string, helpers: AddItemHelpers) => {
-      const res = await dispatch(tasksThunks.createTask({ todolistID, title }));
+      const res = await createTask({ todolistID, title });
 
       if (tasksThunks.createTask.rejected.match(res)) {
         const errorMessage = res.payload?.errors.length
