@@ -36,23 +36,23 @@ const slice = createSlice({
 const initApp = createAsyncThunk<
   boolean,
   undefined,
-  // ThunkAPIConfigType
-  {
-    state: RootState;
-    dispatch: AppDispatch;
-    rejectValue: { errors: string[]; fieldsErrors: FieldsErrorsType[] } | null;
-  }
+  ThunkAPIConfigType
+  // {
+  //   state: RootState;
+  //   dispatch: AppDispatch;
+  //   rejectValue: { errors: string[]; fieldsErrors: FieldsErrorsType[] } | null;
+  // }
   //TODO: Если в санке в первый параметр написать `${slice.name}/initApp` - тоже начнёт ругаться. Но в сторе никаких
   // проблем не будет.
   // !!ОБРАТИ ВНИМАНИЕ: В слайсе тудулиста, если я пишу первый параметр через slice.name, то оно не
   // ругается. Разницу, которую я заметил: в слайсе тудулиста, тайпскрипт типизирует слайс автоматически. В данном
   // слайсе - не типизирует.
->("auth/initApp", async (_, { dispatch, rejectWithValue }) => {
+>("auth/initApp", async (_, thunkAPI) => {
   //TODO: Такой костыль (thunkAPI.dispatch as AppDispatch) мне подсказали на саппорте: взять из thunkAPI dispatch и
   // сделать его как AppDispatch.
 
-  // const dispatch = thunkAPI.dispatch as AppDispatch;
-  // const rejectWithValue = thunkAPI.rejectWithValue;
+  const dispatch = thunkAPI.dispatch as AppDispatch;
+  const rejectWithValue = thunkAPI.rejectWithValue;
 
   try {
     const res = await authAPI.init();
