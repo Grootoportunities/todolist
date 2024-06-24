@@ -7,6 +7,7 @@
   "name": "1-lesson",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://Grootoportunities.github.io/todolist",
   "dependencies": {
     "@babel/runtime": "7.23.6",
     "@emotion/react": "11.11.3",
@@ -29,6 +30,7 @@
     "@types/uuid": "9.0.7",
     "axios": "1.6.3",
     "formik": "2.4.5",
+    "gh-pages": "^6.1.1",
     "prettier": "3.1.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -45,13 +47,15 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "GENERATE_SOURCEMAP=false react-scripts build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "storybook dev -p 9009",
     "build-storybook": "storybook build",
     "jest:integration": "jest -c integration/jest.config.js",
-    "test:integration": "start-server-and-test storybook http-get://localhost:6006 jest:integration"
+    "test:integration": "start-server-and-test storybook http-get://localhost:6006 jest:integration",
+    "predeploy": "yarn run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
