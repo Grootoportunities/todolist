@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { useTodolistsList } from "../lib/useTodolistsList";
+import { useTodolistsList } from "../lib";
 import { Grid } from "@material-ui/core";
 import { Todolist } from "./todolist";
 import { AddItemForm } from "../../../common/components";

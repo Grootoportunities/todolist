@@ -1,10 +1,10 @@
 import { useFormik } from "formik";
 import { useEffect } from "react";
-import { appSelectors } from "../../../app";
-import { selectIsLoggedIn } from "../model/auth.selectors";
-import { authThunks } from "../model/authSlice";
+import { authThunks } from "../model";
 import { useAppSelector } from "../../../common/hooks";
 import { useActions } from "../../../common/hooks";
+import { appSelectors } from "../../../app/model";
+import { selectIsLoggedIn } from "../model/auth.selectors";
 
 export const useLogin = () => {
   const { initApp, setLogin } = useActions();

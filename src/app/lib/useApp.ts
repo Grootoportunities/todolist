@@ -1,8 +1,8 @@
 import { useCallback, useEffect } from "react";
-import { authSelectors } from "../../features/auth";
-import { selectIsInit, selectStatus } from "../model/app.selectors";
 import { useAppSelector } from "../../common/hooks";
 import { useActions } from "../../common/hooks";
+import { selectIsInit, selectStatus } from "../model/app.selectors";
+import { authSelectors } from "../../features/auth/model";
 
 export const useApp = () => {
   const status = useAppSelector(selectStatus);

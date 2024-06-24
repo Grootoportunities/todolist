@@ -1,4 +1,4 @@
-import { FieldsErrorsType } from "../../features/auth";
+import { FieldsErrorsType } from "../../features/auth/api";
 
 export type BaseActionType<T extends (...args: any) => any> = Omit<
   ReturnType<T>,
