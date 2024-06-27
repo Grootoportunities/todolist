@@ -3,9 +3,9 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./app/ui/App";
 import { Provider } from "react-redux";
-import { store } from "./app/store";
+import { store } from "app/store";
 import { createHashRouter, RouterProvider } from "react-router-dom";
-import { Login } from "./features/auth/ui/Login";
+import { Login } from "features/auth/ui/Login";
 
 const PATH = {
   APP: "/",

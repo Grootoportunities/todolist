@@ -1,14 +1,14 @@
-import { tasksAPI } from "../api";
-import { AppDispatch, RootState } from "../../../app/store";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { clearTasksAndTodolists } from "../../../common/actions";
-import { handleServerNetworkError } from "../../../common/utils";
-import { todolistsThunks } from "./todolistsSlice";
-import { StatusesType } from "../../../common/enums";
-import { ThunkAPIConfigType } from "../../../common/types";
-import { handleServerAppError } from "../../../common/utils";
 import { TasksStateType, TaskType, UpdateTaskModelType } from "../api";
-import { appActions } from "../../../app/model";
+import { clearTasksAndTodolists } from "common/actions";
+import { handleServerNetworkError } from "common/utils";
+import { handleServerAppError } from "common/utils";
+import { AppDispatch, RootState } from "app/store";
+import { todolistsThunks } from "./todolistsSlice";
+import { ThunkAPIConfigType } from "common/types";
+import { StatusesType } from "common/enums";
+import { appActions } from "app/model";
+import { tasksAPI } from "../api";
 
 const slice = createSlice({
   name: "tasks",
@@ -72,7 +72,8 @@ const slice = createSlice({
 
 const fetchTasks = createAsyncThunk<
   { todolistID: string; tasks: TaskType[] },
-  string
+  string,
+  ThunkAPIConfigType
 >("tasks/fetchTasks", async (todolistID, { dispatch }) => {
   dispatch(appActions.setAppStatus({ status: StatusesType.LOADING }));
   const res = await tasksAPI.getTasks(todolistID);
@@ -153,8 +154,8 @@ const updateTask = createAsyncThunk<
   const dispatch = thunkAPI.dispatch as AppDispatch;
   const rejectWithValue = thunkAPI.rejectWithValue;
   const state = thunkAPI.getState() as RootState;
-
-  const task = state.tasks[arg.todolistID].find((t) => t.id === arg.taskID);
+  const { todolistID, taskID, model } = arg;
+  const task = state.tasks[todolistID].find((t) => t.id === taskID);
 
   if (!task) {
     console.warn("Task has not been found in state");
@@ -168,41 +169,41 @@ const updateTask = createAsyncThunk<
     deadline: task.deadline,
     priority: task.priority,
     description: task.description,
-    ...arg.model,
+    ...model,
   };
 
   dispatch(appActions.setAppStatus({ status: StatusesType.LOADING }));
   dispatch(
     tasksActions.setTaskEntityStatus({
-      todolistID: arg.todolistID,
-      taskID: arg.taskID,
+      todolistID,
+      taskID,
       status: StatusesType.LOADING,
     }),
   );
 
   try {
-    const res = await tasksAPI.updateTask(arg.todolistID, arg.taskID, apiModel);
+    const res = await tasksAPI.updateTask(todolistID, taskID, apiModel);
     if (res.data.resultCode === 0) {
       dispatch(appActions.setAppStatus({ status: StatusesType.SUCCEEDED }));
       dispatch(
         tasksActions.setTaskEntityStatus({
-          todolistID: arg.todolistID,
-          taskID: arg.taskID,
+          todolistID,
+          taskID,
           status: StatusesType.SUCCEEDED,
         }),
       );
 
       return {
-        todolistID: arg.todolistID,
-        taskID: arg.taskID,
+        todolistID,
+        taskID,
         model: apiModel,
       };
     }
 
     dispatch(
       tasksActions.setTaskEntityStatus({
-        todolistID: arg.todolistID,
-        taskID: arg.taskID,
+        todolistID,
+        taskID,
         status: StatusesType.FAILED,
       }),
     );
@@ -215,8 +216,8 @@ const updateTask = createAsyncThunk<
   } catch (err) {
     dispatch(
       tasksActions.setTaskEntityStatus({
-        todolistID: arg.todolistID,
-        taskID: arg.taskID,
+        todolistID,
+        taskID,
         status: StatusesType.FAILED,
       }),
     );

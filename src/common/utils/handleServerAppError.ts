@@ -1,10 +1,10 @@
-import { Dispatch } from "redux";
 import { ResponseType } from "../types";
 import { StatusesType } from "../enums";
-import { appActions } from "../../app/model";
+import { appActions } from "app/model";
+import { AppDispatch } from "app/store";
 
 export const handleServerAppError = <D>(
-  dispatch: Dispatch,
+  dispatch: AppDispatch,
   data: ResponseType<D>,
   shouldSetAppError = true,
 ) => {

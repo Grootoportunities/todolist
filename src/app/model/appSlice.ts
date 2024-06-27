@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { StatusesType } from "../../common/enums";
+import { StatusesType } from "common/enums";
 
 const slice = createSlice({
   name: "application",

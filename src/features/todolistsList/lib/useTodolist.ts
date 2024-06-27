@@ -1,9 +1,9 @@
 import { useCallback, useEffect } from "react";
 import { PropTypes } from "@material-ui/core";
 import { v1 } from "uuid";
-import { useActions, useAppSelector } from "../../../common/hooks";
-import { AddItemHelpers } from "../../../common/components";
-import { TaskStatuses } from "../../../common/enums";
+import { useActions, useAppSelector } from "common/hooks";
+import { AddItemHelpers } from "common/components";
+import { TaskStatuses } from "common/enums";
 import {
   FilterValuesType,
   selectTasks,

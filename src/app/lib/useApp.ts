@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react";
-import { useAppSelector } from "../../common/hooks";
-import { useActions } from "../../common/hooks";
+import { useAppSelector } from "common/hooks";
+import { useActions } from "common/hooks";
 import { selectIsInit, selectStatus } from "../model/app.selectors";
 import { authSelectors } from "../../features/auth/model";
 

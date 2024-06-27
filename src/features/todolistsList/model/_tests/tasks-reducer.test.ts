@@ -1,12 +1,7 @@
 import { tasksActions, tasksSlice, tasksThunks } from "../tasksSlice";
-import { BaseActionType } from "../../../../common/types";
+import { BaseActionType } from "common/types";
 import { todolistsThunks } from "../todolistsSlice";
-
-import {
-  StatusesType,
-  TaskPriorities,
-  TaskStatuses,
-} from "../../../../common/enums";
+import { StatusesType, TaskPriorities, TaskStatuses } from "common/enums";
 import { TasksStateType } from "../../api";
 
 let startState: TasksStateType;

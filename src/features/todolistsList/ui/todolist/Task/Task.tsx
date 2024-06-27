@@ -1,9 +1,9 @@
 import React, { FC, memo } from "react";
 import { Checkbox, IconButton } from "@material-ui/core";
-import { EditableSpan } from "../../../../../common/components";
+import { EditableSpan } from "common/components";
 import { Delete } from "@material-ui/icons";
 import { useTask } from "../../../lib";
-import { TaskStatuses } from "../../../../../common/enums";
+import { TaskStatuses } from "common/enums";
 import { S } from "./_styles";
 import { TaskType } from "../../../api";
 

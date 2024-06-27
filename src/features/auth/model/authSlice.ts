@@ -1,14 +1,10 @@
+import { handleServerAppError, handleServerNetworkError } from "common/utils";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { clearTasksAndTodolists } from "../../../common/actions";
-import {
-  handleServerAppError,
-  handleServerNetworkError,
-} from "../../../common/utils";
-import { AppDispatch } from "../../../app/store";
-import { StatusesType } from "../../../common/enums";
-import { ThunkAPIConfigType } from "../../../common/types";
+import { clearTasksAndTodolists } from "common/actions";
 import { authAPI, LoginParamsType } from "../api";
-import { appActions } from "../../../app/model";
+import { ThunkAPIConfigType } from "common/types";
+import { StatusesType } from "common/enums";
+import { appActions } from "app/model";
 
 const slice = createSlice({
   name: "auth",
@@ -31,10 +27,7 @@ const slice = createSlice({
 
 const initApp = createAsyncThunk<boolean, undefined, ThunkAPIConfigType>(
   "auth/initApp",
-  async (_, thunkAPI) => {
-    const dispatch = thunkAPI.dispatch as AppDispatch;
-    const rejectWithValue = thunkAPI.rejectWithValue;
-
+  async (_, { dispatch, rejectWithValue }) => {
     try {
       const res = await authAPI.init();
       if (res.data.resultCode === 0) {
@@ -61,10 +54,7 @@ const initApp = createAsyncThunk<boolean, undefined, ThunkAPIConfigType>(
 
 const setLogin = createAsyncThunk<boolean, LoginParamsType, ThunkAPIConfigType>(
   `auth/setLogin`,
-  async (data, thunkAPI) => {
-    const dispatch = thunkAPI.dispatch as AppDispatch;
-    const rejectWithValue = thunkAPI.rejectWithValue;
-
+  async (data, { dispatch, rejectWithValue }) => {
     dispatch(appActions.setAppStatus({ status: StatusesType.LOADING }));
 
     try {
@@ -89,10 +79,7 @@ const setLogin = createAsyncThunk<boolean, LoginParamsType, ThunkAPIConfigType>(
 
 const deleteLogin = createAsyncThunk<boolean, undefined, ThunkAPIConfigType>(
   "auth/deleteLogin",
-  async (_, thunkAPI) => {
-    const dispatch = thunkAPI.dispatch as AppDispatch;
-    const rejectWithValue = thunkAPI.rejectWithValue;
-
+  async (_, { dispatch, rejectWithValue }) => {
     dispatch(appActions.setAppStatus({ status: StatusesType.LOADING }));
 
     try {

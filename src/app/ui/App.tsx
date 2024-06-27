@@ -6,14 +6,14 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Menu from "@material-ui/icons/Menu";
-import { ErrorSnackbar } from "../../common/components";
+import { ErrorSnackbar } from "common/components";
 import { Navigate } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { useApp } from "../lib";
-import { StatusesType } from "../../common/enums";
-import { TodolistsList } from "../../features/todolistsList/ui";
+import { StatusesType } from "common/enums";
+import { TodolistsList } from "features/todolistsList/ui";
 
 type AppProps = { demo?: boolean };
 

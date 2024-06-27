@@ -1,20 +1,15 @@
-import { todolistsAPI } from "../api";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { clearTasksAndTodolists } from "../../../common/actions";
-import { AppDispatch } from "../../../app/store";
-import {
-  handleServerAppError,
-  handleServerNetworkError,
-} from "../../../common/utils";
-import { StatusesType } from "../../../common/enums";
-import { ThunkAPIConfigType } from "../../../common/types";
-import { TodolistType } from "../api";
+import { handleServerAppError, handleServerNetworkError } from "common/utils";
+import { clearTasksAndTodolists } from "common/actions";
+import { ThunkAPIConfigType } from "common/types";
+import { StatusesType } from "common/enums";
+import { appActions } from "app/model";
+import { todolistsAPI, TodolistType } from "../api";
 import {
   FilterValuesType,
   TodolistDomainType,
   UpdateTodolistThunk,
 } from "./types";
-import { appActions } from "../../../app/model";
 
 const slice = createSlice({
   name: "todolists",
@@ -82,10 +77,7 @@ const fetchTodolists = createAsyncThunk<
   TodolistType[],
   undefined,
   ThunkAPIConfigType
->(`${slice.name}/fetchTodolists`, async (_, thunkAPI) => {
-  const dispatch = thunkAPI.dispatch as AppDispatch;
-  const rejectWithValue = thunkAPI.rejectWithValue;
-
+>(`${slice.name}/fetchTodolists`, async (_, { dispatch, rejectWithValue }) => {
   dispatch(appActions.setAppStatus({ status: StatusesType.LOADING }));
 
   try {
@@ -101,10 +93,7 @@ const fetchTodolists = createAsyncThunk<
 
 const deleteTodolist = createAsyncThunk<string, string, ThunkAPIConfigType>(
   `${slice.name}/deleteTodolist`,
-  async (todolistID, thunkAPI) => {
-    const dispatch = thunkAPI.dispatch as AppDispatch;
-    const rejectWithValue = thunkAPI.rejectWithValue;
-
+  async (todolistID, { dispatch, rejectWithValue }) => {
     dispatch(appActions.setAppStatus({ status: StatusesType.LOADING }));
     dispatch(
       todolistsActions.setTodolistEntityStatus({
@@ -154,89 +143,89 @@ const createTodolist = createAsyncThunk<
   TodolistType,
   string,
   ThunkAPIConfigType
->(`${slice.name}/createTodolist`, async (title, thunkAPI) => {
-  const dispatch = thunkAPI.dispatch as AppDispatch;
-  const rejectWithValue = thunkAPI.rejectWithValue;
+>(
+  `${slice.name}/createTodolist`,
+  async (title, { dispatch, rejectWithValue }) => {
+    dispatch(appActions.setAppStatus({ status: StatusesType.LOADING }));
 
-  dispatch(appActions.setAppStatus({ status: StatusesType.LOADING }));
+    try {
+      const res = await todolistsAPI.createTodolist(title);
 
-  try {
-    const res = await todolistsAPI.createTodolist(title);
+      if (res.data.resultCode === 0) {
+        dispatch(appActions.setAppStatus({ status: StatusesType.SUCCEEDED }));
 
-    if (res.data.resultCode === 0) {
-      dispatch(appActions.setAppStatus({ status: StatusesType.SUCCEEDED }));
+        return res.data.data.item;
+      }
 
-      return res.data.data.item;
+      handleServerAppError(dispatch, res.data, false);
+      return rejectWithValue({
+        errors: res.data.messages,
+        fieldsErrors: res.data.fieldsErrors,
+      });
+    } catch (err) {
+      handleServerNetworkError(err, dispatch);
+      return rejectWithValue(null);
     }
-
-    handleServerAppError(dispatch, res.data, false);
-    return rejectWithValue({
-      errors: res.data.messages,
-      fieldsErrors: res.data.fieldsErrors,
-    });
-  } catch (err) {
-    handleServerNetworkError(err, dispatch);
-    return rejectWithValue(null);
-  }
-});
+  },
+);
 
 const updateTodolistTitle = createAsyncThunk<
   UpdateTodolistThunk,
   UpdateTodolistThunk,
   ThunkAPIConfigType
->(`${slice.name}/updateTodolistTitle`, async (arg, thunkAPI) => {
-  const dispatch = thunkAPI.dispatch as AppDispatch;
-  const rejectWithValue = thunkAPI.rejectWithValue;
+>(
+  `${slice.name}/updateTodolistTitle`,
+  async (arg, { dispatch, rejectWithValue }) => {
+    const { todolistID, title } = arg;
 
-  const { todolistID, title } = arg;
+    dispatch(appActions.setAppStatus({ status: StatusesType.LOADING }));
+    dispatch(
+      todolistsActions.setTodolistEntityStatus({
+        todolistID,
+        status: StatusesType.LOADING,
+      }),
+    );
 
-  dispatch(appActions.setAppStatus({ status: StatusesType.LOADING }));
-  dispatch(
-    todolistsActions.setTodolistEntityStatus({
-      todolistID,
-      status: StatusesType.LOADING,
-    }),
-  );
+    try {
+      const res = await todolistsAPI.updateTodolist(todolistID, title);
+      if (res.data.resultCode === 0) {
+        dispatch(appActions.setAppStatus({ status: StatusesType.SUCCEEDED }));
+        dispatch(
+          todolistsActions.setTodolistEntityStatus({
+            todolistID,
+            status: StatusesType.SUCCEEDED,
+          }),
+        );
 
-  try {
-    const res = await todolistsAPI.updateTodolist(todolistID, title);
-    if (res.data.resultCode === 0) {
-      dispatch(appActions.setAppStatus({ status: StatusesType.SUCCEEDED }));
+        return { todolistID, title };
+      }
+
       dispatch(
         todolistsActions.setTodolistEntityStatus({
           todolistID,
-          status: StatusesType.SUCCEEDED,
+          status: StatusesType.FAILED,
         }),
       );
 
-      return { todolistID, title };
+      handleServerAppError(dispatch, res.data);
+
+      return rejectWithValue({
+        errors: res.data.messages,
+        fieldsErrors: res.data.fieldsErrors,
+      });
+    } catch (err) {
+      dispatch(
+        todolistsActions.setTodolistEntityStatus({
+          todolistID,
+          status: StatusesType.FAILED,
+        }),
+      );
+      handleServerNetworkError(err, dispatch);
+
+      return rejectWithValue(null);
     }
-
-    dispatch(
-      todolistsActions.setTodolistEntityStatus({
-        todolistID,
-        status: StatusesType.FAILED,
-      }),
-    );
-
-    handleServerAppError(dispatch, res.data);
-
-    return rejectWithValue({
-      errors: res.data.messages,
-      fieldsErrors: res.data.fieldsErrors,
-    });
-  } catch (err) {
-    dispatch(
-      todolistsActions.setTodolistEntityStatus({
-        todolistID,
-        status: StatusesType.FAILED,
-      }),
-    );
-    handleServerNetworkError(err, dispatch);
-
-    return rejectWithValue(null);
-  }
-});
+  },
+);
 
 export const todolistsSlice = slice.reducer;
 export const todolistsActions = slice.actions;

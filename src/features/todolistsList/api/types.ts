@@ -1,8 +1,4 @@
-import {
-  StatusesType,
-  TaskPriorities,
-  TaskStatuses,
-} from "../../../common/enums";
+import { StatusesType, TaskPriorities, TaskStatuses } from "common/enums";
 
 export type TodolistType = {
   id: string;

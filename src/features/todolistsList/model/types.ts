@@ -1,4 +1,4 @@
-import { StatusesType } from "../../../common/enums";
+import { StatusesType } from "common/enums";
 import { TodolistType } from "../api";
 
 export type FilterValuesType = "all" | "active" | "completed";

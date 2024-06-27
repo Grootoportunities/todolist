@@ -6,9 +6,9 @@ import {
   tasksThunks,
   todolistsActions,
   todolistsThunks,
-} from "../../features/todolistsList/model";
-import { authThunks } from "../../features/auth/model";
-import { appActions } from "../../app/model";
+} from "features/todolistsList/model";
+import { authThunks } from "features/auth/model";
+import { appActions } from "app/model";
 
 const allActions = {
   ...tasksThunks,
