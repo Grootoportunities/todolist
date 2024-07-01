@@ -1,6 +1,6 @@
 import { Task } from "../ui/todolist/Task";
-import { ReduxStoreProviderDecorator } from "../../../stories/ReduxStoreProviderDecorator";
-import { useAppSelector } from "../../../common/hooks";
+import { ReduxStoreProviderDecorator } from "stories/ReduxStoreProviderDecorator";
+import { useAppSelector } from "common/hooks";
 import { selectTasks } from "../model";
 
 export default {

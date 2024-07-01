@@ -70,24 +70,26 @@ export const DeleteTodolist = () => {
 
 export const UpdateTodolistTitle = () => {
   const [state, setState] = useState<any>(null);
-  const [ID, setID] = useState<string>("");
+  const [todolistID, setTodolistID] = useState<string>("");
   const [title, setTitle] = useState<string>("");
 
   const onIDChangeHandler = (e: ChangeEvent<HTMLInputElement>) =>
-    setID(e.currentTarget.value);
+    setTodolistID(e.currentTarget.value);
 
   const onTitleChangeHandler = (e: ChangeEvent<HTMLInputElement>) =>
     setTitle(e.currentTarget.value);
 
   const onClickHandler = () =>
-    todolistsAPI.updateTodolist(ID, title).then((res) => setState(res.data));
+    todolistsAPI
+      .updateTodolist({ todolistID, title })
+      .then((res) => setState(res.data));
 
   return (
     <div>
       {JSON.stringify(state)}
       <div>
         <input
-          value={ID}
+          value={todolistID}
           placeholder={"Todolist ID"}
           onChange={onIDChangeHandler}
         />

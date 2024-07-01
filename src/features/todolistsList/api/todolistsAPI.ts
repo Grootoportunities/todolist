@@ -1,6 +1,7 @@
 import { instance } from "common/api";
 import { ResponseType } from "common/types";
 import { TodolistType } from "./types";
+import { UpdateTodolistThunk } from "features/todolistsList/model";
 
 export const todolistsAPI = {
   getTodolists: () => instance.get<TodolistType[]>("todo-lists"),
@@ -13,6 +14,9 @@ export const todolistsAPI = {
   deleteTodolist: (ID: string) =>
     instance.delete<ResponseType>(`todo-lists/${ID}`),
 
-  updateTodolist: (ID: string, title: string) =>
-    instance.put<ResponseType>(`todo-lists/${ID}`, { title }),
+  updateTodolist: (params: UpdateTodolistThunk) => {
+    const { title, todolistID } = params;
+
+    return instance.put<ResponseType>(`todo-lists/${todolistID}`, { title });
+  },
 };

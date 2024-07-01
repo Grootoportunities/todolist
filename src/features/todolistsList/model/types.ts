@@ -10,3 +10,9 @@ export type UpdateTodolistThunk = {
   todolistID: string;
   title: string;
 };
+export type DeleteTaskThunk = { todolistID: string; taskID: string };
+export type UpdateTaskThunk<T> = {
+  todolistID: string;
+  taskID: string;
+  model: T;
+};

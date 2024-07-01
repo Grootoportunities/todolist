@@ -13,8 +13,12 @@ import {
 } from "common/utils";
 import { RootState } from "app/store";
 import { todolistsThunks } from "./todolistsSlice";
-import { StatusesType } from "common/enums";
+import { ResultCode, StatusesType } from "common/enums";
 import { appActions } from "app/model";
+import {
+  DeleteTaskThunk,
+  UpdateTaskThunk,
+} from "features/todolistsList/model/types";
 
 const slice = createSlice({
   name: "tasks",
@@ -105,7 +109,7 @@ const deleteTask = createAppAsyncThunk<DeleteTaskThunk, DeleteTaskThunk>(
 
     try {
       const res = await tasksAPI.deleteTask(arg);
-      if (res.data.resultCode === 0) {
+      if (res.data.resultCode === ResultCode.Success) {
         dispatch(appActions.setAppStatus({ status: StatusesType.SUCCEEDED }));
 
         return arg;
@@ -144,7 +148,7 @@ const createTask = createAppAsyncThunk<
 
   try {
     const res = await tasksAPI.createTask(arg);
-    if (res.data.resultCode === 0) {
+    if (res.data.resultCode === ResultCode.Success) {
       dispatch(appActions.setAppStatus({ status: StatusesType.SUCCEEDED }));
 
       return res.data.data.item;
@@ -200,7 +204,7 @@ const updateTask = createAppAsyncThunk<
 
   try {
     const res = await tasksAPI.updateTask(todolistID, taskID, apiModel);
-    if (res.data.resultCode === 0) {
+    if (res.data.resultCode === ResultCode.Success) {
       dispatch(appActions.setAppStatus({ status: StatusesType.SUCCEEDED }));
       dispatch(
         tasksActions.setTaskEntityStatus({
@@ -246,12 +250,3 @@ const updateTask = createAppAsyncThunk<
 export const tasksSlice = slice.reducer;
 export const tasksActions = slice.actions;
 export const tasksThunks = { updateTask, createTask, deleteTask, fetchTasks };
-
-//TYPES
-
-type DeleteTaskThunk = { todolistID: string; taskID: string };
-type UpdateTaskThunk<T> = {
-  todolistID: string;
-  taskID: string;
-  model: T;
-};
