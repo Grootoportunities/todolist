@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
-import { tasksAPI, todolistsAPI } from "../features/todolistsList/api";
+import { tasksAPI, todolistsAPI } from "features/todolistsList/api";
 
 export default {
   title: "API",
@@ -146,7 +146,9 @@ export const CreateTask = () => {
     setTitle(e.currentTarget.value);
 
   const onClickHandler = () =>
-    tasksAPI.createTask(todolistID, title).then((res) => setState(res.data));
+    tasksAPI
+      .createTask({ todolistID, title })
+      .then((res) => setState(res.data));
 
   return (
     <div>
@@ -181,7 +183,7 @@ export const DeleteTask = () => {
 
   const onClickHandler = () =>
     tasksAPI
-      .deleteTask(todolistID, taskID)
+      .deleteTask({ todolistID, taskID })
       .then((res) => setState(res.data))
       .catch((err) => setState(err));
 
