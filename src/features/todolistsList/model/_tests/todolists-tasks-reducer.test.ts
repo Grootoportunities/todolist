@@ -1,5 +1,5 @@
-import { todolistsSlice, todolistsThunks } from "../todolistsSlice";
-import { BaseActionType } from "../../../../common/types";
+import { todolistsActions, todolistsSlice } from "../todolistsSlice";
+import { BaseActionType } from "common/types";
 import { TodolistDomainType } from "../types";
 import { TasksStateType } from "../../api";
 import { tasksSlice } from "../tasksSlice";
@@ -9,9 +9,9 @@ test("ID's of tasks and todolists should be equal", () => {
   const startTasksState: TasksStateType = {};
 
   const action: BaseActionType<
-    typeof todolistsThunks.createTodolist.fulfilled
+    typeof todolistsActions.createTodolist.fulfilled
   > = {
-    type: todolistsThunks.createTodolist.fulfilled.type,
+    type: todolistsActions.createTodolist.fulfilled.type,
     payload: {
       id: "todolistId1",
       title: "What to learn",

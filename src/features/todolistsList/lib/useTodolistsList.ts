@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
-import { useActions, useAppSelector } from "../../../common/hooks";
-import { AddItemHelpers } from "../../../common/components";
-import { selectTodolist, todolistsThunks } from "../model";
+import { useActions, useAppSelector } from "common/hooks";
+import { AddItemHelpers } from "common/components";
+import { selectTodolist, todolistsActions } from "../model";
 
 export const useTodolistsList = (demo: boolean) => {
   const todolists = useAppSelector(selectTodolist);
@@ -11,7 +11,7 @@ export const useTodolistsList = (demo: boolean) => {
     async (title: string, helpers: AddItemHelpers) => {
       const res = await createTodolist(title);
 
-      if (todolistsThunks.createTodolist.rejected.match(res)) {
+      if (todolistsActions.createTodolist.rejected.match(res)) {
         const errorMessage = res.payload?.errors.length
           ? res.payload.errors[0]
           : "Some error occurred.";

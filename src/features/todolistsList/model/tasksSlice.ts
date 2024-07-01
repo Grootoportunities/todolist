@@ -12,7 +12,7 @@ import {
   handleServerNetworkError,
 } from "common/utils";
 import { RootState } from "app/store";
-import { todolistsThunks } from "./todolistsSlice";
+import { todolistsActions } from "./todolistsSlice";
 import { ResultCode, StatusesType } from "common/enums";
 import { appActions } from "app/model";
 import {
@@ -40,13 +40,13 @@ const slice = createSlice({
   },
   extraReducers: (builder) =>
     builder
-      .addCase(todolistsThunks.createTodolist.fulfilled, (state, action) => {
+      .addCase(todolistsActions.createTodolist.fulfilled, (state, action) => {
         state[action.payload.id] = [];
       })
-      .addCase(todolistsThunks.deleteTodolist.fulfilled, (state, action) => {
+      .addCase(todolistsActions.deleteTodolist.fulfilled, (state, action) => {
         delete state[action.payload];
       })
-      .addCase(todolistsThunks.fetchTodolists.fulfilled, (state, action) => {
+      .addCase(todolistsActions.fetchTodolists.fulfilled, (state, action) => {
         action.payload.forEach((tl) => (state[tl.id] = []));
       })
       .addCase(clearTasksAndTodolists, () => {

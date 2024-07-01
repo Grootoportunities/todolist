@@ -1,11 +1,7 @@
-import {
-  todolistsActions,
-  todolistsSlice,
-  todolistsThunks,
-} from "../todolistsSlice";
+import { todolistsActions, todolistsSlice } from "../todolistsSlice";
 import { v1 } from "uuid";
-import { BaseActionType } from "../../../../common/types";
-import { StatusesType } from "../../../../common/enums";
+import { BaseActionType } from "common/types";
+import { StatusesType } from "common/enums";
 import { FilterValuesType, TodolistDomainType } from "../types";
 
 let todolistId1: string;
@@ -38,9 +34,9 @@ beforeEach(() => {
 
 test("correct todolist should be removed", () => {
   const action: BaseActionType<
-    typeof todolistsThunks.deleteTodolist.fulfilled
+    typeof todolistsActions.deleteTodolist.fulfilled
   > = {
-    type: todolistsThunks.deleteTodolist.fulfilled.type,
+    type: todolistsActions.deleteTodolist.fulfilled.type,
     payload: todolistId1,
   };
 
@@ -54,9 +50,9 @@ test("correct todolist should be added", () => {
   let newTodolistTitle = "New Todolist";
 
   const action: BaseActionType<
-    typeof todolistsThunks.createTodolist.fulfilled
+    typeof todolistsActions.createTodolist.fulfilled
   > = {
-    type: todolistsThunks.createTodolist.fulfilled.type,
+    type: todolistsActions.createTodolist.fulfilled.type,
     payload: {
       id: "todolistId3",
       title: newTodolistTitle,
@@ -75,9 +71,9 @@ test("correct todolist should change its name", () => {
   let newTodolistTitle = "New Todolist";
 
   const action: BaseActionType<
-    typeof todolistsThunks.updateTodolistTitle.fulfilled
+    typeof todolistsActions.updateTodolistTitle.fulfilled
   > = {
-    type: todolistsThunks.updateTodolistTitle.fulfilled.type,
+    type: todolistsActions.updateTodolistTitle.fulfilled.type,
     payload: {
       todolistID: todolistId2,
       title: newTodolistTitle,
@@ -107,9 +103,9 @@ test("correct filter of todolist should be changed", () => {
 
 test("Todolists should be setted correctly", () => {
   const action: BaseActionType<
-    typeof todolistsThunks.fetchTodolists.fulfilled
+    typeof todolistsActions.fetchTodolists.fulfilled
   > = {
-    type: todolistsThunks.fetchTodolists.fulfilled.type,
+    type: todolistsActions.fetchTodolists.fulfilled.type,
     payload: startState,
   };
 

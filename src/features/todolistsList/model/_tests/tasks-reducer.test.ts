@@ -1,6 +1,6 @@
 import { tasksActions, tasksSlice, tasksThunks } from "../tasksSlice";
 import { BaseActionType } from "common/types";
-import { todolistsThunks } from "../todolistsSlice";
+import { todolistsActions } from "../todolistsSlice";
 import { StatusesType, TaskPriorities, TaskStatuses } from "common/enums";
 import { TasksStateType } from "../../api";
 
@@ -181,9 +181,9 @@ test("Task title should change correctly", () => {
 
 test("New empty array of task should be added when new todolist is added", () => {
   const action: BaseActionType<
-    typeof todolistsThunks.createTodolist.fulfilled
+    typeof todolistsActions.createTodolist.fulfilled
   > = {
-    type: todolistsThunks.createTodolist.fulfilled.type,
+    type: todolistsActions.createTodolist.fulfilled.type,
     payload: {
       ...startState["todolistID1"],
       id: "1",
@@ -205,9 +205,9 @@ test("New empty array of task should be added when new todolist is added", () =>
 
 test("By deleting todolist, tasks also should be deleted", () => {
   const action: BaseActionType<
-    typeof todolistsThunks.deleteTodolist.fulfilled
+    typeof todolistsActions.deleteTodolist.fulfilled
   > = {
-    type: todolistsThunks.deleteTodolist.fulfilled.type,
+    type: todolistsActions.deleteTodolist.fulfilled.type,
     payload: "todolistID2",
   };
 
@@ -221,9 +221,9 @@ test("By deleting todolist, tasks also should be deleted", () => {
 
 test("Empty array should be added when todolists are setted", () => {
   const action: BaseActionType<
-    typeof todolistsThunks.fetchTodolists.fulfilled
+    typeof todolistsActions.fetchTodolists.fulfilled
   > = {
-    type: todolistsThunks.fetchTodolists.fulfilled.type,
+    type: todolistsActions.fetchTodolists.fulfilled.type,
     payload: [
       { id: "1", title: "title1", order: 0, addedDate: "" },
       { id: "2", title: "title2", order: 0, addedDate: "" },
