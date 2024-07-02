@@ -9,7 +9,3 @@ export type LoginParamsType = {
   rememberMe: boolean;
   captcha?: string;
 };
-export type FieldsErrorsType = {
-  field: string;
-  error: string;
-};

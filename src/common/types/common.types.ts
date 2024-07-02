@@ -1,5 +1,3 @@
-import { FieldsErrorsType } from "features/auth/api";
-
 export type BaseActionType<T extends (...args: any) => any> = Omit<
   ReturnType<T>,
   "meta"
@@ -14,4 +12,9 @@ export type ResponseType<D = {}> = {
   messages: string[];
   fieldsErrors: FieldsErrorsType[];
   resultCode: number;
+};
+
+export type FieldsErrorsType = {
+  field: string;
+  error: string;
 };

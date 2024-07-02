@@ -1,18 +1,18 @@
-import React from "react";
-import Grid from "@mui/material/Grid";
-import Checkbox from "@mui/material/Checkbox";
-import FormControl from "@mui/material/FormControl";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormGroup from "@mui/material/FormGroup";
-import FormLabel from "@mui/material/FormLabel";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import { ErrorSnackbar } from "../../../../common/components";
-import { Navigate } from "react-router-dom";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import { ErrorSnackbar } from "common/components";
+import FormGroup from "@mui/material/FormGroup";
+import TextField from "@mui/material/TextField";
+import Checkbox from "@mui/material/Checkbox";
+import { Navigate } from "react-router-dom";
 import { useLogin } from "../../lib";
-import { StatusesType } from "../../../../common/enums";
+import React from "react";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import { StatusesType } from "common/enums";
 
 export const Login = () => {
   const { isLoggedIn, status, isInit, formik } = useLogin();
@@ -65,7 +65,9 @@ export const Login = () => {
                 margin="normal"
                 {...formik.getFieldProps("email")}
               />
-              {formik.errors.email ? <div>{formik.errors.email}</div> : null}
+              {formik.errors.email ? (
+                <div style={{ color: "red" }}>{formik.errors.email}</div>
+              ) : null}
               <TextField
                 type="password"
                 label="Password"
@@ -73,7 +75,7 @@ export const Login = () => {
                 {...formik.getFieldProps("password")}
               />
               {formik.errors.password ? (
-                <div>{formik.errors.password}</div>
+                <div style={{ color: "red" }}>{formik.errors.password}</div>
               ) : null}
               <FormControlLabel
                 label={"Remember me"}

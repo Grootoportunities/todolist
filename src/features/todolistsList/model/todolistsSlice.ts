@@ -1,7 +1,6 @@
 import { handleServerAppError, handleServerNetworkError } from "common/utils";
 import { clearTasksAndTodolists } from "common/actions";
 import { ResultCode, StatusesType } from "common/enums";
-import { FieldsErrorsType } from "features/auth/api";
 import { todolistsAPI, TodolistType } from "../api";
 import { appActions } from "app/model";
 import {
@@ -14,6 +13,7 @@ import {
   TodolistDomainType,
   UpdateTodolistThunk,
 } from "./types";
+import { FieldsErrorsType } from "common/types";
 
 const createTodolistsSlice = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },

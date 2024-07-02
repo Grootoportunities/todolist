@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { FieldsErrorsType } from "features/auth/api";
+import { FieldsErrorsType } from "common/types";
 
 export const createAppAsyncThunk = createAsyncThunk.withTypes<{
   rejectValue: { errors: string[]; fieldsErrors: FieldsErrorsType[] } | null;
