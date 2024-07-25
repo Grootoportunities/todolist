@@ -6,55 +6,55 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Menu from "@material-ui/icons/Menu";
-import { ErrorSnackbar } from "common/components";
-import { Navigate } from "react-router-dom";
+import {ErrorSnackbar} from "common/components";
+import {Navigate} from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
-import { useApp } from "../lib";
-import { StatusesType } from "common/enums";
-import { TodolistsList } from "features/todolistsList/ui";
+import {useApp} from "../lib";
+import {StatusesType} from "common/enums";
+import {TodolistsList} from "features/todolistsList/ui";
 
-type AppProps = { demo?: boolean };
+// type AppProps = { demo?: boolean };
 
-function App({ demo = false }: AppProps) {
-  const { status, isLoggedIn, isInit, onLogoutHandler } = useApp();
+function App() {
+    const {status, isLoggedIn, isInit, onLogoutHandler} = useApp();
 
-  if (!isInit) {
+    if (!isInit) {
+        return (
+            <Grid
+                container
+                justifyContent={"center"}
+                height={"100vh"}
+                alignItems={"center"}
+            >
+                <CircularProgress/>
+            </Grid>
+        );
+    }
+
+    if (!isLoggedIn) return <Navigate to={"/login"}/>;
+
     return (
-      <Grid
-        container
-        justifyContent={"center"}
-        height={"100vh"}
-        alignItems={"center"}
-      >
-        <CircularProgress />
-      </Grid>
+        <div className="App">
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton edge="start" color="inherit" aria-label="menu">
+                        <Menu/>
+                    </IconButton>
+                    <Typography variant="h6">Todolists</Typography>
+                    <Button variant={"contained"} onClick={onLogoutHandler}>
+                        Logout
+                    </Button>
+                </Toolbar>
+                {status === StatusesType.LOADING && <LinearProgress/>}
+            </AppBar>
+            <Container fixed>
+                <TodolistsList demo={false}/>
+            </Container>
+            <ErrorSnackbar/>
+        </div>
     );
-  }
-
-  if (!isLoggedIn) return <Navigate to={"/login"} />;
-
-  return (
-    <div className="App">
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu">
-            <Menu />
-          </IconButton>
-          <Typography variant="h6">Todolists</Typography>
-          <Button variant={"contained"} onClick={onLogoutHandler}>
-            Logout
-          </Button>
-        </Toolbar>
-        {status === StatusesType.LOADING && <LinearProgress />}
-      </AppBar>
-      <Container fixed>
-        <TodolistsList demo={demo} />
-      </Container>
-      <ErrorSnackbar />
-    </div>
-  );
 }
 
 export default App;
