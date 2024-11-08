@@ -67,7 +67,6 @@ const slice = createSlice({
       })
       .addCase(updateTask.fulfilled, (state, action) => {
         const tasks = state[action.payload.todolistID];
-
         const index = tasks.findIndex((t) => t.id === action.payload.taskID);
 
         if (index !== -1)
@@ -168,9 +167,9 @@ const createTask = createAppAsyncThunk<
 const updateTask = createAppAsyncThunk<
   UpdateTaskThunk<UpdateTaskModelType>,
   UpdateTaskThunk<
-    Omit<
+    Pick<
       Partial<UpdateTaskModelType>,
-      "startDate" | "description" | "deadline" | "priority"
+        | "status" | "title"
     >
   >
 >("tasks/updateTask", async (arg, { dispatch, rejectWithValue, getState }) => {

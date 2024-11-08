@@ -25,7 +25,6 @@ export const Task: FC<TaskProps> = memo(
 
     return (
       <S.TaskItem
-        className={task.status === TaskStatuses.Completed ? "is-done" : ""}
         key={task.id}
         isDone={task.status}
       >

@@ -25,8 +25,7 @@ export const Todolist: FC<TodolistPropsType> = memo(
       filteredTasks,
     } = useTodolist(demo, todolist);
 
-    const mappedTasks = filteredTasks.map((item) => {
-      return (
+    const mappedTasks = filteredTasks.map((item) =>
         <Task
           disabled={todolist.entityStatus === StatusesType.LOADING}
           key={item.id}
@@ -34,7 +33,6 @@ export const Todolist: FC<TodolistPropsType> = memo(
           todolistId={todolist.id}
         />
       );
-    });
 
     const mappedFilterButtons = filterButtons.map((b) => {
       return (
